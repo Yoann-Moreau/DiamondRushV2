@@ -1,0 +1,33 @@
+phases:
+  duration:
+    totemPlacement: 60
+    spawnPlacement: 20
+    firstExploration: 600
+    firstCombat: 60
+    pause: 10
+  durationChange:
+    exploration: -120          # can be <= 0
+    combat: 60                 # can be <= 0
+    number: 4                  # can be = 0
+totems:
+  height: 3
+teamSpawns:
+  minDistanceFromTotem: 25
+distanceToSpot: 25
+killRewards:
+  nextKillsThreshold: 3
+  firstKills:
+    material: "DIAMOND"        # Must be a valid Material
+    quantity: 1
+  nextKills:
+    material: "IRON_INGOT"     # Must be a valid Material
+    quantity: 3
+explorationRewards:
+  startCycle: 2                # Cycles start at 1
+  rewards:
+    - material: "DIAMOND"      # Must be a valid Material
+      quantity: 1
+      who: "leader"            # Must be either "leader" or "player"
+    - material: "IRON_INGOT"   # Must be a valid Material
+      quantity: 7
+      who: "player"            # Must be either "leader" or "player"
