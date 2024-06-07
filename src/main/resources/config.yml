@@ -1,19 +1,27 @@
 phases:
+  # For exploration and combat, the duration is for the first phase. It is then altered by the duration change
+  # over the next cycles
   duration:
     totemPlacement: 60
     spawnPlacement: 20
     firstExploration: 600
     firstCombat: 60
     pause: 10
+  # Duration changes can be inferior to 0 to decrease a phase duration over the next cycles
   durationChange:
     exploration: -120          # can be <= 0
     combat: 60                 # can be <= 0
     number: 4                  # can be = 0
+# Totems are composed of a configurable number of blocks of obsidian in the middle with two more on the eastern
+# and western sides
 totems:
   height: 3
 teamSpawns:
   minDistanceFromTotem: 25
+# The distance to spot is the distance within which a player must be from an enemy totem to be
+# sent back to base when attacked
 distanceToSpot: 25
+# Kill rewards are given to the player getting a kill on an enemy team player during a combat phase
 killRewards:
   nextKillsThreshold: 3
   firstKills:
@@ -22,6 +30,8 @@ killRewards:
   nextKills:
     material: "IRON_INGOT"     # Must be a valid Material
     quantity: 3
+# Exploration rewards are given to team players or leaders at the start of the exploration phase
+# starting at the defined cycle
 explorationRewards:
   startCycle: 2                # Cycles start at 1
   rewards:

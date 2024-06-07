@@ -148,5 +148,17 @@ public class Config {
 					(String) rewardMap.get("who")
 			));
 		}
+
+		checkForErrors();
+	}
+
+
+	public void checkForErrors() {
+		if (firstExplorationDuration + explorationChange * numberOfChanges < 0) {
+			throw new RuntimeException("The exploration time can't be inferior to 0.");
+		}
+		if (firstCombatDuration + combatChange * numberOfChanges < 0) {
+			throw new RuntimeException("The combat time can't be inferior to 0.");
+		}
 	}
 }
