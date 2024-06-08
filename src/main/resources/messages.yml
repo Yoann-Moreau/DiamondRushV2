@@ -3,4 +3,8 @@ messages:
     noPermission: "<red>You do not have permission to perform this command."
     notAPlayer: "<red>This command must be performed by a player."
     create:
+      description: "Creates a new DiamondRush game at your location."
       success: "<green>A DiamondRush game has been created at your location."
+    join:
+      description: "Joins the created DiamondRush game."
+      success: "<green>You have joined the DiamondRush game."

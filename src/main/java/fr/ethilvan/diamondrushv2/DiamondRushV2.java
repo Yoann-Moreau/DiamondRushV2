@@ -1,6 +1,6 @@
 package fr.ethilvan.diamondrushv2;
 
-import fr.ethilvan.diamondrushv2.command.game.CreateCommand;
+import fr.ethilvan.diamondrushv2.command.DiamondRushCommand;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.LifecycleEventManager;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
@@ -32,7 +32,7 @@ public final class DiamondRushV2 extends JavaPlugin {
 		LifecycleEventManager<Plugin> manager = this.getLifecycleManager();
 		manager.registerEventHandler(LifecycleEvents.COMMANDS, event -> {
 			final Commands commands = event.registrar();
-			commands.register("diamondrush", new CreateCommand(diamondRush, "create"));
+			commands.register("diamondrush", new DiamondRushCommand(diamondRush));
 		});
 	}
 }

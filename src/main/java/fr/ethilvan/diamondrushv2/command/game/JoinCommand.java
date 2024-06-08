@@ -6,31 +6,31 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class CreateCommand extends Subcommand {
+public class JoinCommand extends Subcommand {
 
-	public CreateCommand(DiamondRush diamondRush) {
+	public JoinCommand(DiamondRush diamondRush) {
 		super(diamondRush);
 	}
 
 
 	@Override
 	public String getName() {
-		return "create";
+		return "join";
 	}
 
 	@Override
 	public String getSyntax() {
-		return "/diamondrush create";
+		return "/diamondrush join";
 	}
 
 	@Override
 	public String getDescription() {
-		return "messages.commands.create.description";
+		return "messages.commands.join.description";
 	}
 
 	@Override
 	public String getPermission() {
-		return "diamondrush.create";
+		return "diadmondrush.join";
 	}
 
 
@@ -44,6 +44,6 @@ public class CreateCommand extends Subcommand {
 			sendMessage(sender, "messages.commands.notAPlayer");
 			return;
 		}
-		sendMessage(sender, "messages.commands.create.success");
+		sendMessage(sender, "messages.commands.join.success");
 	}
 }

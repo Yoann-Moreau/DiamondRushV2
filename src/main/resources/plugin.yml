@@ -16,3 +16,8 @@ commands:
     description: Creates a new game of DiamondRush
     usage: /<command>
     permission: diamondrush.create
+  diamondrush join:
+    aliases: dr join
+    description: Allow a player to join a DiamondRush game
+    usage: /<command>
+    permission: diamondrush.join
