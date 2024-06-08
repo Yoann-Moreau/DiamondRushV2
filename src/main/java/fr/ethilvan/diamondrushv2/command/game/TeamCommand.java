@@ -42,8 +42,8 @@ public class TeamCommand extends Subcommand {
 			return;
 		}
 		Map<String, String> placeholders = new HashMap<>();
-		placeholders.put("?team-color", "gold");
-		placeholders.put("?team-name", "Orange");
+		placeholders.put("\\{team-color\\}", "gold");
+		placeholders.put("\\{team-name\\}", "Orange");
 		sendMessage(sender, "messages.commands.team.addSuccess", placeholders);
 	}
 }

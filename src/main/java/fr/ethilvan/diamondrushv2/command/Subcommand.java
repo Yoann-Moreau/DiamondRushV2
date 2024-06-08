@@ -5,10 +5,12 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -56,36 +58,14 @@ public abstract class Subcommand {
 			return;
 		}
 
-		TextComponent textComponent = (TextComponent) replacePlaceholders(
-				PlainTextComponentSerializer.plainText().deserialize(message),
-				placeholders
-		);
-		commandSender.sendRichMessage(textComponent.content());
+		for (Map.Entry<String, String> placeholder : placeholders.entrySet()) {
+			message = message.replaceAll(placeholder.getKey(), placeholder.getValue());
+		}
+		commandSender.sendRichMessage(message);
 	}
 
 
 	private void missingMessage(CommandSender sender, String messagePath) {
 		sender.sendRichMessage("<red>Message missing from configuration: '" + messagePath + "'.");
-	}
-
-
-	private Component replacePlaceholders(Component component, Map<String, String> placeholders) {
-		TextComponent textComponent = (TextComponent) component;
-		Optional<String> nextKey = placeholders.keySet().stream().findFirst();
-		if (nextKey.isPresent()) {
-			String key = nextKey.get();
-			String value = placeholders.get(key);
-			if (placeholders.size() > 1) {
-				placeholders.remove(key);
-				return replacePlaceholders(
-						MiniMessage.miniMessage().deserialize(textComponent.content(), Placeholder.unparsed(key, value)),
-						placeholders
-				);
-			}
-
-			return MiniMessage.miniMessage().deserialize(textComponent.content(), Placeholder.unparsed(key, value));
-		}
-
-		return component;
 	}
 }
