@@ -28,6 +28,11 @@ public class DiamondRush {
 	}
 
 
+	public DiamondRushV2 getPlugin() {
+		return plugin;
+	}
+
+
 	public Config getConfig() {
 		return config;
 	}

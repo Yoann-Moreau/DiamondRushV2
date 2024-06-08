@@ -6,6 +6,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class JoinCommand extends Subcommand {
 
 	public JoinCommand(DiamondRush diamondRush) {
@@ -45,5 +48,16 @@ public class JoinCommand extends Subcommand {
 			return;
 		}
 		sendMessage(sender, "messages.commands.join.success");
+	}
+
+
+	@Override
+	public List<String> getAutoCompleteChoices(String[] args) {
+		if (args.length == 2) {
+			ArrayList<String> teamNames = new ArrayList<>();
+			// TODO: Add current teams names
+			return teamNames;
+		}
+		return List.of();
 	}
 }

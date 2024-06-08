@@ -66,6 +66,24 @@ public class DiamondRushCommand implements TabExecutor {
 			@NotNull String label,
 			@NotNull String[] args
 	) {
+
+		if (args.length == 1) {
+			ArrayList<String> subcommandNames = new ArrayList<>();
+
+			for (Subcommand subcommand : subcommands) {
+				subcommandNames.add(subcommand.getName());
+			}
+			return subcommandNames;
+		}
+
+		if (args.length > 1) {
+			for (Subcommand subcommand : subcommands) {
+				if (args[0].equalsIgnoreCase(subcommand.getName())) {
+					return subcommand.getAutoCompleteChoices(args);
+				}
+			}
+		}
+
 		return List.of();
 	}
 }
