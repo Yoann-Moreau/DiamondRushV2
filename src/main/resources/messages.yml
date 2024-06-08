@@ -1,0 +1,6 @@
+messages:
+  commands:
+    noPermission: "<red>You do not have permission to perform this command."
+    notAPlayer: "<red>This command must be performed by a player."
+    create:
+      success: "<green>A DiamondRush game has been created at your location."

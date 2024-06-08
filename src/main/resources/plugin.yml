@@ -11,3 +11,8 @@ commands:
     aliases: dr
     description: The global diamondrush command
     usage: /<command>
+  diamondrush create:
+    aliases: dr create
+    description: Creates a new game of DiamondRush
+    usage: /<command>
+    permission: diamondrush.create
