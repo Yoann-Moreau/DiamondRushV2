@@ -8,16 +8,6 @@ description: DiamondRush mini game remade
 website: ethilvan.fr
 commands:
   diamondrush:
-    aliases: dr
+    aliases: [dr]
     description: The global diamondrush command
-    usage: /<command>
-  diamondrush create:
-    aliases: dr create
-    description: Creates a new game of DiamondRush
-    usage: /<command>
-    permission: diamondrush.create
-  diamondrush join:
-    aliases: dr join
-    description: Allow a player to join a DiamondRush game
-    usage: /<command>
-    permission: diamondrush.join
+    usage: /diamondrush <arg>

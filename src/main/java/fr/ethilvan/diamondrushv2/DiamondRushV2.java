@@ -29,10 +29,6 @@ public final class DiamondRushV2 extends JavaPlugin {
 
 
 	private void registerCommands() {
-		LifecycleEventManager<Plugin> manager = this.getLifecycleManager();
-		manager.registerEventHandler(LifecycleEvents.COMMANDS, event -> {
-			final Commands commands = event.registrar();
-			commands.register("diamondrush", new DiamondRushCommand(diamondRush));
-		});
+		this.getCommand("diamondrush").setExecutor(new DiamondRushCommand(diamondRush));
 	}
 }

@@ -3,8 +3,6 @@ package fr.ethilvan.diamondrushv2.command;
 import fr.ethilvan.diamondrushv2.DiamondRush;
 import fr.ethilvan.diamondrushv2.command.game.CreateCommand;
 import fr.ethilvan.diamondrushv2.command.game.JoinCommand;
-import io.papermc.paper.command.brigadier.BasicCommand;
-import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -12,10 +10,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-public class DiamondRushCommand implements BasicCommand, TabExecutor {
+public class DiamondRushCommand implements TabExecutor {
 
 	protected DiamondRush diamondRush;
 	protected ArrayList<Subcommand> subcommands;
@@ -31,8 +28,12 @@ public class DiamondRushCommand implements BasicCommand, TabExecutor {
 
 
 	@Override
-	public void execute(@NotNull CommandSourceStack commandSourceStack, @NotNull String[] args) {
-		CommandSender sender = commandSourceStack.getSender();
+	public boolean onCommand(
+			@NotNull CommandSender sender,
+			@NotNull Command command,
+			@NotNull String label,
+			@NotNull String[] args
+	) {
 
 		if (args.length < 1) {
 			sender.sendMessage("----------------Available commands----------------");
@@ -44,32 +45,16 @@ public class DiamondRushCommand implements BasicCommand, TabExecutor {
 				sender.sendRichMessage("<gold>" + subcommand.getSyntax() + "<dark_gray>: <white>" + description);
 			}
 			sender.sendMessage("--------------------------------------------------");
-			return;
+			return true;
 		}
 
 		for (Subcommand subcommand : subcommands) {
 			if (args[0].equalsIgnoreCase(subcommand.getName())) {
 				subcommand.perform(sender, args);
-				;
-				break;
+				return true;
 			}
 		}
 
-	}
-
-	@Override
-	public @NotNull Collection<String> suggest(@NotNull CommandSourceStack commandSourceStack, @NotNull String[] args) {
-		return BasicCommand.super.suggest(commandSourceStack, args);
-	}
-
-
-	@Override
-	public boolean onCommand(
-			@NotNull CommandSender sender,
-			@NotNull Command command,
-			@NotNull String label,
-			@NotNull String[] args
-	) {
 		return false;
 	}
 
