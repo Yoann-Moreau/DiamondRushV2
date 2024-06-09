@@ -5,6 +5,7 @@ messages:
     create:
       description: "Creates a new DiamondRush game at your location."
       success: "<green>A DiamondRush game has been created at your location."
+      gameAlreadyCreated: "<red>A DiamondRush game has already been created."
     team:
       description: "Adds, removes or modify the specified team."
       addSuccess: "<green>The <{team-color}>{team-name}</{team-color}> team has been created successfully."

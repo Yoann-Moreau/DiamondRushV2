@@ -1,6 +1,7 @@
 package fr.ethilvan.diamondrushv2;
 
 import fr.ethilvan.diamondrushv2.config.Config;
+import fr.ethilvan.diamondrushv2.game.Game;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -11,6 +12,7 @@ public class DiamondRush {
 	private final DiamondRushV2 plugin;
 	private final Config config;
 	private FileConfiguration messagesConfig;
+	private Game game = null;
 
 
 	public DiamondRush(DiamondRushV2 plugin) {
@@ -40,6 +42,15 @@ public class DiamondRush {
 
 	public FileConfiguration getMessagesConfig() {
 		return messagesConfig;
+	}
+
+
+	public Game getGame() {
+		return game;
+	}
+
+	public void setGame(Game game) {
+		this.game = game;
 	}
 
 
