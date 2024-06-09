@@ -50,6 +50,10 @@ public class JoinCommand extends Subcommand {
 			sendMessage(sender, "messages.commands.notAPlayer");
 			return;
 		}
+		if (diamondRush.getGame() == null) {
+			sendMessage(sender, "messages.noGameCreated");
+			return;
+		}
 		if (args.length < 2) {
 			sendMessage(sender, "messages.commands.join.noTeamSpecified");
 			return;
