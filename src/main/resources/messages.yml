@@ -19,5 +19,8 @@ messages:
       modifySuccess: "<yellow>The <{team-color}>{team-name}</{team-color}> team has been modified successfully."
     join:
       description: "Joins the created DiamondRush game."
-      success: "<green>You have joined the DiamondRush game."
+      noTeamSpecified: "<red>You must provide a team name."
+      noSuchTeam: "<red>No team by that name exists."
+      alreadyInATeam: "<red>You have already joined a team."
+      success: "<green>You have joined the <{team-color}>{team-name}</{team-color}> team."
   noGameCreated: "<red> You must create a game first."
