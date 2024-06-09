@@ -8,9 +8,16 @@ messages:
       gameAlreadyCreated: "<red>A DiamondRush game has already been created."
     team:
       description: "Adds, removes or modify the specified team."
+      noActionSpecified: "<red>You must provide an action."
+      noTeamSpecified: "<red>You must provide a team name."
+      noColorSpecified: "<red>You must provide a color for the team."
+      notAValidColor: "<red>The team color is not valid."
+      teamAlreadyExists: "<red>A team with that name already exists."
+      colorTaken: "<red>That color is already used by an other team."
       addSuccess: "<green>The <{team-color}>{team-name}</{team-color}> team has been created successfully."
       removeSuccess: "<gray>The <{team-color}>{team-name}</{team-color}> team has been deleted successfully."
       modifySuccess: "<yellow>The <{team-color}>{team-name}</{team-color}> team has been modified successfully."
     join:
       description: "Joins the created DiamondRush game."
       success: "<green>You have joined the DiamondRush game."
+  noGameCreated: "<red> You must create a game first."

@@ -6,14 +6,14 @@ import org.bukkit.Material;
 public enum TeamColor {
 
 	BLUE("BLUE", NamedTextColor.BLUE, Material.BLUE_WOOL),
-	RED("RED", NamedTextColor.DARK_RED, Material.RED_WOOL),
-	GREEN("GREEN", NamedTextColor.DARK_GREEN, Material.RED_WOOL),
-	ORANGE("ORANGE", NamedTextColor.GOLD, Material.ORANGE_WOOL),
-	PURPLE("PURPLE", NamedTextColor.DARK_PURPLE, Material.PURPLE_WOOL),
+	RED("DARK_RED", NamedTextColor.DARK_RED, Material.RED_WOOL),
+	GREEN("DARK_GREEN", NamedTextColor.DARK_GREEN, Material.RED_WOOL),
+	ORANGE("GOLD", NamedTextColor.GOLD, Material.ORANGE_WOOL),
+	PURPLE("DARK_PURPLE", NamedTextColor.DARK_PURPLE, Material.PURPLE_WOOL),
 	WHITE("WHITE", NamedTextColor.WHITE, Material.WHITE_WOOL),
-	GRAY("GRAY", NamedTextColor.DARK_GRAY, Material.GRAY_WOOL),
+	GRAY("DARK_GRAY", NamedTextColor.DARK_GRAY, Material.GRAY_WOOL),
 	AQUA("AQUA", NamedTextColor.AQUA, Material.CYAN_WOOL),
-	LIGHT_GREEN("LIGHT_GREEN", NamedTextColor.GREEN, Material.LIME_WOOL),
+	LIGHT_GREEN("GREEN", NamedTextColor.GREEN, Material.LIME_WOOL),
 	BLACK("BLACK", NamedTextColor.BLACK, Material.BLACK_WOOL),
 	YELLOW("YELLOW", NamedTextColor.YELLOW, Material.YELLOW_WOOL);
 

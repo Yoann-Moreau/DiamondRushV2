@@ -2,10 +2,14 @@ package fr.ethilvan.diamondrushv2.command.game;
 
 import fr.ethilvan.diamondrushv2.DiamondRush;
 import fr.ethilvan.diamondrushv2.command.Subcommand;
+import fr.ethilvan.diamondrushv2.game.Team;
+import fr.ethilvan.diamondrushv2.game.TeamColor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TeamCommand extends Subcommand {
@@ -41,9 +45,80 @@ public class TeamCommand extends Subcommand {
 			sendMessage(sender, "messages.commands.noPermission");
 			return;
 		}
+		if (diamondRush.getGame() == null) {
+			sendMessage(sender, "messages.noGameCreated");
+			return;
+		}
+		if (args.length < 2) {
+			sendMessage(sender, "messages.commands.team.noActionSpecified");
+			return;
+		}
+		if (args[1].equalsIgnoreCase("add")) {
+			addTeam(sender, args);
+		}
+	}
+
+
+	@Override
+	public List<String> getAutoCompleteChoices(String[] args) {
+		if (args.length == 2) {
+			ArrayList<String> actions = new ArrayList<>();
+			actions.add("add");
+			actions.add("remove");
+			actions.add("modify");
+			return actions;
+		}
+
+		if (args.length == 4) {
+			if (args[1].equalsIgnoreCase("add")) {
+				ArrayList<String> colors = new ArrayList<>();
+				for (TeamColor teamColor : TeamColor.values()) {
+					colors.add(teamColor.name());
+				}
+				return colors;
+			}
+		}
+		return List.of();
+	}
+
+
+	private void addTeam(CommandSender sender, @NotNull String[] args) {
+		if (args.length < 3) {
+			sendMessage(sender, "messages.commands.team.noTeamSpecified");
+			return;
+		}
+		if (args.length < 4) {
+			sendMessage(sender, "messages.commands.team.noColorSpecified");
+			return;
+		}
+		String teamName = args[2];
+		String colorName = args[3];
+
+		TeamColor teamColor;
+		try {
+			teamColor = TeamColor.valueOf(colorName.toUpperCase());
+		} catch (IllegalArgumentException e) {
+			sendMessage(sender, "messages.commands.team.notAValidColor");
+			return;
+		}
+		// Check if team name is taken
+		if (diamondRush.getGame().getTeam(teamName) != null) {
+			sendMessage(sender, "messages.commands.team.teamAlreadyExists");
+			return;
+		}
+		// Check if team color is taken
+		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+			if (teamEntry.getValue().getTeamColor().equals(teamColor)) {
+				sendMessage(sender, "messages.commands.team.colorTaken");
+				return;
+			}
+		}
+
+		Team team = new Team(teamName, teamColor);
+		diamondRush.getGame().addTeam(teamName, team);
 		Map<String, String> placeholders = new HashMap<>();
-		placeholders.put("\\{team-color\\}", "gold");
-		placeholders.put("\\{team-name\\}", "Orange");
+		placeholders.put("\\{team-color\\}", team.getTeamColor().getColorName().toLowerCase());
+		placeholders.put("\\{team-name\\}", team.getName());
 		sendMessage(sender, "messages.commands.team.addSuccess", placeholders);
 	}
 }
