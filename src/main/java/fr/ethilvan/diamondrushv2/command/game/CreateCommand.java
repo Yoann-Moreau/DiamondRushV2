@@ -3,6 +3,7 @@ package fr.ethilvan.diamondrushv2.command.game;
 import fr.ethilvan.diamondrushv2.DiamondRush;
 import fr.ethilvan.diamondrushv2.command.Subcommand;
 import fr.ethilvan.diamondrushv2.game.Game;
+import fr.ethilvan.diamondrushv2.region.CylindricalRegion;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -50,6 +51,9 @@ public class CreateCommand extends Subcommand {
 			return;
 		}
 		diamondRush.setGame(new Game(player.getWorld(), player.getLocation()));
+		CylindricalRegion spawnRegion = new CylindricalRegion(player.getLocation().getBlock(), 5, 4);
+		spawnRegion.clear();
+		diamondRush.getGame().addRegion(spawnRegion);
 		sendMessage(sender, "messages.commands.create.success");
 	}
 }
