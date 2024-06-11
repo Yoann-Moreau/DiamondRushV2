@@ -72,9 +72,11 @@ public class CuboidRegion extends Region {
 	@Override
 	public void clear() {
 		for (int x = min.getX(); x <= max.getX(); x++) {
-			for (int y = min.getY(); y <= max.getY(); y++) {
+			for (int y = max.getY(); y >= min.getY(); y--) {
 				for (int z = min.getZ(); z <= max.getZ(); z++) {
-					world.getBlockAt(x, y, z).setType(Material.AIR);
+					if (!world.getBlockAt(x, y, z).getType().equals(Material.AIR)) {
+						world.getBlockAt(x, y, z).setType(Material.AIR);
+					}
 				}
 			}
 		}
