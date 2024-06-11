@@ -23,4 +23,8 @@ messages:
       noSuchTeam: "<red>No team by that name exists."
       alreadyInATeam: "<red>You have already joined a team."
       success: "<green>You have joined the <{team-color}>{team-name}</{team-color}> team."
+    start:
+      notEnoughTeams: "<red>At least 2 teams must be created and joined before starting the game."
+      notEnoughPlayerInTeam: "<red> At least one team (<{team-color}>{team-name}</{team-color}>) doesn't have enough players."
+      gameAlreadyStarted: "<red> A DiamondRush game is already in progress."
   noGameCreated: "<red> You must create a game first."

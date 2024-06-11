@@ -3,6 +3,7 @@ package fr.ethilvan.diamondrushv2.command;
 import fr.ethilvan.diamondrushv2.DiamondRush;
 import fr.ethilvan.diamondrushv2.command.game.CreateCommand;
 import fr.ethilvan.diamondrushv2.command.game.JoinCommand;
+import fr.ethilvan.diamondrushv2.command.game.StartCommand;
 import fr.ethilvan.diamondrushv2.command.game.TeamCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -26,6 +27,7 @@ public class DiamondRushCommand implements TabExecutor {
 		subcommands.add(new CreateCommand(diamondRush));
 		subcommands.add(new TeamCommand(diamondRush));
 		subcommands.add(new JoinCommand(diamondRush));
+		subcommands.add(new StartCommand(diamondRush));
 	}
 
 

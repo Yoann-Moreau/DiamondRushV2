@@ -15,6 +15,7 @@ public class Game {
 	private final Location spawn;
 	private final Map<String, Team> teams;
 	private final List<Region> regions;
+	private GamePhase phase = GamePhase.CREATION;
 
 
 	public Game(World world, Location spawn) {
@@ -59,5 +60,13 @@ public class Game {
 
 	public void addRegion(Region region) {
 		regions.add(region);
+	}
+
+	public GamePhase getPhase() {
+		return phase;
+	}
+
+	public void setPhase(GamePhase phase) {
+		this.phase = phase;
 	}
 }
