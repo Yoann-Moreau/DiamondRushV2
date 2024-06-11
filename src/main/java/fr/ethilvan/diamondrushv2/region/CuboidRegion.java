@@ -30,11 +30,11 @@ public class CuboidRegion extends Region {
 	}
 
 
-	public int getxDistanceFromCenter() {
+	public int getXDistanceFromCenter() {
 		return xDistanceFromCenter;
 	}
 
-	public int getzDistanceFromCenter() {
+	public int getZDistanceFromCenter() {
 		return zDistanceFromCenter;
 	}
 
