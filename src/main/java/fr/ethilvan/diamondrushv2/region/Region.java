@@ -1,8 +1,11 @@
 package fr.ethilvan.diamondrushv2.region;
 
+import fr.ethilvan.diamondrushv2.region.pattern.Pattern;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+
+import java.util.List;
 
 public abstract class Region {
 
@@ -37,6 +40,18 @@ public abstract class Region {
 
 
 	public abstract boolean contains(Block block);
+
+	public void create(Pattern pattern) {
+		clear();
+		pattern.create();
+	}
+
+	public void create(List<Pattern> patterns) {
+		clear();
+		for (Pattern pattern : patterns) {
+			pattern.create();
+		}
+	}
 
 	public abstract void clear();
 }

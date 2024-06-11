@@ -16,6 +16,15 @@ public class CylindricalRegion extends Region {
 	}
 
 
+	public int getRadius() {
+		return radius;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+
 	@Override
 	public boolean contains(Block block) {
 		if (block.getY() < center.getY() - 1 || block.getY() > center.getY() + height) {
@@ -35,6 +44,7 @@ public class CylindricalRegion extends Region {
 		}
 		return true;
 	}
+
 
 	@Override
 	public void clear() {
