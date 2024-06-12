@@ -13,7 +13,8 @@ public class Team {
 	private String name;
 	private TeamColor teamColor;
 	private org.bukkit.scoreboard.Team minecraftTeam;
-	private List<UUID> playerUUIDs;
+	private final List<UUID> playerUUIDs;
+	private UUID leaderUuid;
 
 	private final ScoreboardManager scoreboardManager;
 
@@ -67,7 +68,7 @@ public class Team {
 		return playerUUIDs;
 	}
 
-	public void addPlayer(UUID uuid) {
+	public void addPlayerUuid(UUID uuid) {
 		playerUUIDs.add(uuid);
 		Player player = Bukkit.getPlayer(uuid);
 		if (player != null) {
@@ -75,11 +76,20 @@ public class Team {
 		}
 	}
 
-	public void removePlayer(UUID uuid) {
+	public void removePlayerUuid(UUID uuid) {
 		Player player = Bukkit.getPlayer(uuid);
 		if (player != null) {
 			minecraftTeam.removePlayer(player);
 		}
 		playerUUIDs.remove(uuid);
+	}
+
+
+	public UUID getLeaderUuid() {
+		return leaderUuid;
+	}
+
+	public void setLeaderUuid(UUID leaderUuid) {
+		this.leaderUuid = leaderUuid;
 	}
 }

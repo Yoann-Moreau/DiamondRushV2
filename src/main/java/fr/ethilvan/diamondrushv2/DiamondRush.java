@@ -2,12 +2,15 @@ package fr.ethilvan.diamondrushv2;
 
 import fr.ethilvan.diamondrushv2.config.Config;
 import fr.ethilvan.diamondrushv2.game.Game;
+import fr.ethilvan.diamondrushv2.game.Team;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.util.Map;
+import java.util.UUID;
 
 public class DiamondRush {
 
@@ -88,6 +91,44 @@ public class DiamondRush {
 		}
 		for (Player player : plugin.getServer().getOnlinePlayers()) {
 			player.sendRichMessage(message);
+		}
+	}
+
+
+	public void messageLeaders(String messagePath) {
+		for (Map.Entry<String, Team> teamEntry : getGame().getTeams().entrySet()) {
+			Player player = Bukkit.getPlayer(teamEntry.getValue().getLeaderUuid());
+			if (player == null) {
+				continue;
+			}
+			String message = plugin.getDiamondRush().getMessagesConfig().getString(messagePath);
+			if (message == null) {
+				missingMessage(messagePath);
+				return;
+			}
+			player.sendRichMessage(message);
+		}
+	}
+
+
+	public void messageOtherPlayersInTeam(String messagePath) {
+		for (Map.Entry<String, Team> teamEntry : getGame().getTeams().entrySet()) {
+			UUID leaderUuid = teamEntry.getValue().getLeaderUuid();
+			for (UUID uuid : teamEntry.getValue().getPlayerUUIDs()) {
+				if (uuid == leaderUuid) { // Skip leader
+					continue;
+				}
+				Player player = Bukkit.getPlayer(uuid);
+				if (player == null) {
+					continue;
+				}
+				String message = plugin.getDiamondRush().getMessagesConfig().getString(messagePath);
+				if (message == null) {
+					missingMessage(messagePath);
+					return;
+				}
+				player.sendRichMessage(message);
+			}
 		}
 	}
 

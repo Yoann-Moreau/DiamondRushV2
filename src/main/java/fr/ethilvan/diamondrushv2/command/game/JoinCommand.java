@@ -72,7 +72,7 @@ public class JoinCommand extends Subcommand {
 			}
 		}
 		// Add player to team
-		team.addPlayer(player.getUniqueId());
+		team.addPlayerUuid(player.getUniqueId());
 		Map<String, String> placeholders = new HashMap<>();
 		placeholders.put("\\{team-color\\}", team.getTeamColor().getColorName().toLowerCase());
 		placeholders.put("\\{team-name\\}", team.getName());

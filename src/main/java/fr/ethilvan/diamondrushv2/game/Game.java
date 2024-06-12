@@ -1,13 +1,13 @@
 package fr.ethilvan.diamondrushv2.game;
 
 import fr.ethilvan.diamondrushv2.region.Region;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Game {
 
@@ -68,5 +68,34 @@ public class Game {
 
 	public void setPhase(GamePhase phase) {
 		this.phase = phase;
+	}
+
+
+	public void assignLeaders() {
+		Random random = new Random();
+		for (Map.Entry<String, Team> teamEntry : getTeams().entrySet()) {
+			List<UUID> uuids = teamEntry.getValue().getPlayerUUIDs();
+			UUID leaderUuid = uuids.get(random.nextInt(uuids.size()));
+			teamEntry.getValue().setLeaderUuid(leaderUuid);
+		}
+	}
+
+
+	public void resetPlayers() {
+		for (Map.Entry<String, Team> teamEntry : getTeams().entrySet()) {
+			for (UUID uuid : teamEntry.getValue().getPlayerUUIDs()) {
+				Player player = Bukkit.getPlayer(uuid);
+				if (player == null) {
+					continue;
+				}
+				player.getInventory().clear();
+				player.setHealth(20);
+				player.setFoodLevel(20);
+				player.setSaturation(5);
+				player.setLevel(0);
+				player.setExp(0);
+				player.setGameMode(GameMode.SURVIVAL);
+			}
+		}
 	}
 }
