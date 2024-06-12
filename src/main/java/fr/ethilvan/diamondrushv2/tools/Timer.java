@@ -15,7 +15,7 @@ public class Timer implements Runnable {
 
 	private final int majorDuration = 30;
 	private final int mediumDuration = 10;
-	private final int minorDuration = 1;
+	private final int minorDuration = 5;
 
 	private int taskId;
 	private int remainingTime;
@@ -23,7 +23,6 @@ public class Timer implements Runnable {
 	private long pauseDelay;
 
 	private Stopwatch stopwatch;
-
 
 
 	public Timer(DiamondRushV2 plugin, int duration, Runnable runnable, String endMessagePath) {
@@ -40,14 +39,14 @@ public class Timer implements Runnable {
 	@Override
 	public void run() {
 		remainingTime -= currentDelay;
-		if (remainingTime > majorDuration) {
+		if (remainingTime >= majorDuration + mediumDuration) {
 			scheduleAndBroadcastTime(majorDuration, "major");
 		}
-		else if (remainingTime > mediumDuration) {
+		else if (remainingTime >= mediumDuration + minorDuration) {
 			scheduleAndBroadcastTime(mediumDuration, "medium");
 		}
 		else if (remainingTime > 0) {
-			scheduleAndBroadcastTime(minorDuration, "minor");
+			scheduleAndBroadcastTime(1, "minor");
 		}
 		else {
 			plugin.getDiamondRush().broadcastMessage(endMessagePath);
