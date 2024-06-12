@@ -2,8 +2,10 @@ package fr.ethilvan.diamondrushv2.command.game;
 
 import fr.ethilvan.diamondrushv2.DiamondRush;
 import fr.ethilvan.diamondrushv2.command.Subcommand;
+import fr.ethilvan.diamondrushv2.event.GameStartEvent;
 import fr.ethilvan.diamondrushv2.game.GamePhase;
 import fr.ethilvan.diamondrushv2.game.Team;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,7 +61,7 @@ public class StartCommand extends Subcommand {
 			sendMessage(sender, "messages.commands.start.gameAlreadyStarted");
 			return;
 		}
-		diamondRush.getGame().setPhase(GamePhase.STARTING);
+		Bukkit.getPluginManager().callEvent(new GameStartEvent());
 	}
 
 }

@@ -28,3 +28,11 @@ messages:
       notEnoughPlayerInTeam: "<red> At least one team (<{team-color}>{team-name}</{team-color}>) doesn't have enough players."
       gameAlreadyStarted: "<red> A DiamondRush game is already in progress."
   noGameCreated: "<red> You must create a game first."
+  timer:
+    major: "<yellow>{timer}"
+    medium: "<gold>{timer}"
+    minor: "<red>{timer}"
+  phases:
+    starting:
+      start: "A DiamondRush game is about to start."
+      end: "Go!"

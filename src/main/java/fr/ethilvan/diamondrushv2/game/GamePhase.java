@@ -8,6 +8,7 @@ public enum GamePhase {
 	SPAWN_PLACEMENT,
 	EXPLORATION,
 	COMBAT,
+	TRANSITION,
 	PAUSE;
 
 }

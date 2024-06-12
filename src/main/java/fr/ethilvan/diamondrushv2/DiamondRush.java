@@ -4,8 +4,10 @@ import fr.ethilvan.diamondrushv2.config.Config;
 import fr.ethilvan.diamondrushv2.game.Game;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.util.Map;
 
 public class DiamondRush {
 
@@ -60,6 +62,38 @@ public class DiamondRush {
 			plugin.saveResource("messages.yml", false);
 		}
 		messagesConfig = YamlConfiguration.loadConfiguration(file);
+	}
+
+
+	public void broadcastMessage(String messagePath) {
+		String message = plugin.getDiamondRush().getMessagesConfig().getString(messagePath);
+		if (message == null) {
+			missingMessage(messagePath);
+			return;
+		}
+		for (Player player : plugin.getServer().getOnlinePlayers()) {
+			player.sendRichMessage(message);
+		}
+	}
+
+	public void broadcastMessage(String messagePath, Map<String, String> placeholders) {
+		String message = plugin.getDiamondRush().getMessagesConfig().getString(messagePath);
+		if (message == null) {
+			missingMessage(messagePath);
+			return;
+		}
+
+		for (Map.Entry<String, String> placeholder : placeholders.entrySet()) {
+			message = message.replaceAll(placeholder.getKey(), placeholder.getValue());
+		}
+		for (Player player : plugin.getServer().getOnlinePlayers()) {
+			player.sendRichMessage(message);
+		}
+	}
+
+
+	private void missingMessage(String messagePath) {
+		plugin.getLogger().warning("Message missing from configuration: '" + messagePath + "'.");
 	}
 
 }
