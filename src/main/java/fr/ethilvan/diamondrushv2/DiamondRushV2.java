@@ -2,6 +2,7 @@ package fr.ethilvan.diamondrushv2;
 
 import fr.ethilvan.diamondrushv2.command.DiamondRushCommand;
 import fr.ethilvan.diamondrushv2.game.Team;
+import fr.ethilvan.diamondrushv2.listener.GameListeners;
 import fr.ethilvan.diamondrushv2.listener.GamePhaseListeners;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -47,6 +48,7 @@ public final class DiamondRushV2 extends JavaPlugin {
 
 	private void registerEvents() {
 		getServer().getPluginManager().registerEvents(new GamePhaseListeners(this.getDiamondRush()), this);
+		getServer().getPluginManager().registerEvents(new GameListeners(this.getDiamondRush()), this);
 	}
 
 
