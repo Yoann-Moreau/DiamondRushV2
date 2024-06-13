@@ -47,6 +47,15 @@ public class Game {
 		return teams.get(teamName);
 	}
 
+	public Team getTeam(UUID playerUuid) {
+		for (Map.Entry<String, Team> teamEntry : getTeams().entrySet()) {
+			if (teamEntry.getValue().getPlayerUUIDs().contains(playerUuid)) {
+				return teamEntry.getValue();
+			}
+		}
+		return null;
+	}
+
 	public void addTeam(String teamName, Team team) {
 		teams.put(teamName, team);
 	}

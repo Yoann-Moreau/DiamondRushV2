@@ -1,6 +1,7 @@
 package fr.ethilvan.diamondrushv2.game;
 
 import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.ScoreboardManager;
 
@@ -15,6 +16,7 @@ public class Team {
 	private org.bukkit.scoreboard.Team minecraftTeam;
 	private final List<UUID> playerUUIDs;
 	private UUID leaderUuid;
+	private Block TotemBlock = null;
 
 	private final ScoreboardManager scoreboardManager;
 
@@ -91,5 +93,14 @@ public class Team {
 
 	public void setLeaderUuid(UUID leaderUuid) {
 		this.leaderUuid = leaderUuid;
+	}
+
+
+	public Block getTotemBlock() {
+		return TotemBlock;
+	}
+
+	public void setTotemBlock(Block totemBlock) {
+		TotemBlock = totemBlock;
 	}
 }

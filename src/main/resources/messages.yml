@@ -40,4 +40,6 @@ messages:
       start:
         leader: "Find a place for your totem!"
         player: "Help your leader find a place for your totem."
-      end: "<yellow>Totem placement is over."
+      end:
+        end: "<yellow>Totem placement is over."
+        goAgain: "<red>At least one team has not placed their totem in time, let's do it again."

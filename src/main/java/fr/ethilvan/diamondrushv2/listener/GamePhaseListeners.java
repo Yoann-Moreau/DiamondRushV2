@@ -2,6 +2,8 @@ package fr.ethilvan.diamondrushv2.listener;
 
 import fr.ethilvan.diamondrushv2.DiamondRush;
 import fr.ethilvan.diamondrushv2.event.GameStartEvent;
+import fr.ethilvan.diamondrushv2.event.SpawnPlacementStartEvent;
+import fr.ethilvan.diamondrushv2.event.TotemPlacementEndEvent;
 import fr.ethilvan.diamondrushv2.event.TotemPlacementStartEvent;
 import fr.ethilvan.diamondrushv2.game.GamePhase;
 import fr.ethilvan.diamondrushv2.game.Team;
@@ -60,6 +62,46 @@ public class GamePhaseListeners implements Listener {
 
 		diamondRush.getGame().resetPlayers();
 
+		teleportPlayersToGameSpawn();
+		// Give obsidian to leaders
+		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+			Player leader = Bukkit.getPlayer(teamEntry.getValue().getLeaderUuid());
+			if (leader == null) {
+				continue;
+			}
+			leader.getInventory().setItemInMainHand(new ItemStack(Material.OBSIDIAN));
+		}
+
+		gameTimer = new Timer(
+				diamondRush.getPlugin(),
+				diamondRush.getConfig().getTotemPlacementDuration(),
+				() -> Bukkit.getPluginManager().callEvent(new TotemPlacementEndEvent()),
+				"messages.phases.totemPlacement.end.end"
+		);
+		gameTimer.run();
+	}
+
+
+	@EventHandler
+	public void onTotemPlacementEnd(TotemPlacementEndEvent event) {
+		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+			if (teamEntry.getValue().getTotemBlock() == null) {
+				diamondRush.broadcastMessage("messages.phases.totemPlacement.end.goAgain");
+				Bukkit.getPluginManager().callEvent(new TotemPlacementStartEvent());
+				return;
+			}
+		}
+		Bukkit.getPluginManager().callEvent(new SpawnPlacementStartEvent());
+	}
+
+
+	@EventHandler
+	public void onSpawnPlacementStart(SpawnPlacementStartEvent event) {
+
+	}
+
+
+	private void teleportPlayersToGameSpawn() {
 		Region spawnRegion = diamondRush.getGame().getRegion("gameSpawn");
 		if (!(spawnRegion instanceof CylindricalRegion cylindricalRegion)) {
 			throw new RuntimeException("The game spawn must be a cylindrical region.");
@@ -83,24 +125,11 @@ public class GamePhaseListeners implements Listener {
 				if (player == null) {
 					continue;
 				}
-				if (uuid == teamEntry.getValue().getLeaderUuid()) {
-					player.getInventory().setItemInMainHand(new ItemStack(Material.OBSIDIAN));
-				}
 				player.teleportAsync(startPosition);
 			}
 
 			// Calculate new angle for next team
 			i += 360 / diamondRush.getGame().getTeams().size();
 		}
-
-		gameTimer = new Timer(
-				diamondRush.getPlugin(),
-				diamondRush.getConfig().getTotemPlacementDuration(),
-				() -> {
-
-				},
-				"messages.phases.totemPlacement.end"
-		);
-		gameTimer.run();
 	}
 }
