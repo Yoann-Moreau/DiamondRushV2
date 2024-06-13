@@ -1,10 +1,7 @@
 package fr.ethilvan.diamondrushv2.listener;
 
 import fr.ethilvan.diamondrushv2.DiamondRush;
-import fr.ethilvan.diamondrushv2.event.GameStartEvent;
-import fr.ethilvan.diamondrushv2.event.SpawnPlacementStartEvent;
-import fr.ethilvan.diamondrushv2.event.TotemPlacementEndEvent;
-import fr.ethilvan.diamondrushv2.event.TotemPlacementStartEvent;
+import fr.ethilvan.diamondrushv2.event.*;
 import fr.ethilvan.diamondrushv2.game.GamePhase;
 import fr.ethilvan.diamondrushv2.game.Team;
 import fr.ethilvan.diamondrushv2.region.CuboidRegion;
@@ -117,6 +114,53 @@ public class GamePhaseListeners implements Listener {
 	@EventHandler
 	public void onSpawnPlacementStart(SpawnPlacementStartEvent event) {
 		diamondRush.getGame().setPhase(GamePhase.SPAWN_PLACEMENT);
+		// Give chiseled stone bricks to leaders
+		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+			Player leader = Bukkit.getPlayer(teamEntry.getValue().getLeaderUuid());
+			if (leader == null) {
+				continue;
+			}
+			leader.getInventory().setItemInMainHand(new ItemStack(Material.CHISELED_STONE_BRICKS));
+		}
+		// Message players
+		diamondRush.messageLeaders("messages.phases.spawnPlacement.start.leader");
+		diamondRush.messageOtherPlayersInTeams("messages.phases.spawnPlacement.start.player");
+
+		gameTimer = new Timer(
+				diamondRush.getPlugin(),
+				diamondRush.getConfig().getSpawnPlacementDuration(),
+				() -> Bukkit.getPluginManager().callEvent(new SpawnPlacementEndEvent()),
+				"messages.phases.spawnPlacement.end"
+		);
+		gameTimer.run();
+	}
+
+
+	@EventHandler
+	public void onSpawnPlacementEnd(SpawnPlacementEndEvent event) {
+		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+			Block spawnBlock;
+			if (teamEntry.getValue().getSpawnBlock() == null) {
+				Player leader = Bukkit.getPlayer(teamEntry.getValue().getLeaderUuid());
+				if (leader == null) {
+					continue;
+				}
+				spawnBlock = leader.getLocation().getBlock();
+			}
+			else {
+				spawnBlock = teamEntry.getValue().getSpawnBlock();
+			}
+			CuboidRegion region = new CuboidRegion(spawnBlock, 3, 3, 3);
+			region.create(new TotemFloorPattern(region, teamEntry.getValue().getTeamColor()));
+			diamondRush.getGame().addRegion(teamEntry.getValue().getName() + "Spawn", region);
+		}
+		Bukkit.getPluginManager().callEvent(new ExplorationStartEvent());
+	}
+
+
+	@EventHandler
+	public void onExplorationStart(ExplorationStartEvent event) {
+		diamondRush.getGame().setPhase(GamePhase.EXPLORATION);
 	}
 
 

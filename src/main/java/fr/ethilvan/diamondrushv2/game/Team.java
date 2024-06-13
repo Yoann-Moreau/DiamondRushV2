@@ -16,7 +16,8 @@ public class Team {
 	private org.bukkit.scoreboard.Team minecraftTeam;
 	private final List<UUID> playerUUIDs;
 	private UUID leaderUuid;
-	private Block TotemBlock = null;
+	private Block totemBlock = null;
+	private Block spawnBlock = null;
 
 	private final ScoreboardManager scoreboardManager;
 
@@ -97,10 +98,19 @@ public class Team {
 
 
 	public Block getTotemBlock() {
-		return TotemBlock;
+		return totemBlock;
 	}
 
 	public void setTotemBlock(Block totemBlock) {
-		TotemBlock = totemBlock;
+		this.totemBlock = totemBlock;
+	}
+
+
+	public Block getSpawnBlock() {
+		return spawnBlock;
+	}
+
+	public void setSpawnBlock(Block spawnBlock) {
+		this.spawnBlock = spawnBlock;
 	}
 }

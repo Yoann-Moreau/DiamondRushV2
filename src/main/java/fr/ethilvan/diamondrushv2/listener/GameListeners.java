@@ -51,6 +51,7 @@ public class GameListeners implements Listener {
 		if (diamondRush.getGame() == null) {
 			return;
 		}
+		// Check for totem placement change
 		if (diamondRush.getGame().getPhase().equals(GamePhase.TOTEM_PLACEMENT) &&
 				event.getBlock().getType().equals(Material.OBSIDIAN)) {
 
@@ -59,16 +60,28 @@ public class GameListeners implements Listener {
 				if (team.getTotemBlock().getLocation().equals(event.getBlock().getLocation())) {
 					Player player = event.getPlayer();
 					if (!team.getLeaderUuid().equals(player.getUniqueId())) {
-						// Change leader
-						team.setLeaderUuid(player.getUniqueId());
-						diamondRush.messagePlayer(player, "messages.phases.leaderChange.leader");
-						Map<String, String> placeholders = new HashMap<>();
-						placeholders.put("\\{player\\}", player.getName());
-						diamondRush.messageOtherPlayersInTeam(team, "messages.phases.leaderChange.player", placeholders);
+						changeLeader(team, player);
 					}
 					event.getBlock().setType(Material.AIR);
 					player.getInventory().setItemInMainHand(new ItemStack(Material.OBSIDIAN));
 					team.setTotemBlock(null);
+				}
+			}
+		}
+		// Check for spawn placement change
+		if (diamondRush.getGame().getPhase().equals(GamePhase.SPAWN_PLACEMENT) &&
+				event.getBlock().getType().equals(Material.CHISELED_STONE_BRICKS)) {
+
+			for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+				Team team = teamEntry.getValue();
+				if (team.getSpawnBlock().getLocation().equals(event.getBlock().getLocation())) {
+					Player player = event.getPlayer();
+					if (!team.getLeaderUuid().equals(player.getUniqueId())) {
+						changeLeader(team, player);
+					}
+					event.getBlock().setType(Material.AIR);
+					player.getInventory().setItemInMainHand(new ItemStack(Material.CHISELED_STONE_BRICKS));
+					team.setSpawnBlock(null);
 				}
 			}
 		}
@@ -99,6 +112,21 @@ public class GameListeners implements Listener {
 				return;
 			}
 			team.setTotemBlock(event.getBlock());
+		}
+		// Check for spawn placement
+		if (diamondRush.getGame().getPhase().equals(GamePhase.SPAWN_PLACEMENT) &&
+				event.getBlock().getType().equals(Material.CHISELED_STONE_BRICKS)) {
+
+			Team team = diamondRush.getGame().getTeam(event.getPlayer().getUniqueId());
+			if (team == null) {
+				event.setCancelled(true);
+				return;
+			}
+			if (!team.getLeaderUuid().equals(event.getPlayer().getUniqueId())) {
+				event.setCancelled(true);
+				return;
+			}
+			team.setSpawnBlock(event.getBlock());
 		}
 		// Check for protected regions
 		checkForProtectedRegions(event);
@@ -192,5 +220,14 @@ public class GameListeners implements Listener {
 				}
 			}
 		}
+	}
+
+
+	private void changeLeader(Team team, Player newLeader) {
+		team.setLeaderUuid(newLeader.getUniqueId());
+		diamondRush.messagePlayer(newLeader, "messages.phases.leaderChange.leader");
+		Map<String, String> placeholders = new HashMap<>();
+		placeholders.put("\\{player\\}", newLeader.getName());
+		diamondRush.messageOtherPlayersInTeam(team, "messages.phases.leaderChange.player", placeholders);
 	}
 }

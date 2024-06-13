@@ -9,6 +9,6 @@ public enum GamePhase {
 	EXPLORATION,
 	COMBAT,
 	TRANSITION,
-	PAUSE;
+	PAUSE
 
 }

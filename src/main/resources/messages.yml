@@ -46,3 +46,8 @@ messages:
       end:
         end: "<yellow>Totem placement is over."
         goAgain: "<red>At least one team has not placed their totem in time, let's do it again."
+    spawnPlacement:
+      start:
+        leader: "Find a place for your spawn."
+        player: "Help your leader find a place for your spawn."
+      end: "<yellow>Spawn placement is over."
