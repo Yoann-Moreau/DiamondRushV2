@@ -6,13 +6,19 @@ import fr.ethilvan.diamondrushv2.game.GamePhase;
 import fr.ethilvan.diamondrushv2.game.Team;
 import fr.ethilvan.diamondrushv2.region.Region;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 
@@ -105,6 +111,50 @@ public class GameListeners implements Listener {
 			return;
 		}
 		checkForProtectedRegions(event);
+	}
+
+
+	@EventHandler
+	public void onEmptyBucket(PlayerBucketEmptyEvent event) {
+		if (diamondRush.getGame() == null) {
+			return;
+		}
+		if (diamondRush.getGame().getPhase().equals(GamePhase.PAUSE) ||
+				diamondRush.getGame().getPhase().equals(GamePhase.TRANSITION)) {
+			event.setCancelled(true);
+			return;
+		}
+		// Prevent use of lava buckets
+		if (event.getBucket().equals(Material.LAVA_BUCKET)) {
+			event.setCancelled(true);
+			return;
+		}
+		// Prevent use of bucket in protected regions
+		for (Map.Entry<String, Region> regionEntry : diamondRush.getGame().getRegions().entrySet()) {
+			if (regionEntry.getValue().contains(event.getBlock())) {
+				event.setCancelled(true);
+				return;
+			}
+		}
+	}
+
+
+	@EventHandler
+	public void onStructureGrow(StructureGrowEvent event) {
+		if (diamondRush.getGame() == null) {
+			return;
+		}
+		List<BlockState> blockStates = event.getBlocks();
+		Iterator<BlockState> iterator = blockStates.iterator();
+		while (iterator.hasNext()) {
+			Block block = iterator.next().getBlock();
+			for (Map.Entry<String, Region> regionEntry : diamondRush.getGame().getRegions().entrySet()) {
+				if (regionEntry.getValue().contains(block)) {
+					iterator.remove();
+					break;
+				}
+			}
+		}
 	}
 
 
