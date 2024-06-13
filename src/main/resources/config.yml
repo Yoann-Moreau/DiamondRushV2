@@ -13,7 +13,7 @@ phases:
     combat: 60                 # can be <= 0
     number: 4                  # can be = 0
 # Totems are composed of a configurable number of blocks of obsidian in the middle with two more on the eastern
-# and western sides
+# and western sides at the top
 totems:
   height: 3
 teamSpawns:

@@ -7,8 +7,12 @@ import fr.ethilvan.diamondrushv2.event.TotemPlacementEndEvent;
 import fr.ethilvan.diamondrushv2.event.TotemPlacementStartEvent;
 import fr.ethilvan.diamondrushv2.game.GamePhase;
 import fr.ethilvan.diamondrushv2.game.Team;
+import fr.ethilvan.diamondrushv2.region.CuboidRegion;
 import fr.ethilvan.diamondrushv2.region.CylindricalRegion;
 import fr.ethilvan.diamondrushv2.region.Region;
+import fr.ethilvan.diamondrushv2.region.pattern.Pattern;
+import fr.ethilvan.diamondrushv2.region.pattern.TotemFloorPattern;
+import fr.ethilvan.diamondrushv2.region.pattern.TotemPattern;
 import fr.ethilvan.diamondrushv2.tools.Timer;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
@@ -20,6 +24,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -84,6 +90,7 @@ public class GamePhaseListeners implements Listener {
 
 	@EventHandler
 	public void onTotemPlacementEnd(TotemPlacementEndEvent event) {
+		// Check for missing totem
 		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 			if (teamEntry.getValue().getTotemBlock() == null) {
 				diamondRush.broadcastMessage("messages.phases.totemPlacement.end.goAgain");
@@ -91,13 +98,25 @@ public class GamePhaseListeners implements Listener {
 				return;
 			}
 		}
+		// Place totems
+		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+			Block totemBlock = teamEntry.getValue().getTotemBlock();
+			int height = totemBlock.getWorld().getMaxHeight() - totemBlock.getY();
+			CuboidRegion region = new CuboidRegion(totemBlock, 3, 3, height);
+			int totemHeight = diamondRush.getConfig().getTotemHeight();
+			List<Pattern> patterns = new ArrayList<>();
+			patterns.add(new TotemFloorPattern(region, teamEntry.getValue().getTeamColor()));
+			patterns.add(new TotemPattern(region, totemHeight));
+			region.create(patterns);
+			diamondRush.getGame().addRegion(teamEntry.getValue().getName() + "Totem", region);
+		}
 		Bukkit.getPluginManager().callEvent(new SpawnPlacementStartEvent());
 	}
 
 
 	@EventHandler
 	public void onSpawnPlacementStart(SpawnPlacementStartEvent event) {
-
+		diamondRush.getGame().setPhase(GamePhase.SPAWN_PLACEMENT);
 	}
 
 

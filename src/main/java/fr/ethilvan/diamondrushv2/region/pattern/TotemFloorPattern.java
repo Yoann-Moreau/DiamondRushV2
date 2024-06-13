@@ -51,10 +51,10 @@ public class TotemFloorPattern extends Pattern {
 		y = y + 1;
 		for (int x = min.getX(); x <= max.getX(); x++) {
 			for (int z = min.getZ(); z <= max.getZ(); z++) {
-				if (x != min.getX() || x != max.getX()) {
+				if (x != min.getX() && x != max.getX()) {
 					continue;
 				}
-				if (z != min.getZ() || z != max.getZ()) {
+				if (z != min.getZ() && z != max.getZ()) {
 					continue;
 				}
 				cuboidRegion.getWorld().getBlockAt(x, y, z).setType(Material.TORCH);
