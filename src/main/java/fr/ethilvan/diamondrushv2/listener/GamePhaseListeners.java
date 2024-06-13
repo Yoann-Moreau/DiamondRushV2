@@ -54,7 +54,7 @@ public class GamePhaseListeners implements Listener {
 		diamondRush.getGame().setPhase(GamePhase.TOTEM_PLACEMENT);
 		diamondRush.getGame().assignLeaders();
 		diamondRush.messageLeaders("messages.phases.totemPlacement.start.leader");
-		diamondRush.messageOtherPlayersInTeam("messages.phases.totemPlacement.start.player");
+		diamondRush.messageOtherPlayersInTeams("messages.phases.totemPlacement.start.player");
 
 		diamondRush.getGame().getWorld().setGameRule(GameRule.KEEP_INVENTORY, true);
 		diamondRush.getGame().getWorld().setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);

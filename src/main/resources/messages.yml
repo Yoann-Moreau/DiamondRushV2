@@ -36,6 +36,9 @@ messages:
     starting:
       start: "A DiamondRush game is about to start."
       end: "Go!"
+    leaderChange:
+      leader: "You are now the team leader."
+      player: "{player} is now the team leader."
     totemPlacement:
       start:
         leader: "Find a place for your totem!"

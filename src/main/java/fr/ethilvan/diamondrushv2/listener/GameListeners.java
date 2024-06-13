@@ -6,12 +6,16 @@ import fr.ethilvan.diamondrushv2.game.GamePhase;
 import fr.ethilvan.diamondrushv2.game.Team;
 import fr.ethilvan.diamondrushv2.region.Region;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -31,6 +35,35 @@ public class GameListeners implements Listener {
 			return;
 		}
 		checkForProtectedRegions(event);
+	}
+
+
+	@EventHandler
+	public void onBlockTap(BlockDamageEvent event) {
+		if (diamondRush.getGame() == null) {
+			return;
+		}
+		if (diamondRush.getGame().getPhase().equals(GamePhase.TOTEM_PLACEMENT) &&
+				event.getBlock().getType().equals(Material.OBSIDIAN)) {
+
+			for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+				Team team = teamEntry.getValue();
+				if (team.getTotemBlock().getLocation().equals(event.getBlock().getLocation())) {
+					Player player = event.getPlayer();
+					if (!team.getLeaderUuid().equals(player.getUniqueId())) {
+						// Change leader
+						team.setLeaderUuid(player.getUniqueId());
+						diamondRush.messagePlayer(player, "messages.phases.leaderChange.leader");
+						Map<String, String> placeholders = new HashMap<>();
+						placeholders.put("\\{player\\}", player.getName());
+						diamondRush.messageOtherPlayersInTeam(team, "messages.phases.leaderChange.player", placeholders);
+					}
+					event.getBlock().setType(Material.AIR);
+					player.getInventory().setItemInMainHand(new ItemStack(Material.OBSIDIAN));
+					team.setTotemBlock(null);
+				}
+			}
+		}
 	}
 
 

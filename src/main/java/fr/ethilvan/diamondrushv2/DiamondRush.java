@@ -95,6 +95,16 @@ public class DiamondRush {
 	}
 
 
+	public void messagePlayer(Player player, String messagePath) {
+		String message = plugin.getDiamondRush().getMessagesConfig().getString(messagePath);
+		if (message == null) {
+			missingMessage(messagePath);
+			return;
+		}
+		player.sendRichMessage(message);
+	}
+
+
 	public void messageLeaders(String messagePath) {
 		for (Map.Entry<String, Team> teamEntry : getGame().getTeams().entrySet()) {
 			Player player = Bukkit.getPlayer(teamEntry.getValue().getLeaderUuid());
@@ -111,7 +121,7 @@ public class DiamondRush {
 	}
 
 
-	public void messageOtherPlayersInTeam(String messagePath) {
+	public void messageOtherPlayersInTeams(String messagePath) {
 		for (Map.Entry<String, Team> teamEntry : getGame().getTeams().entrySet()) {
 			UUID leaderUuid = teamEntry.getValue().getLeaderUuid();
 			for (UUID uuid : teamEntry.getValue().getPlayerUUIDs()) {
@@ -129,6 +139,47 @@ public class DiamondRush {
 				}
 				player.sendRichMessage(message);
 			}
+		}
+	}
+
+
+	public void messageOtherPlayersInTeam(Team team, String messagePath) {
+		for (UUID uuid : team.getPlayerUUIDs()) {
+			if (uuid == team.getLeaderUuid()) { // Skip leader
+				continue;
+			}
+			Player player = Bukkit.getPlayer(uuid);
+			if (player == null) {
+				continue;
+			}
+			String message = plugin.getDiamondRush().getMessagesConfig().getString(messagePath);
+			if (message == null) {
+				missingMessage(messagePath);
+				return;
+			}
+			player.sendRichMessage(message);
+		}
+	}
+
+
+	public void messageOtherPlayersInTeam(Team team, String messagePath, Map<String, String> placeholders) {
+		for (UUID uuid : team.getPlayerUUIDs()) {
+			if (uuid == team.getLeaderUuid()) { // Skip leader
+				continue;
+			}
+			Player player = Bukkit.getPlayer(uuid);
+			if (player == null) {
+				continue;
+			}
+			String message = plugin.getDiamondRush().getMessagesConfig().getString(messagePath);
+			if (message == null) {
+				missingMessage(messagePath);
+				return;
+			}
+			for (Map.Entry<String, String> placeholder : placeholders.entrySet()) {
+				message = message.replaceAll(placeholder.getKey(), placeholder.getValue());
+			}
+			player.sendRichMessage(message);
 		}
 	}
 
