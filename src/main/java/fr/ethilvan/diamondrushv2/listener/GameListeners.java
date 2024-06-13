@@ -9,10 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.block.BlockEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -32,6 +29,11 @@ public class GameListeners implements Listener {
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (diamondRush.getGame() == null) {
+			return;
+		}
+		if (diamondRush.getGame().getPhase().equals(GamePhase.PAUSE) ||
+				diamondRush.getGame().getPhase().equals(GamePhase.TRANSITION)) {
+			event.setCancelled(true);
 			return;
 		}
 		checkForProtectedRegions(event);
@@ -72,6 +74,11 @@ public class GameListeners implements Listener {
 		if (diamondRush.getGame() == null) {
 			return;
 		}
+		if (diamondRush.getGame().getPhase().equals(GamePhase.PAUSE) ||
+				diamondRush.getGame().getPhase().equals(GamePhase.TRANSITION)) {
+			event.setCancelled(true);
+			return;
+		}
 		// Check for totem placement
 		if (diamondRush.getGame().getPhase().equals(GamePhase.TOTEM_PLACEMENT) &&
 				event.getBlock().getType().equals(Material.OBSIDIAN)) {
@@ -92,10 +99,20 @@ public class GameListeners implements Listener {
 	}
 
 
+	@EventHandler
+	public void onBlockChange(BlockFromToEvent event) {
+		if (diamondRush.getGame() == null) {
+			return;
+		}
+		checkForProtectedRegions(event);
+	}
+
+
 	private void checkForProtectedRegions(BlockEvent event) {
 		for (Map.Entry<String, Region> regionEntry : diamondRush.getGame().getRegions().entrySet()) {
 			if (regionEntry.getValue().contains(event.getBlock())) {
 
+				// Prevent breaking blocks
 				if (event instanceof BlockBreakEvent blockBreakEvent) {
 
 					if (!diamondRush.getGame().getPhase().equals(GamePhase.EXPLORATION) &&
@@ -109,6 +126,18 @@ public class GameListeners implements Listener {
 						return;
 					}
 					blockBreakEvent.setCancelled(true);
+					return;
+				}
+				// Prevent placing blocks
+				else if (event instanceof BlockPlaceEvent blockPlaceEvent) {
+					blockPlaceEvent.setCancelled(true);
+					return;
+				}
+			}
+			// Prevent changing blocks
+			if (event instanceof BlockFromToEvent blockFromToEvent) {
+				if (regionEntry.getValue().contains(blockFromToEvent.getToBlock())) {
+					blockFromToEvent.setCancelled(true);
 					return;
 				}
 			}
