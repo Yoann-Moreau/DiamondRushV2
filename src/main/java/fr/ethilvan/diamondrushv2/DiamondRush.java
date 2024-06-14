@@ -31,7 +31,7 @@ public class DiamondRush {
 
 	public void loadConfig() {
 		this.plugin.saveDefaultConfig();
-		this.config.reload();
+		this.config.load();
 	}
 
 

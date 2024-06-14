@@ -1,6 +1,7 @@
 package fr.ethilvan.diamondrushv2.config;
 
 import fr.ethilvan.diamondrushv2.DiamondRushV2;
+import org.bukkit.Material;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +41,6 @@ public class Config {
 	public Config(DiamondRushV2 plugin) {
 		this.plugin = plugin;
 		explorationRewards = new ArrayList<>();
-		explorationRewards.add(new ExplorationReward("DIAMOND", 1, "leader"));
-		explorationRewards.add(new ExplorationReward("IRON_INGOT", 7, "player"));
 	}
 
 
@@ -118,7 +117,7 @@ public class Config {
 	}
 
 
-	public void reload() {
+	public void load() {
 		totemPlacementDuration = plugin.getConfig().getInt("phases.duration.totemPlacement");
 		spawnPlacementDuration = plugin.getConfig().getInt("phases.duration.spawnPlacement");
 		firstExplorationDuration = plugin.getConfig().getInt("phases.duration.firstExploration");
@@ -154,6 +153,12 @@ public class Config {
 
 
 	public void checkForErrors() {
+		if (Material.getMaterial(firstKillsMaterial) == null) {
+			throw new RuntimeException("The firstKillsMaterial must be a valid Material.");
+		}
+		if (Material.getMaterial(nextKillsMaterial) == null) {
+			throw new RuntimeException("The nextKillsMaterial must be a valid Material.");
+		}
 		if (firstExplorationDuration + explorationChange * numberOfChanges < 0) {
 			throw new RuntimeException("The exploration time can't be inferior to 0.");
 		}

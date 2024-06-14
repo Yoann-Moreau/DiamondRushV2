@@ -4,6 +4,10 @@ import fr.ethilvan.diamondrushv2.command.DiamondRushCommand;
 import fr.ethilvan.diamondrushv2.game.Team;
 import fr.ethilvan.diamondrushv2.listener.GameListeners;
 import fr.ethilvan.diamondrushv2.listener.GamePhaseListeners;
+import org.bukkit.Bukkit;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
@@ -13,12 +17,17 @@ public final class DiamondRushV2 extends JavaPlugin {
 
 	private DiamondRush diamondRush;
 	private BukkitScheduler scheduler;
+	private Listener[] listeners;
 
 
 	@Override
 	public void onEnable() {
 		this.diamondRush = new DiamondRush(this);
 		this.scheduler = getServer().getScheduler();
+		this.listeners = new Listener[2];
+
+		listeners[0] = new GamePhaseListeners(this.getDiamondRush());
+		listeners[1] = new GameListeners(this.getDiamondRush());
 
 		registerCommands();
 		registerEvents();
@@ -48,9 +57,17 @@ public final class DiamondRushV2 extends JavaPlugin {
 	}
 
 
-	private void registerEvents() {
-		getServer().getPluginManager().registerEvents(new GamePhaseListeners(this.getDiamondRush()), this);
-		getServer().getPluginManager().registerEvents(new GameListeners(this.getDiamondRush()), this);
+	public void registerEvents() {
+		PluginManager pluginManager = Bukkit.getPluginManager();
+		for (Listener listener : listeners) {
+			pluginManager.registerEvents(listener, this);
+		}
+	}
+
+	public void unregisterEvents() {
+		for (Listener listener : listeners) {
+			HandlerList.unregisterAll(listener);
+		}
 	}
 
 
@@ -60,5 +77,9 @@ public final class DiamondRushV2 extends JavaPlugin {
 
 	public BukkitScheduler getScheduler() {
 		return scheduler;
+	}
+
+	public Listener[] getListeners() {
+		return listeners;
 	}
 }
