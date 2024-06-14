@@ -11,10 +11,7 @@ import fr.ethilvan.diamondrushv2.region.pattern.Pattern;
 import fr.ethilvan.diamondrushv2.region.pattern.TotemFloorPattern;
 import fr.ethilvan.diamondrushv2.region.pattern.TotemPattern;
 import fr.ethilvan.diamondrushv2.tools.Timer;
-import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -114,8 +111,11 @@ public class GamePhaseListeners implements Listener {
 	@EventHandler
 	public void onSpawnPlacementStart(SpawnPlacementStartEvent event) {
 		diamondRush.getGame().setPhase(GamePhase.SPAWN_PLACEMENT);
-		// Give chiseled stone bricks to leaders
 		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+			// Set team lives
+			int lives = diamondRush.getConfig().getTotemHeight() + 2;
+			teamEntry.getValue().setLives(lives);
+			// Give chiseled stone bricks to leaders
 			Player leader = Bukkit.getPlayer(teamEntry.getValue().getLeaderUuid());
 			if (leader == null) {
 				continue;
@@ -161,6 +161,45 @@ public class GamePhaseListeners implements Listener {
 	@EventHandler
 	public void onExplorationStart(ExplorationStartEvent event) {
 		diamondRush.getGame().setPhase(GamePhase.EXPLORATION);
+	}
+
+
+	@EventHandler
+	public void onTeamLoss(TeamLossEvent event) {
+		// Increment defeated teams
+		diamondRush.getGame().setDefeatedTeams(diamondRush.getGame().getDefeatedTeams() + 1);
+		// Call game end if only 1 team remaining
+		if (diamondRush.getGame().getDefeatedTeams() >= diamondRush.getGame().getTeams().size() - 1) {
+			Bukkit.getPluginManager().callEvent(new GameEndEvent());
+			return;
+		}
+		// Eliminate team and put its players in spectator mode
+		for (UUID uuid : event.getTeam().getPlayerUUIDs()) {
+			Player player = Bukkit.getPlayer(uuid);
+			if (player == null) {
+				continue;
+			}
+			player.setGameMode(GameMode.SPECTATOR);
+		}
+	}
+
+
+	@EventHandler
+	public void onGameEnd(GameEndEvent event) {
+		diamondRush.getGame().resetPlayers();
+		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+			Team team = teamEntry.getValue();
+			for (UUID uuid : team.getPlayerUUIDs()) {
+				Player player = Bukkit.getPlayer(uuid);
+				if (player == null) {
+					continue;
+				}
+				player.teleportAsync(diamondRush.getGame().getSpawn());
+				player.setGameMode(GameMode.ADVENTURE);
+			}
+		}
+		gameTimer.cancel();
+		diamondRush.setGame(null);
 	}
 
 

@@ -17,6 +17,7 @@ public class Game {
 	private final Map<String, Team> teams;
 	private final Map<String, Region> regions;
 	private GamePhase phase = GamePhase.CREATION;
+	private int defeatedTeams = 0;
 
 
 	public Game(World world, Location spawn) {
@@ -84,6 +85,15 @@ public class Game {
 
 	public void setPhase(GamePhase phase) {
 		this.phase = phase;
+	}
+
+
+	public int getDefeatedTeams() {
+		return defeatedTeams;
+	}
+
+	public void setDefeatedTeams(int defeatedTeams) {
+		this.defeatedTeams = defeatedTeams;
 	}
 
 

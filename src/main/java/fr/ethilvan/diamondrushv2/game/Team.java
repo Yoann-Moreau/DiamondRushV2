@@ -18,6 +18,7 @@ public class Team {
 	private UUID leaderUuid;
 	private Block totemBlock = null;
 	private Block spawnBlock = null;
+	private int lives;
 
 	private final ScoreboardManager scoreboardManager;
 
@@ -112,5 +113,14 @@ public class Team {
 
 	public void setSpawnBlock(Block spawnBlock) {
 		this.spawnBlock = spawnBlock;
+	}
+
+
+	public int getLives() {
+		return lives;
+	}
+
+	public void setLives(int lives) {
+		this.lives = lives;
 	}
 }

@@ -2,9 +2,11 @@ package fr.ethilvan.diamondrushv2.listener;
 
 
 import fr.ethilvan.diamondrushv2.DiamondRush;
+import fr.ethilvan.diamondrushv2.event.TeamLossEvent;
 import fr.ethilvan.diamondrushv2.game.GamePhase;
 import fr.ethilvan.diamondrushv2.game.Team;
 import fr.ethilvan.diamondrushv2.region.Region;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -43,7 +45,41 @@ public class GameListeners implements Listener {
 			event.setCancelled(true);
 			return;
 		}
-		checkForProtectedRegions(event);
+		// Check for protected regions
+		for (Map.Entry<String, Region> regionEntry : diamondRush.getGame().getRegions().entrySet()) {
+			if (regionEntry.getValue().contains(event.getBlock())) {
+
+				if (!diamondRush.getGame().getPhase().equals(GamePhase.EXPLORATION) &&
+						!diamondRush.getGame().getPhase().equals(GamePhase.COMBAT)) {
+					event.setCancelled(true);
+					return;
+				}
+
+				if (event.getBlock().getType().equals(Material.OBSIDIAN)) {
+					for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+						Team team = teamEntry.getValue();
+						if (regionEntry.getKey().equals(teamEntry.getKey() + "Totem")) {
+							int currentLives = team.getLives() - 1;
+							team.setLives(currentLives);
+							Map<String, String> placeholders = new HashMap<>();
+							placeholders.put("\\{team-color\\}", team.getTeamColor().getColorName());
+							placeholders.put("\\{team-name\\}", team.getName());
+							placeholders.put("\\{lives\\}", String.valueOf(currentLives));
+							diamondRush.broadcastMessage("messages.teamLosesLife", placeholders);
+							if (currentLives == 0) {
+								event.getBlock().setType(Material.AIR);
+								Bukkit.getPluginManager().callEvent(new TeamLossEvent(team));
+							}
+							return;
+						}
+					}
+					return;
+				}
+
+				event.setCancelled(true);
+				return;
+			}
+		}
 	}
 
 
@@ -130,7 +166,12 @@ public class GameListeners implements Listener {
 			team.setSpawnBlock(event.getBlock());
 		}
 		// Check for protected regions
-		checkForProtectedRegions(event);
+		for (Map.Entry<String, Region> regionEntry : diamondRush.getGame().getRegions().entrySet()) {
+			if (regionEntry.getValue().contains(event.getBlock())) {
+				event.setCancelled(true);
+				return;
+			}
+		}
 	}
 
 
@@ -139,7 +180,12 @@ public class GameListeners implements Listener {
 		if (diamondRush.getGame() == null) {
 			return;
 		}
-		checkForProtectedRegions(event);
+		for (Map.Entry<String, Region> regionEntry : diamondRush.getGame().getRegions().entrySet()) {
+			if (regionEntry.getValue().contains(event.getToBlock())) {
+				event.setCancelled(true);
+				return;
+			}
+		}
 	}
 
 
@@ -200,43 +246,6 @@ public class GameListeners implements Listener {
 				if (regionEntry.getValue().contains(block)) {
 					iterator.remove();
 					break;
-				}
-			}
-		}
-	}
-
-
-	private void checkForProtectedRegions(BlockEvent event) {
-		for (Map.Entry<String, Region> regionEntry : diamondRush.getGame().getRegions().entrySet()) {
-			if (regionEntry.getValue().contains(event.getBlock())) {
-
-				// Prevent breaking blocks
-				if (event instanceof BlockBreakEvent blockBreakEvent) {
-
-					if (!diamondRush.getGame().getPhase().equals(GamePhase.EXPLORATION) &&
-							!diamondRush.getGame().getPhase().equals(GamePhase.COMBAT)) {
-
-						blockBreakEvent.setCancelled(true);
-						return;
-					}
-
-					if (blockBreakEvent.getBlock().getType().equals(Material.OBSIDIAN)) {
-						return;
-					}
-					blockBreakEvent.setCancelled(true);
-					return;
-				}
-				// Prevent placing blocks
-				else if (event instanceof BlockPlaceEvent blockPlaceEvent) {
-					blockPlaceEvent.setCancelled(true);
-					return;
-				}
-			}
-			// Prevent changing blocks
-			if (event instanceof BlockFromToEvent blockFromToEvent) {
-				if (regionEntry.getValue().contains(blockFromToEvent.getToBlock())) {
-					blockFromToEvent.setCancelled(true);
-					return;
 				}
 			}
 		}

@@ -51,3 +51,4 @@ messages:
         leader: "Find a place for your spawn."
         player: "Help your leader find a place for your spawn."
       end: "<yellow>Spawn placement is over."
+  teamLosesLife: "The <{team-color}>{team-name}</{team-color}> team has lost <red>1</red> life, <red>{lives}</red> remaining."
