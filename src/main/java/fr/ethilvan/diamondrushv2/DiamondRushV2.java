@@ -33,7 +33,9 @@ public final class DiamondRushV2 extends JavaPlugin {
 		// Unregister scoreboard teams
 		if (diamondRush.getGame() != null) {
 			for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
-				teamEntry.getValue().getMinecraftTeam().unregister();
+				if (teamEntry.getValue().getMinecraftTeam() != null) {
+					teamEntry.getValue().getMinecraftTeam().unregister();
+				}
 			}
 		}
 

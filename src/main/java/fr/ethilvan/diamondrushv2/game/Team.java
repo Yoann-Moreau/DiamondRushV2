@@ -37,7 +37,7 @@ public class Team {
 		minecraftTeam.color(teamColor.getChatColor());
 		minecraftTeam.setOption(
 				org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY,
-				org.bukkit.scoreboard.Team.OptionStatus.FOR_OWN_TEAM
+				org.bukkit.scoreboard.Team.OptionStatus.FOR_OTHER_TEAMS
 		);
 	}
 
