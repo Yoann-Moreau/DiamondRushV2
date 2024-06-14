@@ -53,5 +53,7 @@ messages:
       start:
         leader: "Find a place for your spawn."
         player: "Help your leader find a place for your spawn."
-      end: "<yellow>Spawn placement is over."
+      end:
+        end: "<yellow>Spawn placement is over."
+        goAgain: "<red>The team <{team-color}>{team-name}</{team-color}> has placed their spawn too close to the totem. Let's go again."
   teamLosesLife: "The <{team-color}>{team-name}</{team-color}> team has lost <red>1</red> life, <red>{lives}</red> remaining."

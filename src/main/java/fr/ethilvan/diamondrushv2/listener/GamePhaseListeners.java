@@ -18,10 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class GamePhaseListeners implements Listener {
 
@@ -130,7 +127,7 @@ public class GamePhaseListeners implements Listener {
 				diamondRush.getPlugin(),
 				diamondRush.getConfig().getSpawnPlacementDuration(),
 				() -> Bukkit.getPluginManager().callEvent(new SpawnPlacementEndEvent()),
-				"messages.phases.spawnPlacement.end"
+				"messages.phases.spawnPlacement.end.end"
 		);
 		gameTimer.run();
 	}
@@ -140,16 +137,39 @@ public class GamePhaseListeners implements Listener {
 	public void onSpawnPlacementEnd(SpawnPlacementEndEvent event) {
 		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 			Block spawnBlock;
+			Player leader = Bukkit.getPlayer(teamEntry.getValue().getLeaderUuid());
+			if (leader == null) {
+				continue;
+			}
 			if (teamEntry.getValue().getSpawnBlock() == null) {
-				Player leader = Bukkit.getPlayer(teamEntry.getValue().getLeaderUuid());
-				if (leader == null) {
-					continue;
-				}
 				spawnBlock = leader.getLocation().getBlock();
 			}
 			else {
 				spawnBlock = teamEntry.getValue().getSpawnBlock();
 			}
+			// Check distance with totem
+			Block totemBlock = teamEntry.getValue().getTotemBlock();
+			int distance = (int) Math.sqrt(Math.pow(spawnBlock.getX() - totemBlock.getX(), 2) +
+					Math.pow(spawnBlock.getZ() - totemBlock.getZ(), 2));
+			if (distance < diamondRush.getConfig().getMinDistanceFromTotem()) {
+				Map<String, String> placeholders = new HashMap<>();
+				placeholders.put("\\{team-color\\}", teamEntry.getValue().getTeamColor().getColorName().toLowerCase());
+				placeholders.put("\\{team-name\\}", teamEntry.getValue().getName());
+				diamondRush.broadcastMessage("messages.phases.spawnPlacement.end.goAgain", placeholders);
+				gameTimer = new Timer(
+						diamondRush.getPlugin(),
+						diamondRush.getConfig().getSpawnPlacementDuration(),
+						() -> Bukkit.getPluginManager().callEvent(new SpawnPlacementEndEvent()),
+						"messages.phases.spawnPlacement.end.end"
+				);
+				gameTimer.run();
+				return;
+			}
+			// Check if block was placed
+			if (teamEntry.getValue().getSpawnBlock() == null) {
+				leader.getInventory().removeItem(new ItemStack(Material.CHISELED_STONE_BRICKS));
+			}
+			// Create spawn region
 			CuboidRegion region = new CuboidRegion(spawnBlock, 3, 3, 3);
 			region.create(new TotemFloorPattern(region, teamEntry.getValue().getTeamColor()));
 			diamondRush.getGame().addRegion(teamEntry.getValue().getName() + "Spawn", region);
