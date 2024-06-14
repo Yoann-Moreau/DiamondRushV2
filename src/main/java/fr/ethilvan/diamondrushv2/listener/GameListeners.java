@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
@@ -113,7 +114,7 @@ public class GameListeners implements Listener {
 			}
 			team.setTotemBlock(event.getBlock());
 		}
-		// Check for spawn placement
+		// Check for team spawn placement
 		if (diamondRush.getGame().getPhase().equals(GamePhase.SPAWN_PLACEMENT) &&
 				event.getBlock().getType().equals(Material.CHISELED_STONE_BRICKS)) {
 
@@ -176,6 +177,25 @@ public class GameListeners implements Listener {
 		Iterator<BlockState> iterator = blockStates.iterator();
 		while (iterator.hasNext()) {
 			Block block = iterator.next().getBlock();
+			for (Map.Entry<String, Region> regionEntry : diamondRush.getGame().getRegions().entrySet()) {
+				if (regionEntry.getValue().contains(block)) {
+					iterator.remove();
+					break;
+				}
+			}
+		}
+	}
+
+
+	@EventHandler
+	public void onEntityExplode(EntityExplodeEvent event) {
+		if (diamondRush.getGame() == null) {
+			return;
+		}
+		List<Block> blocks = event.blockList();
+		Iterator<Block> iterator = blocks.iterator();
+		while (iterator.hasNext()) {
+			Block block = iterator.next();
 			for (Map.Entry<String, Region> regionEntry : diamondRush.getGame().getRegions().entrySet()) {
 				if (regionEntry.getValue().contains(block)) {
 					iterator.remove();
