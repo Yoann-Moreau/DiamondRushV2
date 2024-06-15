@@ -30,7 +30,7 @@ public class StartCommand extends Subcommand {
 
 	@Override
 	public String getDescription() {
-		return "Starts the DiamondRush game.";
+		return "messages.commands.start.description";
 	}
 
 	@Override

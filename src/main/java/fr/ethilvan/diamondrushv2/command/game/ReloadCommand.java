@@ -28,7 +28,7 @@ public class ReloadCommand extends Subcommand {
 
 	@Override
 	public String getDescription() {
-		return "Reloads the configuration from files.";
+		return "messages.commands.reload.description";
 	}
 
 	@Override
