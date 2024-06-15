@@ -6,7 +6,7 @@ phases:
     spawnPlacement: 20
     firstExploration: 600
     firstCombat: 60
-    pause: 10
+    transition: 10
   # Duration changes can be inferior to 0 to decrease a phase duration over the next cycles
   durationChange:
     exploration: -120          # can be <= 0

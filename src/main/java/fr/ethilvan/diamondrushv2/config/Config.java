@@ -16,7 +16,7 @@ public class Config {
 	private int spawnPlacementDuration = 20;
 	private int firstExplorationDuration = 600;
 	private int firstCombatDuration = 60;
-	private int pauseDuration = 10;
+	private int transitionDuration = 10;
 	// Duration changes
 	private int explorationChange = -120;
 	private int combatChange = 60;
@@ -60,8 +60,8 @@ public class Config {
 		return Math.max(10, firstCombatDuration);
 	}
 
-	public int getPauseDuration() {
-		return Math.max(1, pauseDuration);
+	public int getTransitionDuration() {
+		return Math.max(1, transitionDuration);
 	}
 
 	public int getExplorationChange() {
@@ -122,7 +122,7 @@ public class Config {
 		spawnPlacementDuration = plugin.getConfig().getInt("phases.duration.spawnPlacement");
 		firstExplorationDuration = plugin.getConfig().getInt("phases.duration.firstExploration");
 		firstCombatDuration = plugin.getConfig().getInt("phases.duration.firstCombat");
-		pauseDuration = plugin.getConfig().getInt("phases.duration.pause");
+		transitionDuration = plugin.getConfig().getInt("phases.duration.transition");
 		explorationChange = plugin.getConfig().getInt("phases.durationChange.exploration");
 		combatChange = plugin.getConfig().getInt("phases.durationChange.combat");
 		numberOfChanges = plugin.getConfig().getInt("phases.durationChange.number");

@@ -17,6 +17,8 @@ public class Game {
 	private final Map<String, Team> teams;
 	private final Map<String, Region> regions;
 	private GamePhase phase = GamePhase.CREATION;
+	private GamePhase nextPhase;
+	private int cycle = 1;
 	private int defeatedTeams = 0;
 
 
@@ -85,6 +87,24 @@ public class Game {
 
 	public void setPhase(GamePhase phase) {
 		this.phase = phase;
+	}
+
+
+	public GamePhase getNextPhase() {
+		return nextPhase;
+	}
+
+	public void setNextPhase(GamePhase nextPhase) {
+		this.nextPhase = nextPhase;
+	}
+
+
+	public int getCycle() {
+		return cycle;
+	}
+
+	public void setCycle(int cycle) {
+		this.cycle = cycle;
 	}
 
 

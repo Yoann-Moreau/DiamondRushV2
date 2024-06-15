@@ -56,4 +56,13 @@ messages:
       end:
         end: "<yellow>Spawn placement is over."
         goAgain: "<red>The team <{team-color}>{team-name}</{team-color}> has placed their spawn too close to the totem. Let's go again."
+    exploration:
+      start: "Start of the exploration phase."
+      end: "End of the exploration phase."
+    combat:
+      start: "Start of the combat phase."
+      end: "End of the combat phase."
+    transition:
+      start: "Time to change channel."
+      end: "Time to change channel."
   teamLosesLife: "The <{team-color}>{team-name}</{team-color}> team has lost <red>1</red> life, <red>{lives}</red> remaining."

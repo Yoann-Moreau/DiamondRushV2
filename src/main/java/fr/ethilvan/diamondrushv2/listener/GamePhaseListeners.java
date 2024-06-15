@@ -181,6 +181,80 @@ public class GamePhaseListeners implements Listener {
 	@EventHandler
 	public void onExplorationStart(ExplorationStartEvent event) {
 		diamondRush.getGame().setPhase(GamePhase.EXPLORATION);
+		diamondRush.getGame().setNextPhase(GamePhase.COMBAT);
+		diamondRush.broadcastMessage("messages.phases.exploration.start");
+
+		changePlayersGameMode(GameMode.SURVIVAL);
+
+		int firstExploration = diamondRush.getConfig().getFirstExplorationDuration();
+		int explorationChange = diamondRush.getConfig().getExplorationChange();
+		int cycle = diamondRush.getGame().getCycle();
+		int numberOfChanges = diamondRush.getConfig().getNumberOfChanges();
+		int duration = firstExploration + (cycle - 1) * explorationChange;
+		if (cycle > numberOfChanges) {
+			duration = firstExploration + (numberOfChanges - 1) * explorationChange;
+		}
+
+		gameTimer = new Timer(
+				diamondRush.getPlugin(),
+				duration,
+				() -> Bukkit.getPluginManager().callEvent(new TransitionStartEvent()),
+				"messages.phases.exploration.end"
+		);
+		gameTimer.run();
+	}
+
+
+	@EventHandler
+	public void onTransitionStart(TransitionStartEvent event) {
+		diamondRush.getGame().setPhase(GamePhase.TRANSITION);
+		diamondRush.broadcastMessage("messages.phases.transition.start");
+
+		changePlayersGameMode(GameMode.CREATIVE);
+
+		Runnable runnable;
+		if (diamondRush.getGame().getNextPhase().equals(GamePhase.COMBAT)) {
+			runnable = () -> Bukkit.getPluginManager().callEvent(new CombatStartEvent());
+		}
+		else {
+			diamondRush.getGame().setCycle(diamondRush.getGame().getCycle() + 1);
+			runnable = () -> Bukkit.getPluginManager().callEvent(new ExplorationStartEvent());
+		}
+
+		gameTimer = new Timer(
+				diamondRush.getPlugin(),
+				diamondRush.getConfig().getTransitionDuration(),
+				runnable,
+				"messages.phases.transition.end"
+		);
+		gameTimer.run();
+	}
+
+
+	@EventHandler
+	public void onCombatStart(CombatStartEvent event) {
+		diamondRush.getGame().setPhase(GamePhase.COMBAT);
+		diamondRush.getGame().setNextPhase(GamePhase.EXPLORATION);
+		diamondRush.broadcastMessage("messages.phases.combat.start");
+
+		changePlayersGameMode(GameMode.SURVIVAL);
+
+		int firstCombat = diamondRush.getConfig().getFirstCombatDuration();
+		int combatChange = diamondRush.getConfig().getCombatChange();
+		int cycle = diamondRush.getGame().getCycle();
+		int numberOfChanges = diamondRush.getConfig().getNumberOfChanges();
+		int duration = firstCombat + (cycle - 1) * combatChange;
+		if (cycle > numberOfChanges) {
+			duration = firstCombat + (numberOfChanges - 1) * combatChange;
+		}
+
+		gameTimer = new Timer(
+				diamondRush.getPlugin(),
+				duration,
+				() -> Bukkit.getPluginManager().callEvent(new TransitionStartEvent()),
+				"messages.phases.combat.end"
+		);
+		gameTimer.run();
 	}
 
 
@@ -241,7 +315,7 @@ public class GamePhaseListeners implements Listener {
 			int z = (int) Math.round(center.getZ() + radius * Math.sin(angle));
 
 			Location startPosition = new Location(cylindricalRegion.getWorld(), x + 0.5, y, z + 0.5, i - 90, 0);
-			Block teamBlock = cylindricalRegion.getWorld().getBlockAt(x, y -1, z);
+			Block teamBlock = cylindricalRegion.getWorld().getBlockAt(x, y - 1, z);
 			teamBlock.setType(teamEntry.getValue().getTeamColor().getMaterial());
 
 			for (UUID uuid : teamEntry.getValue().getPlayerUUIDs()) {
@@ -254,6 +328,19 @@ public class GamePhaseListeners implements Listener {
 
 			// Calculate new angle for next team
 			i += 360 / diamondRush.getGame().getTeams().size();
+		}
+	}
+
+
+	private void changePlayersGameMode(GameMode gameMode) {
+		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+			for (UUID uuid : teamEntry.getValue().getPlayerUUIDs()) {
+				Player player = Bukkit.getPlayer(uuid);
+				if (player == null) {
+					continue;
+				}
+				player.setGameMode(gameMode);
+			}
 		}
 	}
 }
