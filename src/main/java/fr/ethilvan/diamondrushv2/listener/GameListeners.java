@@ -321,7 +321,10 @@ public class GameListeners implements Listener {
 		GamePhase phase = diamondRush.getGame().getPhase();
 		if ((phase.equals(GamePhase.TRANSITION) || phase.equals(GamePhase.PAUSE)) &&
 				!player.getGameMode().equals(GameMode.SPECTATOR)) {
-			event.setCancelled(true);
+			Location to = event.getFrom();
+			to.setPitch(event.getTo().getPitch());
+			to.setYaw(event.getTo().getYaw());
+			event.setTo(to);
 		}
 	}
 
