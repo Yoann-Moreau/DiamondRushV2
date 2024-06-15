@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -169,8 +170,7 @@ public class GamePhaseListeners implements Listener {
 			if (teamEntry.getValue().getSpawnBlock() == null) {
 				leader.getInventory().removeItem(new ItemStack(Material.CHISELED_STONE_BRICKS));
 			}
-			// Create spawn region
-			CuboidRegion region = new CuboidRegion(spawnBlock, 3, 3, 3);
+			CuboidRegion region = createSpawnRegion(totemBlock, spawnBlock);
 			region.create(new TotemFloorPattern(region, teamEntry.getValue().getTeamColor()));
 			diamondRush.getGame().addRegion(teamEntry.getValue().getName() + "Spawn", region);
 		}
@@ -342,5 +342,28 @@ public class GamePhaseListeners implements Listener {
 				player.setGameMode(gameMode);
 			}
 		}
+	}
+
+
+	private CuboidRegion createSpawnRegion(@NotNull Block totemBlock, @NotNull Block spawnBlock) {
+		CuboidRegion region = new CuboidRegion(spawnBlock, 3, 3, 3);
+		// Set teleport location (facing totem)
+		double deltaX = totemBlock.getX() - spawnBlock.getX();
+		double deltaZ = totemBlock.getZ() - spawnBlock.getZ();
+		double angle = Math.atan(deltaZ / deltaX);
+		int correction = 90;
+		if (deltaX > 0) {
+			correction = -90;
+		}
+		float yaw = (float) (angle * 180 / Math.PI) + correction;
+		region.setTeleportLocation(
+				new Location(spawnBlock.getWorld(),
+						spawnBlock.getX() + 0.5,
+						spawnBlock.getY(),
+						spawnBlock.getZ() + 0.5,
+						yaw,
+						0
+				));
+		return region;
 	}
 }

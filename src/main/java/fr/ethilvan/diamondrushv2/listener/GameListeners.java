@@ -1,21 +1,30 @@
 package fr.ethilvan.diamondrushv2.listener;
 
 
+import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import fr.ethilvan.diamondrushv2.DiamondRush;
 import fr.ethilvan.diamondrushv2.event.TeamLossEvent;
 import fr.ethilvan.diamondrushv2.game.GamePhase;
 import fr.ethilvan.diamondrushv2.game.Team;
 import fr.ethilvan.diamondrushv2.region.Region;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -32,6 +41,30 @@ public class GameListeners implements Listener {
 
 	public GameListeners(DiamondRush diamondRush) {
 		this.diamondRush = diamondRush;
+	}
+
+
+	@EventHandler
+	public void onPlayerRespawn(PlayerRespawnEvent event) {
+		if (diamondRush.getGame() == null) {
+			return;
+		}
+		Player player = event.getPlayer();
+
+		Team team = diamondRush.getGame().getTeam(player.getUniqueId());
+		if (team != null) {
+			GamePhase phase = diamondRush.getGame().getPhase();
+			if (phase.equals(GamePhase.EXPLORATION) || phase.equals(GamePhase.COMBAT)) {
+				player.getInventory().clear();
+			}
+
+			Region teamSpawnRegion = diamondRush.getGame().getRegion(team.getName() + "Spawn");
+			if (teamSpawnRegion == null) {
+				event.setRespawnLocation(diamondRush.getGame().getSpawn());
+				return;
+			}
+			event.setRespawnLocation(teamSpawnRegion.getTeleportLocation());
+		}
 	}
 
 
@@ -252,11 +285,101 @@ public class GameListeners implements Listener {
 	}
 
 
+	@EventHandler
+	public void onInventoryOpen(InventoryOpenEvent event) {
+		if (diamondRush.getGame() == null) {
+			return;
+		}
+		GamePhase phase = diamondRush.getGame().getPhase();
+		if (phase.equals(GamePhase.TRANSITION) || phase.equals(GamePhase.PAUSE)) {
+			event.setCancelled(true);
+		}
+	}
+
+
+	@EventHandler
+	public void onInventoryClick(InventoryClickEvent event) {
+		if (diamondRush.getGame() == null) {
+			return;
+		}
+		GamePhase phase = diamondRush.getGame().getPhase();
+		if (phase.equals(GamePhase.TRANSITION) || phase.equals(GamePhase.PAUSE)) {
+			event.setCancelled(true);
+		}
+	}
+
+
+	@EventHandler
+	public void onPlayerMove(PlayerMoveEvent event) {
+		if (diamondRush.getGame() == null) {
+			return;
+		}
+		Player player = event.getPlayer();
+		GamePhase phase = diamondRush.getGame().getPhase();
+		if ((phase.equals(GamePhase.TRANSITION) || phase.equals(GamePhase.PAUSE)) &&
+				!player.getGameMode().equals(GameMode.SPECTATOR)) {
+			event.setCancelled(true);
+		}
+	}
+
+
+	@EventHandler
+	public void onPlayerJump(PlayerJumpEvent event) {
+		if (diamondRush.getGame() == null) {
+			return;
+		}
+		GamePhase phase = diamondRush.getGame().getPhase();
+		if ((phase.equals(GamePhase.TRANSITION) || phase.equals(GamePhase.PAUSE))) {
+			event.setCancelled(true);
+		}
+	}
+
+
+	@EventHandler
+	public void onEntityDamageEntity(EntityDamageByEntityEvent event) {
+		if (diamondRush.getGame() == null) {
+			return;
+		}
+		Entity damager = event.getDamager();
+		Entity target = event.getEntity();
+
+		if (damager instanceof Player damagerPlayer) {
+			// Check for player damaging player in exploration
+			GamePhase phase = diamondRush.getGame().getPhase();
+			if (target instanceof Player targetPlayer && phase.equals(GamePhase.EXPLORATION)) {
+				event.setCancelled(true); // cancel damage
+
+				spot(damagerPlayer, targetPlayer);
+			}
+		}
+	}
+
+
 	private void changeLeader(Team team, Player newLeader) {
 		team.setLeaderUuid(newLeader.getUniqueId());
 		diamondRush.messagePlayer(newLeader, "messages.phases.leaderChange.leader");
 		Map<String, String> placeholders = new HashMap<>();
 		placeholders.put("\\{player\\}", newLeader.getName());
 		diamondRush.messageOtherPlayersInTeam(team, "messages.phases.leaderChange.player", placeholders);
+	}
+
+
+	private void spot(Player damager, Player target) {
+		Location location = target.getLocation();
+
+		Team damagerTeam = diamondRush.getGame().getTeam(damager.getUniqueId());
+		Team targetTeam = diamondRush.getGame().getTeam(target.getUniqueId());
+
+		if (damagerTeam != null && targetTeam != null && !damagerTeam.equals(targetTeam)) {
+			int distanceToSpot = diamondRush.getConfig().getDistanceToSpot();
+
+			Region totemRegion = diamondRush.getGame().getRegion(damagerTeam.getName() + "Totem");
+			Region spawnRegion = diamondRush.getGame().getRegion(targetTeam.getName() + "Spawn");
+			Block totemBlock = totemRegion.getCenter();
+
+			if (location.distance(totemBlock.getLocation()) <= distanceToSpot) {
+				target.teleportAsync(spawnRegion.getTeleportLocation());
+			}
+		}
 	}
 }
