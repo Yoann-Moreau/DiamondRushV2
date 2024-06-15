@@ -1,6 +1,7 @@
 package fr.ethilvan.diamondrushv2.listener;
 
 import fr.ethilvan.diamondrushv2.DiamondRush;
+import fr.ethilvan.diamondrushv2.config.ExplorationReward;
 import fr.ethilvan.diamondrushv2.event.*;
 import fr.ethilvan.diamondrushv2.game.GamePhase;
 import fr.ethilvan.diamondrushv2.game.Team;
@@ -186,6 +187,7 @@ public class GamePhaseListeners implements Listener {
 		diamondRush.getGame().getWorld().setGameRule(GameRule.KEEP_INVENTORY, false);
 
 		changePlayersGameMode(GameMode.SURVIVAL);
+		giveExplorationRewards();
 
 		int firstExploration = diamondRush.getConfig().getFirstExplorationDuration();
 		int explorationChange = diamondRush.getConfig().getExplorationChange();
@@ -372,5 +374,39 @@ public class GamePhaseListeners implements Listener {
 						0
 				));
 		return region;
+	}
+
+
+	private void giveExplorationRewards() {
+		int startCycle = diamondRush.getConfig().getRewardsStartCycle();
+		if (diamondRush.getGame().getCycle() < startCycle) {
+			return;
+		}
+		List<ExplorationReward> explorationRewards = diamondRush.getConfig().getExplorationRewards();
+		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+			Team team = teamEntry.getValue();
+			for (ExplorationReward explorationReward : explorationRewards) {
+				Material material = Material.getMaterial(explorationReward.getMaterial());
+				int quantity = explorationReward.getQuantity();
+				// If leader
+				if (explorationReward.getWho().equals("leader")) {
+					Player leader = Bukkit.getPlayer(team.getLeaderUuid());
+					if (leader == null || material == null) {
+						continue;
+					}
+					leader.getInventory().addItem(new ItemStack(material, quantity));
+				}
+				// If player
+				else {
+					for (UUID uuid : team.getPlayerUUIDs()) {
+						Player player = Bukkit.getPlayer(uuid);
+						if (player == null || material == null) {
+							continue;
+						}
+						player.getInventory().addItem(new ItemStack(material, quantity));
+					}
+				}
+			}
+		}
 	}
 }

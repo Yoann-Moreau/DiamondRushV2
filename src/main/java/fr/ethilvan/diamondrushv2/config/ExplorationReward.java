@@ -27,6 +27,21 @@ public class ExplorationReward {
 	}
 
 
+	public String getMaterial() {
+		return material;
+	}
+
+
+	public int getQuantity() {
+		return Math.max(1, quantity);
+	}
+
+
+	public String getWho() {
+		return who;
+	}
+
+
 	public boolean isMaterialValid() {
 		return Material.getMaterial(material) != null;
 	}
