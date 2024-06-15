@@ -19,6 +19,7 @@ public class Team {
 	private Block totemBlock = null;
 	private Block spawnBlock = null;
 	private int lives;
+	private int kills = 0;
 
 	private final ScoreboardManager scoreboardManager;
 
@@ -122,5 +123,14 @@ public class Team {
 
 	public void setLives(int lives) {
 		this.lives = lives;
+	}
+
+
+	public int getKills() {
+		return kills;
+	}
+
+	public void setKills(int kills) {
+		this.kills = kills;
 	}
 }

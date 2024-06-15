@@ -65,4 +65,5 @@ messages:
     transition:
       start: "Time to change channel."
       end: "Time to change channel."
+  killReward: "<green>You've been rewarded for you kill, check your inventory."
   teamLosesLife: "The <{team-color}>{team-name}</{team-color}> team has lost <red>1</red> life, <red>{lives}</red> remaining."

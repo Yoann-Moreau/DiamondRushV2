@@ -183,6 +183,7 @@ public class GamePhaseListeners implements Listener {
 		diamondRush.getGame().setPhase(GamePhase.EXPLORATION);
 		diamondRush.getGame().setNextPhase(GamePhase.COMBAT);
 		diamondRush.broadcastMessage("messages.phases.exploration.start");
+		diamondRush.getGame().getWorld().setGameRule(GameRule.KEEP_INVENTORY, false);
 
 		changePlayersGameMode(GameMode.SURVIVAL);
 
@@ -236,6 +237,12 @@ public class GamePhaseListeners implements Listener {
 		diamondRush.getGame().setPhase(GamePhase.COMBAT);
 		diamondRush.getGame().setNextPhase(GamePhase.EXPLORATION);
 		diamondRush.broadcastMessage("messages.phases.combat.start");
+		diamondRush.getGame().getWorld().setGameRule(GameRule.KEEP_INVENTORY, true);
+
+		// Reset kills for teams
+		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+			teamEntry.getValue().setKills(0);
+		}
 
 		changePlayersGameMode(GameMode.SURVIVAL);
 

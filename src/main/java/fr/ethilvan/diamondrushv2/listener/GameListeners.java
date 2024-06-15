@@ -20,6 +20,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -29,6 +30,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -378,6 +380,28 @@ public class GameListeners implements Listener {
 	}
 
 
+	@EventHandler
+	public void onPlayerDeath(PlayerDeathEvent event) {
+		if (diamondRush.getGame() == null) {
+			return;
+		}
+		Player killed = event.getPlayer();
+		Player killer = event.getPlayer().getKiller();
+		if (killer == null || killer.equals(killed)) {
+			return;
+		}
+
+		Team killerTeam = diamondRush.getGame().getTeam(killer.getUniqueId());
+		Team killedTeam = diamondRush.getGame().getTeam(killed.getUniqueId());
+		if (killedTeam == null || killerTeam == null || killerTeam.equals(killedTeam)) {
+			return;
+		}
+		// Increment kills for team
+		killerTeam.setKills(killerTeam.getKills() + 1);
+		rewardPlayerForKill(killer);
+	}
+
+
 	private void changeLeader(Team team, Player newLeader) {
 		team.setLeaderUuid(newLeader.getUniqueId());
 		diamondRush.messagePlayer(newLeader, "messages.phases.leaderChange.leader");
@@ -404,5 +428,34 @@ public class GameListeners implements Listener {
 				target.teleportAsync(spawnRegion.getTeleportLocation());
 			}
 		}
+	}
+
+
+	private void rewardPlayerForKill(@NotNull Player player) {
+		int nextKillsThreshold = diamondRush.getConfig().getNextKillsThreshold();
+		String firstKillsMaterialString = diamondRush.getConfig().getFirstKillsMaterial();
+		int firstKillsQuantity = diamondRush.getConfig().getFirstKillsQuantity();
+		String nextKillsMaterialString = diamondRush.getConfig().getNextKillsMaterial();
+		int nextKillsQuantity = diamondRush.getConfig().getNextKillsQuantity();
+
+		Team playerTeam = diamondRush.getGame().getTeam(player.getUniqueId());
+		if (playerTeam == null) {
+			return;
+		}
+		if (playerTeam.getKills() < nextKillsThreshold) {
+			Material firstKillsMaterial = Material.getMaterial(firstKillsMaterialString);
+			if (firstKillsMaterial == null) {
+				return;
+			}
+			player.getInventory().addItem(new ItemStack(firstKillsMaterial, firstKillsQuantity));
+		}
+		else {
+			Material nextKillsMaterial = Material.getMaterial(nextKillsMaterialString);
+			if (nextKillsMaterial == null) {
+				return;
+			}
+			player.getInventory().addItem(new ItemStack(nextKillsMaterial, nextKillsQuantity));
+		}
+		diamondRush.messagePlayer(player, "messages.killReward");
 	}
 }
