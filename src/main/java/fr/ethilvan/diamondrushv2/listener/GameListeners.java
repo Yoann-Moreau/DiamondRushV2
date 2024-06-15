@@ -20,6 +20,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -27,6 +28,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -344,12 +346,33 @@ public class GameListeners implements Listener {
 		Entity target = event.getEntity();
 
 		if (damager instanceof Player damagerPlayer) {
-			// Check for player damaging player in exploration
 			GamePhase phase = diamondRush.getGame().getPhase();
-			if (target instanceof Player targetPlayer && phase.equals(GamePhase.EXPLORATION)) {
+			// Check for player damaging player
+			if (target instanceof Player targetPlayer && !phase.equals(GamePhase.COMBAT)) {
 				event.setCancelled(true); // cancel damage
+				if (phase.equals(GamePhase.EXPLORATION)) {
+					spot(damagerPlayer, targetPlayer);
+				}
+			}
+		}
+	}
 
-				spot(damagerPlayer, targetPlayer);
+
+	@EventHandler
+	public void onProjectileHit(ProjectileHitEvent event) {
+		if (diamondRush.getGame() == null) {
+			return;
+		}
+		Entity target = event.getHitEntity();
+		ProjectileSource damager = event.getEntity().getShooter();
+
+		if (target instanceof Player targetPlayer && damager instanceof Player damagerPlayer) {
+			GamePhase phase = diamondRush.getGame().getPhase();
+			if (!phase.equals(GamePhase.COMBAT)) {
+				event.setCancelled(true); // cancel damage
+				if (phase.equals(GamePhase.EXPLORATION)) {
+					spot(damagerPlayer, targetPlayer);
+				}
 			}
 		}
 	}
