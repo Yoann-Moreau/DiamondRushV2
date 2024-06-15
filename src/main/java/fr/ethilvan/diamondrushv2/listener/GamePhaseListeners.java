@@ -195,7 +195,7 @@ public class GamePhaseListeners implements Listener {
 		int numberOfChanges = diamondRush.getConfig().getNumberOfChanges();
 		int duration = firstExploration + (cycle - 1) * explorationChange;
 		if (cycle > numberOfChanges) {
-			duration = firstExploration + (numberOfChanges - 1) * explorationChange;
+			duration = firstExploration + numberOfChanges * explorationChange;
 		}
 
 		gameTimer = new Timer(
@@ -254,7 +254,7 @@ public class GamePhaseListeners implements Listener {
 		int numberOfChanges = diamondRush.getConfig().getNumberOfChanges();
 		int duration = firstCombat + (cycle - 1) * combatChange;
 		if (cycle > numberOfChanges) {
-			duration = firstCombat + (numberOfChanges - 1) * combatChange;
+			duration = firstCombat + numberOfChanges * combatChange;
 		}
 
 		gameTimer = new Timer(
