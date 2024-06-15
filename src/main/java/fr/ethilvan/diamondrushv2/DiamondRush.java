@@ -105,6 +105,19 @@ public class DiamondRush {
 	}
 
 
+	public void messagePlayer(Player player, String messagePath, Map<String, String> placeholders) {
+		String message = plugin.getDiamondRush().getMessagesConfig().getString(messagePath);
+		if (message == null) {
+			missingMessage(messagePath);
+			return;
+		}
+		for (Map.Entry<String, String> placeholder : placeholders.entrySet()) {
+			message = message.replaceAll(placeholder.getKey(), placeholder.getValue());
+		}
+		player.sendRichMessage(message);
+	}
+
+
 	public void messageLeaders(String messagePath) {
 		for (Map.Entry<String, Team> teamEntry : getGame().getTeams().entrySet()) {
 			Player player = Bukkit.getPlayer(teamEntry.getValue().getLeaderUuid());

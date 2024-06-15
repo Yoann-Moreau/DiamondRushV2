@@ -7,6 +7,8 @@ import fr.ethilvan.diamondrushv2.event.TeamLossEvent;
 import fr.ethilvan.diamondrushv2.game.GamePhase;
 import fr.ethilvan.diamondrushv2.game.Team;
 import fr.ethilvan.diamondrushv2.region.Region;
+import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -32,10 +34,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class GameListeners implements Listener {
@@ -99,7 +98,7 @@ public class GameListeners implements Listener {
 							int currentLives = team.getLives() - 1;
 							team.setLives(currentLives);
 							Map<String, String> placeholders = new HashMap<>();
-							placeholders.put("\\{team-color\\}", team.getTeamColor().getColorName());
+							placeholders.put("\\{team-color\\}", team.getTeamColor().getColorName().toLowerCase());
 							placeholders.put("\\{team-name\\}", team.getName());
 							placeholders.put("\\{lives\\}", String.valueOf(currentLives));
 							diamondRush.broadcastMessage("messages.teamLosesLife", placeholders);
@@ -399,6 +398,60 @@ public class GameListeners implements Listener {
 		// Increment kills for team
 		killerTeam.setKills(killerTeam.getKills() + 1);
 		rewardPlayerForKill(killer);
+	}
+
+
+	@EventHandler
+	public void onPlayerChat(AsyncChatEvent event) {
+		if (diamondRush.getGame() == null) {
+			return;
+		}
+		if (diamondRush.getGame().getPhase().equals(GamePhase.CREATION)) {
+			return;
+		}
+		TextComponent textComponent = (TextComponent) event.message();
+		event.setCancelled(true);
+		Player player = event.getPlayer();
+		Team team = diamondRush.getGame().getTeam(player.getUniqueId());
+		if (!diamondRush.getGame().getPhase().equals(GamePhase.COMBAT)) {
+			// send to spectators if not in team
+			if (team == null) {
+				for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+					if (!onlinePlayer.getGameMode().equals(GameMode.SPECTATOR)) {
+						continue;
+					}
+					Map<String, String> placeholders = new HashMap<>();
+					placeholders.put("\\{team-color\\}", "dark_gray");
+					placeholders.put("\\{player-name\\}", player.getName());
+					placeholders.put("\\{message\\}", textComponent.content());
+					diamondRush.messagePlayer(onlinePlayer, "messages.chatMessage", placeholders);
+				}
+				return;
+			}
+			// Send to team members
+			for (UUID uuid : team.getPlayerUUIDs()) {
+				Player teamPlayer = Bukkit.getPlayer(uuid);
+				if (teamPlayer == null) {
+					continue;
+				}
+				Map<String, String> placeholders = new HashMap<>();
+				placeholders.put("\\{team-color\\}", team.getTeamColor().getColorName().toLowerCase());
+				placeholders.put("\\{player-name\\}", player.getName());
+				placeholders.put("\\{message\\}", textComponent.content());
+				diamondRush.messagePlayer(teamPlayer, "messages.chatMessage", placeholders);
+			}
+			return;
+		}
+		// send to everyone
+		String teamColor = "gray";
+		if (team != null) {
+			teamColor = team.getTeamColor().getColorName();
+		}
+		Map<String, String> placeholders = new HashMap<>();
+		placeholders.put("\\{team-color\\}", teamColor.toLowerCase());
+		placeholders.put("\\{player-name\\}", player.getName());
+		placeholders.put("\\{message\\}", textComponent.content());
+		diamondRush.broadcastMessage("messages.chatMessage", placeholders);
 	}
 
 
