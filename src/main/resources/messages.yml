@@ -59,7 +59,7 @@ messages:
         player: "Help your leader find a place for your spawn."
       end:
         end: "<yellow>Spawn placement is over."
-        goAgain: "<red>The team <{team-color}>{team-name}</{team-color}> has placed their spawn too close to the totem. Let's go again."
+        goAgain: "<red>The team <{team-color}>{team-name}</{team-color}> has placed their spawn too close to the totem. Let's do it again."
     exploration:
       start: "Start of the exploration phase."
       end: "End of the exploration phase."

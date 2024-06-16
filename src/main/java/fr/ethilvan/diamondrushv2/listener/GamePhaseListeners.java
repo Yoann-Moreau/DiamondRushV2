@@ -52,6 +52,7 @@ public class GamePhaseListeners implements Listener {
 	public void onTotemPlacementStart(TotemPlacementStartEvent event) {
 		diamondRush.getGame().setPhase(GamePhase.TOTEM_PLACEMENT);
 
+		// First totem placement
 		if (event.isFirstPlacement()) {
 			diamondRush.getGame().assignLeaders();
 			diamondRush.messageLeaders("messages.phases.totemPlacement.start.leader");
@@ -75,12 +76,28 @@ public class GamePhaseListeners implements Listener {
 				leader.getInventory().setItemInMainHand(new ItemStack(Material.OBSIDIAN));
 			}
 		}
+		// New totem placement phase
 		else {
+			for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+				// Reset totem block
+				if (teamEntry.getValue().getTotemBlock() != null) {
+					teamEntry.getValue().getTotemBlock().setType(Material.AIR);
+					teamEntry.getValue().setTotemBlock(null);
+				}
+
+				Player leader = Bukkit.getPlayer(teamEntry.getValue().getLeaderUuid());
+				if (leader == null) {
+					continue;
+				}
+				// Give obsidian to leaders if necessary
+				if (!leader.getInventory().contains(Material.OBSIDIAN)) {
+					leader.getInventory().setItemInMainHand(new ItemStack(Material.OBSIDIAN));
+				}
+			}
 			teleportPlayersToGameSpawn(true);
 		}
 
 		diamondRush.getGame().getWorld().setTime(0);
-
 
 		gameTimer = new Timer(
 				diamondRush.getPlugin(),
@@ -162,8 +179,7 @@ public class GamePhaseListeners implements Listener {
 			}
 			// Check distance with totem
 			Block totemBlock = teamEntry.getValue().getTotemBlock();
-			int distance = (int) Math.sqrt(Math.pow(spawnBlock.getX() - totemBlock.getX(), 2) +
-					Math.pow(spawnBlock.getZ() - totemBlock.getZ(), 2));
+			int distance = (int) totemBlock.getLocation().distance(spawnBlock.getLocation());
 			if (distance < diamondRush.getConfig().getMinDistanceFromTotem()) {
 				Map<String, String> placeholders = new HashMap<>();
 				placeholders.put("\\{team-color\\}", teamEntry.getValue().getTeamColor().getColorName().toLowerCase());
