@@ -56,6 +56,9 @@ public class TeamCommand extends Subcommand {
 		if (args[1].equalsIgnoreCase("add")) {
 			addTeam(sender, args);
 		}
+		else if (args[1].equalsIgnoreCase("remove")) {
+			removeTeam(sender, args);
+		}
 	}
 
 
@@ -67,6 +70,12 @@ public class TeamCommand extends Subcommand {
 			actions.add("remove");
 			actions.add("modify");
 			return actions;
+		}
+
+		if (args.length == 3) {
+			if (args[1].equalsIgnoreCase("remove")) {
+				return new ArrayList<>(diamondRush.getGame().getTeams().keySet());
+			}
 		}
 
 		if (args.length == 4) {
@@ -120,5 +129,28 @@ public class TeamCommand extends Subcommand {
 		placeholders.put("\\{team-color\\}", team.getTeamColor().getColorName().toLowerCase());
 		placeholders.put("\\{team-name\\}", team.getName());
 		sendMessage(sender, "messages.commands.team.addSuccess", placeholders);
+	}
+
+
+	private void removeTeam(CommandSender sender, @NotNull String[] args) {
+		if (args.length < 3) {
+			sendMessage(sender, "messages.commands.team.noTeamSpecified");
+			return;
+		}
+		String teamName = args[2];
+		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+			if (!teamEntry.getKey().equals(teamName)) {
+				continue;
+			}
+			Map<String, String> placeholders = new HashMap<>();
+			placeholders.put("\\{team-color\\}", teamEntry.getValue().getTeamColor().getColorName().toLowerCase());
+			placeholders.put("\\{team-name\\}", teamEntry.getValue().getName());
+			teamEntry.getValue().getMinecraftTeam().unregister();
+			diamondRush.getGame().getTeams().remove(teamName);
+			sendMessage(sender, "messages.commands.team.removeSuccess", placeholders);
+			return;
+		}
+
+		sendMessage(sender, "messages.commands.team.noSuchTeam");
 	}
 }
