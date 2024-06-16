@@ -1,17 +1,24 @@
 package fr.ethilvan.diamondrushv2.game;
 
+import fr.ethilvan.diamondrushv2.DiamondRush;
 import fr.ethilvan.diamondrushv2.region.Region;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Criteria;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
 
 import java.util.*;
 
 
 public class Game {
 
+	private final DiamondRush diamondRush;
 	private final World world;
 	private final World netherWorld;
 	private final Location spawn;
@@ -23,7 +30,8 @@ public class Game {
 	private int defeatedTeams = 0;
 
 
-	public Game(World world, Location spawn) {
+	public Game(DiamondRush diamondRush, World world, Location spawn) {
+		this.diamondRush = diamondRush;
 		this.world = world;
 		this.spawn = spawn;
 		this.teams = new HashMap<>();
@@ -31,6 +39,8 @@ public class Game {
 
 		String netherName = world.getName() + "_nether";
 		this.netherWorld = Bukkit.getWorld(netherName);
+
+		setupScoreboard();
 	}
 
 
@@ -153,5 +163,18 @@ public class Game {
 				player.setGameMode(GameMode.SURVIVAL);
 			}
 		}
+	}
+
+
+	private void setupScoreboard() {
+		String displayNamePath = "messages.scoreboard.name";
+		String displayName = diamondRush.getMessagesConfig().getString(displayNamePath);
+		if (displayName == null) {
+			diamondRush.missingMessage(displayNamePath);
+			return;
+		}
+		Component component = Component.text(displayName, NamedTextColor.GOLD);
+		Objective sidebar = diamondRush.getScoreboard().registerNewObjective("sidebar", Criteria.DUMMY, component);
+		sidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
 	}
 }

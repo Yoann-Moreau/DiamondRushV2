@@ -10,6 +10,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.util.Map;
 
@@ -46,6 +48,12 @@ public final class DiamondRushV2 extends JavaPlugin {
 					teamEntry.getValue().getMinecraftTeam().unregister();
 				}
 			}
+		}
+
+		// Reset scoreboard
+		ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
+		for (Objective objective : scoreboardManager.getMainScoreboard().getObjectives()) {
+			objective.unregister();
 		}
 
 		getLogger().info("Disabled.");

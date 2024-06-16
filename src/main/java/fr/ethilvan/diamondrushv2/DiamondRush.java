@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Scoreboard;
 
 import java.io.File;
 import java.util.Map;
@@ -18,11 +19,13 @@ public class DiamondRush {
 	private final Config config;
 	private FileConfiguration messagesConfig;
 	private Game game = null;
+	private final Scoreboard scoreboard;
 
 
 	public DiamondRush(DiamondRushV2 plugin) {
 		this.plugin = plugin;
 		this.config = new Config(plugin);
+		this.scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
 
 		loadConfig();
 		loadMessages();
@@ -56,6 +59,11 @@ public class DiamondRush {
 
 	public void setGame(Game game) {
 		this.game = game;
+	}
+
+
+	public Scoreboard getScoreboard() {
+		return scoreboard;
 	}
 
 
@@ -197,7 +205,7 @@ public class DiamondRush {
 	}
 
 
-	private void missingMessage(String messagePath) {
+	public void missingMessage(String messagePath) {
 		plugin.getLogger().warning("Message missing from configuration: '" + messagePath + "'.");
 	}
 

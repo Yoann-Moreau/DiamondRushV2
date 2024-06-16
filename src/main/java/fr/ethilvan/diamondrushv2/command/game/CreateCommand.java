@@ -51,7 +51,7 @@ public class CreateCommand extends Subcommand {
 			sendMessage(sender, "messages.commands.create.gameAlreadyCreated");
 			return;
 		}
-		diamondRush.setGame(new Game(player.getWorld(), player.getLocation()));
+		diamondRush.setGame(new Game(diamondRush, player.getWorld(), player.getLocation()));
 		CylindricalRegion spawnRegion = new CylindricalRegion(player.getLocation().getBlock(), 5, 4);
 		SpawnFloorPattern pattern = new SpawnFloorPattern(spawnRegion);
 		spawnRegion.create(pattern);

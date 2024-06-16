@@ -41,12 +41,14 @@ messages:
     minor: "<red>{timer}"
   phases:
     starting:
+      name: "Starting"
       start: "A DiamondRush game is about to start."
       end: "Go!"
     leaderChange:
       leader: "You are now the team leader."
       player: "{player} is now the team leader."
     totemPlacement:
+      name: "Totem placement"
       start:
         leader: "Find a place for your totem!"
         player: "Help your leader find a place for your totem."
@@ -54,6 +56,7 @@ messages:
         end: "<yellow>Totem placement is over."
         goAgain: "<red>At least one team has not placed their totem in time, let's do it again."
     spawnPlacement:
+      name: "Team spawn placement"
       start:
         leader: "Find a place for your spawn."
         player: "Help your leader find a place for your spawn."
@@ -61,14 +64,19 @@ messages:
         end: "<yellow>Spawn placement is over."
         goAgain: "<red>The team <{team-color}>{team-name}</{team-color}> has placed their spawn too close to the totem. Let's do it again."
     exploration:
+      name: "Exploration"
       start: "Start of the exploration phase."
       end: "End of the exploration phase."
     combat:
+      name: "Combat"
       start: "Start of the combat phase."
       end: "End of the combat phase."
     transition:
+      name: "Transition"
       start: "Time to change channel."
-      end: "Time to change channel."
+      end: ""
+  scoreboard:
+    name: "Phase:"
   killReward: "<green>You've been rewarded for you kill, check your inventory."
   teamLosesLife: "The <{team-color}>{team-name}</{team-color}> team has lost <red>1</red> life, <red>{lives}</red> remaining."
   chatMessage: "<{team-color}>{player-name}</{team-color}><dark_gray>: <white>{message}"
