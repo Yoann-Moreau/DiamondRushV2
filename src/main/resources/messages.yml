@@ -34,6 +34,9 @@ messages:
       description: "Reloads the configuration from files."
       success: "<green>Configuration reloaded successfully."
       failure: "<red>Failure to reload configuration. {message}"
+    end:
+      description: "Ends the current DiamondRush game."
+      success: "<gray>The DiamondRush game has been ended."
   noGameCreated: "<red>You must create a game first."
   timer:
     major: "<yellow>{timer}"
