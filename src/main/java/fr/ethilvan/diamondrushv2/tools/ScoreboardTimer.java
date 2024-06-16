@@ -84,7 +84,6 @@ public class ScoreboardTimer implements Runnable {
 
 	public void cancel() {
 		if (taskId != -1) {
-			diamondRush.getPlugin().getLogger().info(String.valueOf(taskId));
 			diamondRush.getPlugin().getScheduler().cancelTask(taskId);
 			taskId = -1;
 		}

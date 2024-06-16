@@ -350,6 +350,7 @@ public class GamePhaseListeners implements Listener {
 			team.getMinecraftTeam().unregister();
 		}
 		gameTimer.cancel();
+		diamondRush.resetScoreboard();
 		diamondRush.setGame(null);
 	}
 
