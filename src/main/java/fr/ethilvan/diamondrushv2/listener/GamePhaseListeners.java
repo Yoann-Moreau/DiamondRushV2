@@ -41,7 +41,7 @@ public class GamePhaseListeners implements Listener {
 		gameTimer = new Timer(
 				diamondRush.getPlugin(),
 				5,
-				() -> Bukkit.getPluginManager().callEvent(new TotemPlacementStartEvent()),
+				() -> Bukkit.getPluginManager().callEvent(new TotemPlacementStartEvent(true)),
 				"messages.phases.starting.end"
 		);
 		gameTimer.run();
@@ -51,25 +51,36 @@ public class GamePhaseListeners implements Listener {
 	@EventHandler
 	public void onTotemPlacementStart(TotemPlacementStartEvent event) {
 		diamondRush.getGame().setPhase(GamePhase.TOTEM_PLACEMENT);
-		diamondRush.getGame().assignLeaders();
-		diamondRush.messageLeaders("messages.phases.totemPlacement.start.leader");
-		diamondRush.messageOtherPlayersInTeams("messages.phases.totemPlacement.start.player");
 
-		diamondRush.getGame().getWorld().setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
-		diamondRush.getGame().getNetherWorld().setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+		if (event.isFirstPlacement()) {
+			diamondRush.getGame().assignLeaders();
+			diamondRush.messageLeaders("messages.phases.totemPlacement.start.leader");
+			diamondRush.messageOtherPlayersInTeams("messages.phases.totemPlacement.start.player");
+			// Hide advancements
+			diamondRush.getGame().getWorld().setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+			diamondRush.getGame().getNetherWorld().setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+			// Hide coordinates
+			diamondRush.getGame().getWorld().setGameRule(GameRule.REDUCED_DEBUG_INFO, true);
+			diamondRush.getGame().getNetherWorld().setGameRule(GameRule.REDUCED_DEBUG_INFO, true);
+
+			diamondRush.getGame().resetPlayers();
+			teleportPlayersToGameSpawn(false);
+
+			// Give obsidian to leaders
+			for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+				Player leader = Bukkit.getPlayer(teamEntry.getValue().getLeaderUuid());
+				if (leader == null) {
+					continue;
+				}
+				leader.getInventory().setItemInMainHand(new ItemStack(Material.OBSIDIAN));
+			}
+		}
+		else {
+			teleportPlayersToGameSpawn(true);
+		}
+
 		diamondRush.getGame().getWorld().setTime(0);
 
-		diamondRush.getGame().resetPlayers();
-
-		teleportPlayersToGameSpawn();
-		// Give obsidian to leaders
-		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
-			Player leader = Bukkit.getPlayer(teamEntry.getValue().getLeaderUuid());
-			if (leader == null) {
-				continue;
-			}
-			leader.getInventory().setItemInMainHand(new ItemStack(Material.OBSIDIAN));
-		}
 
 		gameTimer = new Timer(
 				diamondRush.getPlugin(),
@@ -87,7 +98,7 @@ public class GamePhaseListeners implements Listener {
 		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 			if (teamEntry.getValue().getTotemBlock() == null) {
 				diamondRush.broadcastMessage("messages.phases.totemPlacement.end.goAgain");
-				Bukkit.getPluginManager().callEvent(new TotemPlacementStartEvent());
+				Bukkit.getPluginManager().callEvent(new TotemPlacementStartEvent(false));
 				return;
 			}
 		}
@@ -319,7 +330,7 @@ public class GamePhaseListeners implements Listener {
 	}
 
 
-	private void teleportPlayersToGameSpawn() {
+	private void teleportPlayersToGameSpawn(boolean leadersOnly) {
 		Region spawnRegion = diamondRush.getGame().getRegion("gameSpawn");
 		if (!(spawnRegion instanceof CylindricalRegion cylindricalRegion)) {
 			throw new RuntimeException("The game spawn must be a cylindrical region.");
@@ -338,12 +349,20 @@ public class GamePhaseListeners implements Listener {
 			Block teamBlock = cylindricalRegion.getWorld().getBlockAt(x, y - 1, z);
 			teamBlock.setType(teamEntry.getValue().getTeamColor().getMaterial());
 
-			for (UUID uuid : teamEntry.getValue().getPlayerUUIDs()) {
-				Player player = Bukkit.getPlayer(uuid);
-				if (player == null) {
-					continue;
+			if (leadersOnly) {
+				Player leader = Bukkit.getPlayer(teamEntry.getValue().getLeaderUuid());
+				if (leader != null) {
+					leader.teleportAsync(startPosition);
 				}
-				player.teleportAsync(startPosition);
+			}
+			else {
+				for (UUID uuid : teamEntry.getValue().getPlayerUUIDs()) {
+					Player player = Bukkit.getPlayer(uuid);
+					if (player == null) {
+						continue;
+					}
+					player.teleportAsync(startPosition);
+				}
 			}
 
 			// Calculate new angle for next team
