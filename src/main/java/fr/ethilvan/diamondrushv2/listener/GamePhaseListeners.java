@@ -171,9 +171,18 @@ public class GamePhaseListeners implements Listener {
 			if (teamEntry.getValue().getSpawnBlock() == null) {
 				leader.getInventory().removeItem(new ItemStack(Material.CHISELED_STONE_BRICKS));
 			}
+			// Place spawn region
 			CuboidRegion region = createSpawnRegion(totemBlock, spawnBlock);
 			region.create(new TotemFloorPattern(region, teamEntry.getValue().getTeamColor()));
 			diamondRush.getGame().addRegion(teamEntry.getValue().getName() + "Spawn", region);
+			// Set compass target to team spawn
+			for (UUID uuid : teamEntry.getValue().getPlayerUUIDs()) {
+				Player player = Bukkit.getPlayer(uuid);
+				if (player == null) {
+					continue;
+				}
+				player.setCompassTarget(spawnBlock.getLocation());
+			}
 		}
 		Bukkit.getPluginManager().callEvent(new ExplorationStartEvent());
 	}
