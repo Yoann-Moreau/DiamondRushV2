@@ -103,6 +103,13 @@ public class TeamCommand extends Subcommand {
 		String teamName = args[2];
 		String colorName = args[3];
 
+		if (teamName.equals("game")) {
+			Map<String, String> placeholders = new HashMap<>();
+			placeholders.put("\\{word\\}", teamName);
+			sendMessage(sender, "messages.commands.team.reservedWord", placeholders);
+			return;
+		}
+
 		TeamColor teamColor;
 		try {
 			teamColor = TeamColor.valueOf(colorName.toUpperCase());

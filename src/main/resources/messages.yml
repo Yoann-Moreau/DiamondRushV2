@@ -15,6 +15,7 @@ messages:
       teamAlreadyExists: "<red>A team with that name already exists."
       colorTaken: "<red>That color is already used by an other team."
       noSuchTeam: "<red>No team by that name exists."
+      reservedWord: "<red>'{word}' is a reserved word."
       addSuccess: "<green>The <{team-color}>{team-name}</{team-color}> team has been created successfully."
       removeSuccess: "<gray>The <{team-color}>{team-name}</{team-color}> team has been deleted successfully."
       modifySuccess: "<yellow>The <{team-color}>{team-name}</{team-color}> team has been modified successfully."
