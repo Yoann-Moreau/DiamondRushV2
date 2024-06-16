@@ -13,6 +13,7 @@ import java.util.*;
 public class Game {
 
 	private final World world;
+	private final World netherWorld;
 	private final Location spawn;
 	private final Map<String, Team> teams;
 	private final Map<String, Region> regions;
@@ -27,12 +28,21 @@ public class Game {
 		this.spawn = spawn;
 		this.teams = new HashMap<>();
 		this.regions = new HashMap<>();
+
+		String netherName = world.getName() + "_nether";
+		this.netherWorld = Bukkit.getWorld(netherName);
 	}
 
 
 	public World getWorld() {
 		return world;
 	}
+
+
+	public World getNetherWorld() {
+		return netherWorld;
+	}
+
 
 	public Location getSpawn() {
 		return spawn;

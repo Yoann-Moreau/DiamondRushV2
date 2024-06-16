@@ -55,8 +55,8 @@ public class GamePhaseListeners implements Listener {
 		diamondRush.messageLeaders("messages.phases.totemPlacement.start.leader");
 		diamondRush.messageOtherPlayersInTeams("messages.phases.totemPlacement.start.player");
 
-		diamondRush.getGame().getWorld().setGameRule(GameRule.KEEP_INVENTORY, true);
 		diamondRush.getGame().getWorld().setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+		diamondRush.getGame().getNetherWorld().setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
 		diamondRush.getGame().getWorld().setTime(0);
 
 		diamondRush.getGame().resetPlayers();
@@ -194,6 +194,7 @@ public class GamePhaseListeners implements Listener {
 		diamondRush.getGame().setNextPhase(GamePhase.COMBAT);
 		diamondRush.broadcastMessage("messages.phases.exploration.start");
 		diamondRush.getGame().getWorld().setGameRule(GameRule.KEEP_INVENTORY, false);
+		diamondRush.getGame().getNetherWorld().setGameRule(GameRule.KEEP_INVENTORY, false);
 
 		changePlayersGameMode(GameMode.SURVIVAL);
 		giveExplorationRewards();
@@ -249,6 +250,7 @@ public class GamePhaseListeners implements Listener {
 		diamondRush.getGame().setNextPhase(GamePhase.EXPLORATION);
 		diamondRush.broadcastMessage("messages.phases.combat.start");
 		diamondRush.getGame().getWorld().setGameRule(GameRule.KEEP_INVENTORY, true);
+		diamondRush.getGame().getNetherWorld().setGameRule(GameRule.KEEP_INVENTORY, true);
 
 		// Reset kills for teams
 		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
