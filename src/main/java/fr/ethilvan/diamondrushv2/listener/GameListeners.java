@@ -3,6 +3,7 @@ package fr.ethilvan.diamondrushv2.listener;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import fr.ethilvan.diamondrushv2.DiamondRush;
+import fr.ethilvan.diamondrushv2.config.RespawnEquipment;
 import fr.ethilvan.diamondrushv2.event.TeamLossEvent;
 import fr.ethilvan.diamondrushv2.game.GamePhase;
 import fr.ethilvan.diamondrushv2.game.Team;
@@ -57,11 +58,6 @@ public class GameListeners implements Listener {
 
 		Team team = diamondRush.getGame().getTeam(player.getUniqueId());
 		if (team != null) {
-			GamePhase phase = diamondRush.getGame().getPhase();
-			if (phase.equals(GamePhase.EXPLORATION) || phase.equals(GamePhase.COMBAT)) {
-				player.getInventory().clear();
-			}
-
 			Region teamSpawnRegion = diamondRush.getGame().getRegion(team.getName() + "Spawn");
 			if (teamSpawnRegion == null) {
 				event.setRespawnLocation(diamondRush.getGame().getSpawn());
@@ -413,6 +409,13 @@ public class GameListeners implements Listener {
 			return;
 		}
 		Player killed = event.getPlayer();
+
+		// Check phase for inventory management
+		GamePhase phase = diamondRush.getGame().getPhase();
+		if (phase.equals(GamePhase.COMBAT)) {
+			killed.getInventory().clear();
+		}
+
 		Player killer = event.getPlayer().getKiller();
 		if (killer == null || killer.equals(killed)) {
 			return;
@@ -426,6 +429,26 @@ public class GameListeners implements Listener {
 		// Increment kills for team
 		killerTeam.setKills(killerTeam.getKills() + 1);
 		rewardPlayerForKill(killer);
+
+		// Get respawn equipments
+		List<RespawnEquipment> respawnEquipments = diamondRush.getConfig().getRespawnEquipments();
+		for (RespawnEquipment respawnEquipment : respawnEquipments) {
+			killed.getInventory().clear();
+			if (respawnEquipment.getStartCycle() >= diamondRush.getGame().getCycle()) {
+				// Armor
+				killed.getInventory().setHelmet(new ItemStack(respawnEquipment.getHelmet()));
+				killed.getInventory().setChestplate(new ItemStack(respawnEquipment.getChestplate()));
+				killed.getInventory().setLeggings(new ItemStack(respawnEquipment.getLeggings()));
+				killed.getInventory().setBoots(new ItemStack(respawnEquipment.getBoots()));
+				// Weapon
+				killed.getInventory().setItemInMainHand(new ItemStack(respawnEquipment.getWeaponMaterial()));
+				// Item
+				killed.getInventory().setItemInOffHand(new ItemStack(
+						respawnEquipment.getItemMaterial(),
+						respawnEquipment.getItemQuantity()
+				));
+			}
+		}
 	}
 
 

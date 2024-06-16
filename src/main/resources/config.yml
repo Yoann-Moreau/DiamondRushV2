@@ -41,3 +41,17 @@ explorationRewards:
     - material: "IRON_INGOT"   # Must be a valid Material
       quantity: 7
       who: "player"            # Must be either "leader" or "player"
+# A respawn equipment is what a player will have in his inventory on respawn during combat phase if killed by
+# an enemy player
+# Respawn equipments must be sorted by startCycle ascending order
+respawnEquipments:
+  - startCycle: 2              # Cycles start at 1
+    armor: "LEATHER"           # Must be one of the following: LEATHER, CHAINMAIL, GOLD, IRON, DIAMOND, NETHERITE
+    weapon: "WOODEN_SWORD"     # Must be a valid Material
+    item: "COOKED_BEEF"        # Must be a valid Material
+    itemQuantity: 2            # Must be > 0
+  - startCycle: 3              # Cycles start at 1
+    armor: "CHAINMAIL"         # Must be one of the following: LEATHER, CHAINMAIL, GOLD, IRON, DIAMOND, NETHERITE
+    weapon: "STONE_SWORD"      # Must be a valid Material
+    item: "COOKED_BEEF"        # Must be a valid Material
+    itemQuantity: 2            # Must be > 0

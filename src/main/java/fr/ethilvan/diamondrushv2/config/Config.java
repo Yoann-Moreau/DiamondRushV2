@@ -36,11 +36,14 @@ public class Config {
 	// Exploration rewards
 	private int rewardsStartCycle = 2;
 	private List<ExplorationReward> explorationRewards;
+	// Respawn equipments
+	private List<RespawnEquipment> respawnEquipments;
 
 
 	public Config(DiamondRushV2 plugin) {
 		this.plugin = plugin;
 		explorationRewards = new ArrayList<>();
+		respawnEquipments = new ArrayList<>();
 	}
 
 
@@ -116,6 +119,10 @@ public class Config {
 		return explorationRewards;
 	}
 
+	public List<RespawnEquipment> getRespawnEquipments() {
+		return respawnEquipments;
+	}
+
 
 	public void load() {
 		totemPlacementDuration = plugin.getConfig().getInt("phases.duration.totemPlacement");
@@ -137,14 +144,24 @@ public class Config {
 		rewardsStartCycle = plugin.getConfig().getInt("explorationRewards.startCycle");
 
 		explorationRewards = new ArrayList<>();
-
 		List<Map<?, ?>> explorationRewardsList = plugin.getConfig().getMapList("explorationRewards.rewards");
-
 		for (Map<?, ?> rewardMap : explorationRewardsList) {
 			explorationRewards.add(new ExplorationReward(
 					(String) rewardMap.get("material"),
 					(int) rewardMap.get("quantity"),
 					(String) rewardMap.get("who")
+			));
+		}
+
+		respawnEquipments = new ArrayList<>();
+		List<Map<?, ?>> respawnEquipmentsList = plugin.getConfig().getMapList("respawnEquipments");
+		for (Map<?, ?> equipmentMap : respawnEquipmentsList) {
+			respawnEquipments.add(new RespawnEquipment(
+					(int) equipmentMap.get("startCycle"),
+					(String) equipmentMap.get("armor"),
+					(String) equipmentMap.get("weapon"),
+					(String) equipmentMap.get("item"),
+					(int) equipmentMap.get("itemQuantity")
 			));
 		}
 

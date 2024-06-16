@@ -42,17 +42,17 @@ public class ExplorationReward {
 	}
 
 
-	public boolean isMaterialValid() {
+	private boolean isMaterialValid() {
 		return Material.getMaterial(material) != null;
 	}
 
 
-	public boolean isQuantityValid() {
+	private boolean isQuantityValid() {
 		return (quantity > 0);
 	}
 
 
-	public boolean isWhoValid() {
+	private boolean isWhoValid() {
 		return (who.equals("leader") || who.equals("player"));
 	}
 }
