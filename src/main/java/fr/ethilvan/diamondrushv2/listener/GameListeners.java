@@ -27,6 +27,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.world.StructureGrowEvent;
@@ -247,6 +248,30 @@ public class GameListeners implements Listener {
 				return;
 			}
 		}
+	}
+
+
+	@EventHandler
+	public void onInteract(PlayerInteractEvent event) {
+		if (diamondRush.getGame() == null) {
+			return;
+		}
+		Player player = event.getPlayer();
+		boolean isRightClick = event.getAction().isRightClick();
+		Block targetedBlock = event.getClickedBlock();
+		if (targetedBlock == null) {
+			return;
+		}
+		Material targetedBlockType = targetedBlock.getType();
+		Material itemInHand = player.getInventory().getItemInMainHand().getType();
+		Material itemInOffHand = player.getInventory().getItemInOffHand().getType();
+		if (!isRightClick || targetedBlockType.equals(Material.OBSIDIAN)) {
+			return;
+		}
+		if (!itemInHand.equals(Material.FLINT_AND_STEEL) && !itemInOffHand.equals(Material.FLINT_AND_STEEL)) {
+			return;
+		}
+		event.setCancelled(true);
 	}
 
 
