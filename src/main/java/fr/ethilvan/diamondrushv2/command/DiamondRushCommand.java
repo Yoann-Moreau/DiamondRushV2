@@ -43,7 +43,7 @@ public class DiamondRushCommand implements TabExecutor {
 		if (args.length < 1) {
 			sender.sendMessage("----------------Available commands----------------");
 			for (Subcommand subcommand : subcommands) {
-				if (!sender.hasPermission(subcommand.getPermission())) {
+				if (!sender.hasPermission(subcommand.getPermission()) && !subcommand.getPermission().isEmpty()) {
 					continue;
 				}
 				String description = diamondRush.getMessagesConfig().getString(subcommand.getDescription());

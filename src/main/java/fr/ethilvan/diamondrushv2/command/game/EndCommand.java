@@ -31,7 +31,7 @@ public class EndCommand extends Subcommand {
 
 	@Override
 	public String getPermission() {
-		return "diamondrush.end";
+		return "diamondrush.admin.end";
 	}
 
 	@Override

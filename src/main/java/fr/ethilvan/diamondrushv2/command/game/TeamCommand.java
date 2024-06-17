@@ -36,7 +36,7 @@ public class TeamCommand extends Subcommand {
 
 	@Override
 	public String getPermission() {
-		return "diamondrush.team";
+		return "diamondrush.setup.team";
 	}
 
 	@Override

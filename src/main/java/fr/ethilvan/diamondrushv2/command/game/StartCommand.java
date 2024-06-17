@@ -35,7 +35,7 @@ public class StartCommand extends Subcommand {
 
 	@Override
 	public String getPermission() {
-		return "diamondrush.start";
+		return "diamondrush.manage.start";
 	}
 
 	@Override

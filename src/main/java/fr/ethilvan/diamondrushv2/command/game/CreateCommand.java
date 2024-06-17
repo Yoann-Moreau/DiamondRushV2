@@ -33,7 +33,7 @@ public class CreateCommand extends Subcommand {
 
 	@Override
 	public String getPermission() {
-		return "diamondrush.create";
+		return "diamondrush.setup.create";
 	}
 
 

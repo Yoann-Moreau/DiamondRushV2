@@ -36,7 +36,7 @@ public class PauseCommand extends Subcommand {
 
 	@Override
 	public String getPermission() {
-		return "diamondrush.pause";
+		return "diamondrush.manage.pause";
 	}
 
 	@Override

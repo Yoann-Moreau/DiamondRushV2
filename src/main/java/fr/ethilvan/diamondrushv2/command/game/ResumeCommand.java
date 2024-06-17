@@ -37,7 +37,7 @@ public class ResumeCommand extends Subcommand {
 
 	@Override
 	public String getPermission() {
-		return "diamondrush.resume";
+		return "diamondrush.manage.resume";
 	}
 
 	@Override

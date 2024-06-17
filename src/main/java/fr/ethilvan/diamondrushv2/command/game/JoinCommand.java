@@ -36,16 +36,12 @@ public class JoinCommand extends Subcommand {
 
 	@Override
 	public String getPermission() {
-		return "diadmondrush.join";
+		return "";
 	}
 
 
 	@Override
 	public void perform(CommandSender sender, @NotNull String[] args) {
-		if (!sender.hasPermission(getPermission())) {
-			sendMessage(sender, "messages.commands.noPermission");
-			return;
-		}
 		if (!(sender instanceof Player player)) {
 			sendMessage(sender, "messages.commands.notAPlayer");
 			return;

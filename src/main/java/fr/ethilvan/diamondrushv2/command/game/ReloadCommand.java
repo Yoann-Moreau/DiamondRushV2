@@ -33,7 +33,7 @@ public class ReloadCommand extends Subcommand {
 
 	@Override
 	public String getPermission() {
-		return "diamondrush.reload";
+		return "diamondrush.admin.reload";
 	}
 
 	@Override
