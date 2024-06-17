@@ -433,8 +433,8 @@ public class GameListeners implements Listener {
 		// Get respawn equipments
 		List<RespawnEquipment> respawnEquipments = diamondRush.getConfig().getRespawnEquipments();
 		for (RespawnEquipment respawnEquipment : respawnEquipments) {
-			killed.getInventory().clear();
-			if (respawnEquipment.getStartCycle() >= diamondRush.getGame().getCycle()) {
+			if (respawnEquipment.getStartCycle() <= diamondRush.getGame().getCycle()) {
+				killed.getInventory().clear();
 				// Armor
 				killed.getInventory().setHelmet(new ItemStack(respawnEquipment.getHelmet()));
 				killed.getInventory().setChestplate(new ItemStack(respawnEquipment.getChestplate()));
