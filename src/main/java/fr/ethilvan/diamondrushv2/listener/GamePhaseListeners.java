@@ -132,27 +132,52 @@ public class GamePhaseListeners implements Listener {
 			region.create(patterns);
 			diamondRush.getGame().addRegion(teamEntry.getValue().getName() + "Totem", region);
 		}
-		Bukkit.getPluginManager().callEvent(new SpawnPlacementStartEvent());
+		Bukkit.getPluginManager().callEvent(new SpawnPlacementStartEvent(true));
 	}
 
 
 	@EventHandler
 	public void onSpawnPlacementStart(SpawnPlacementStartEvent event) {
 		diamondRush.getGame().setPhase(GamePhase.SPAWN_PLACEMENT);
-		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
-			// Set team lives
-			int lives = diamondRush.getConfig().getTotemHeight() + 2;
-			teamEntry.getValue().setLives(lives);
-			// Give chiseled stone bricks to leaders
-			Player leader = Bukkit.getPlayer(teamEntry.getValue().getLeaderUuid());
-			if (leader == null) {
-				continue;
+		if (event.isFirstPlacement()) {
+			for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+				// Set team lives
+				int lives = diamondRush.getConfig().getTotemHeight() + 2;
+				teamEntry.getValue().setLives(lives);
+				// Give chiseled stone bricks to leaders
+				Player leader = Bukkit.getPlayer(teamEntry.getValue().getLeaderUuid());
+				if (leader == null) {
+					continue;
+				}
+				leader.getInventory().setItemInMainHand(new ItemStack(Material.CHISELED_STONE_BRICKS));
 			}
-			leader.getInventory().setItemInMainHand(new ItemStack(Material.CHISELED_STONE_BRICKS));
+			// Message players
+			diamondRush.messageLeaders("messages.phases.spawnPlacement.start.leader");
+			diamondRush.messageOtherPlayersInTeams("messages.phases.spawnPlacement.start.player");
 		}
-		// Message players
-		diamondRush.messageLeaders("messages.phases.spawnPlacement.start.leader");
-		diamondRush.messageOtherPlayersInTeams("messages.phases.spawnPlacement.start.player");
+		// Next spawn placements
+		else {
+			for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+				Team team = teamEntry.getValue();
+				int minDistance = diamondRush.getConfig().getMinDistanceFromTotem();
+				if (team.getSpawnBlock() == null) {
+					continue;
+				}
+				if (team.getSpawnBlock().getLocation().distance(team.getTotemBlock().getLocation()) >= minDistance) {
+					continue;
+				}
+				team.getSpawnBlock().setType(Material.AIR);
+				team.setSpawnBlock(null);
+				Player leader = Bukkit.getPlayer(team.getLeaderUuid());
+				if (leader == null) {
+					continue;
+				}
+				// Give chiseled stone bricks to leaders if necessary
+				if (!leader.getInventory().contains(Material.CHISELED_STONE_BRICKS)) {
+					leader.getInventory().setItemInMainHand(new ItemStack(Material.CHISELED_STONE_BRICKS));
+				}
+			}
+		}
 
 		diamondRush.getGame().setGameTimer(new ScoreboardTimer(
 				diamondRush,
@@ -188,14 +213,7 @@ public class GamePhaseListeners implements Listener {
 				placeholders.put("\\{team-name\\}", teamEntry.getValue().getName());
 				diamondRush.broadcastMessage("messages.phases.spawnPlacement.end.goAgain", placeholders);
 
-				diamondRush.getGame().setGameTimer(new ScoreboardTimer(
-						diamondRush,
-						diamondRush.getConfig().getSpawnPlacementDuration(),
-						() -> Bukkit.getPluginManager().callEvent(new SpawnPlacementEndEvent()),
-						"messages.phases.spawnPlacement.name",
-						"messages.phases.spawnPlacement.end.end"
-				));
-				diamondRush.getGame().getGameTimer().run();
+				Bukkit.getPluginManager().callEvent(new SpawnPlacementStartEvent(false));
 				return;
 			}
 			// Check if block was placed

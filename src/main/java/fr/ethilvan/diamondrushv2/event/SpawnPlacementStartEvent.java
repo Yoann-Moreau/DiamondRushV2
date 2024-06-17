@@ -9,6 +9,13 @@ public class SpawnPlacementStartEvent extends Event implements Cancellable {
 
 	private static final HandlerList HANDLER_LIST = new HandlerList();
 	private boolean cancelled = false;
+	private final boolean firstPlacement;
+
+
+	public SpawnPlacementStartEvent(boolean firstPlacement) {
+		this.firstPlacement = firstPlacement;
+	}
+
 
 	@Override
 	public @NotNull HandlerList getHandlers() {
@@ -28,5 +35,10 @@ public class SpawnPlacementStartEvent extends Event implements Cancellable {
 	@Override
 	public void setCancelled(boolean cancelled) {
 		this.cancelled = cancelled;
+	}
+
+
+	public boolean isFirstPlacement() {
+		return firstPlacement;
 	}
 }

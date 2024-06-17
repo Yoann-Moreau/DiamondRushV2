@@ -127,8 +127,15 @@ public class GameListeners implements Listener {
 
 			for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 				Team team = teamEntry.getValue();
-				if (team.getTotemBlock().getLocation().equals(event.getBlock().getLocation())) {
+				Block totemBlock = team.getTotemBlock();
+				if (totemBlock == null) {
+					continue;
+				}
+				if (totemBlock.getLocation().equals(event.getBlock().getLocation())) {
 					Player player = event.getPlayer();
+					if (!team.getPlayerUUIDs().contains(player.getUniqueId())) {
+						return;
+					}
 					if (!team.getLeaderUuid().equals(player.getUniqueId())) {
 						changeLeader(team, player);
 					}
@@ -144,8 +151,15 @@ public class GameListeners implements Listener {
 
 			for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 				Team team = teamEntry.getValue();
-				if (team.getSpawnBlock().getLocation().equals(event.getBlock().getLocation())) {
+				Block spawnBlock = team.getSpawnBlock();
+				if (spawnBlock == null) {
+					continue;
+				}
+				if (spawnBlock.getLocation().equals(event.getBlock().getLocation())) {
 					Player player = event.getPlayer();
+					if (!team.getPlayerUUIDs().contains(player.getUniqueId())) {
+						return;
+					}
 					if (!team.getLeaderUuid().equals(player.getUniqueId())) {
 						changeLeader(team, player);
 					}
