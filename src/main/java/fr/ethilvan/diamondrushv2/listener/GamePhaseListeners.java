@@ -25,7 +25,6 @@ import java.util.*;
 public class GamePhaseListeners implements Listener {
 
 	private final DiamondRush diamondRush;
-	private ScoreboardTimer gameTimer = null;
 
 
 	public GamePhaseListeners(DiamondRush diamondRush) {
@@ -38,14 +37,14 @@ public class GamePhaseListeners implements Listener {
 		diamondRush.getGame().setPhase(GamePhase.STARTING);
 		diamondRush.broadcastMessage("messages.phases.starting.start");
 
-		gameTimer = new ScoreboardTimer(
+		diamondRush.getGame().setGameTimer(new ScoreboardTimer(
 				diamondRush,
 				5,
 				() -> Bukkit.getPluginManager().callEvent(new TotemPlacementStartEvent(true)),
 				"messages.phases.starting.name",
 				"messages.phases.starting.end"
-		);
-		gameTimer.run();
+		));
+		diamondRush.getGame().getGameTimer().run();
 	}
 
 
@@ -100,14 +99,14 @@ public class GamePhaseListeners implements Listener {
 
 		diamondRush.getGame().getWorld().setTime(0);
 
-		gameTimer = new ScoreboardTimer(
+		diamondRush.getGame().setGameTimer(new ScoreboardTimer(
 				diamondRush,
 				diamondRush.getConfig().getTotemPlacementDuration(),
 				() -> Bukkit.getPluginManager().callEvent(new TotemPlacementEndEvent()),
 				"messages.phases.totemPlacement.name",
 				"messages.phases.totemPlacement.end.end"
-		);
-		gameTimer.run();
+		));
+		diamondRush.getGame().getGameTimer().run();
 	}
 
 
@@ -155,14 +154,14 @@ public class GamePhaseListeners implements Listener {
 		diamondRush.messageLeaders("messages.phases.spawnPlacement.start.leader");
 		diamondRush.messageOtherPlayersInTeams("messages.phases.spawnPlacement.start.player");
 
-		gameTimer = new ScoreboardTimer(
+		diamondRush.getGame().setGameTimer(new ScoreboardTimer(
 				diamondRush,
 				diamondRush.getConfig().getSpawnPlacementDuration(),
 				() -> Bukkit.getPluginManager().callEvent(new SpawnPlacementEndEvent()),
 				"messages.phases.spawnPlacement.name",
 				"messages.phases.spawnPlacement.end.end"
-		);
-		gameTimer.run();
+		));
+		diamondRush.getGame().getGameTimer().run();
 	}
 
 
@@ -189,14 +188,14 @@ public class GamePhaseListeners implements Listener {
 				placeholders.put("\\{team-name\\}", teamEntry.getValue().getName());
 				diamondRush.broadcastMessage("messages.phases.spawnPlacement.end.goAgain", placeholders);
 
-				gameTimer = new ScoreboardTimer(
+				diamondRush.getGame().setGameTimer(new ScoreboardTimer(
 						diamondRush,
 						diamondRush.getConfig().getSpawnPlacementDuration(),
 						() -> Bukkit.getPluginManager().callEvent(new SpawnPlacementEndEvent()),
 						"messages.phases.spawnPlacement.name",
 						"messages.phases.spawnPlacement.end.end"
-				);
-				gameTimer.run();
+				));
+				diamondRush.getGame().getGameTimer().run();
 				return;
 			}
 			// Check if block was placed
@@ -240,14 +239,14 @@ public class GamePhaseListeners implements Listener {
 			duration = firstExploration + numberOfChanges * explorationChange;
 		}
 
-		gameTimer = new ScoreboardTimer(
+		diamondRush.getGame().setGameTimer(new ScoreboardTimer(
 				diamondRush,
 				duration,
 				() -> Bukkit.getPluginManager().callEvent(new TransitionStartEvent()),
 				"messages.phases.exploration.name",
 				"messages.phases.exploration.end"
-		);
-		gameTimer.run();
+		));
+		diamondRush.getGame().getGameTimer().run();
 	}
 
 
@@ -267,14 +266,14 @@ public class GamePhaseListeners implements Listener {
 			runnable = () -> Bukkit.getPluginManager().callEvent(new ExplorationStartEvent());
 		}
 
-		gameTimer = new ScoreboardTimer(
+		diamondRush.getGame().setGameTimer(new ScoreboardTimer(
 				diamondRush,
 				diamondRush.getConfig().getTransitionDuration(),
 				runnable,
 				"messages.phases.transition.name",
 				"messages.phases.transition.end"
-		);
-		gameTimer.run();
+		));
+		diamondRush.getGame().getGameTimer().run();
 	}
 
 
@@ -302,14 +301,14 @@ public class GamePhaseListeners implements Listener {
 			duration = firstCombat + numberOfChanges * combatChange;
 		}
 
-		gameTimer = new ScoreboardTimer(
+		diamondRush.getGame().setGameTimer(new ScoreboardTimer(
 				diamondRush,
 				duration,
 				() -> Bukkit.getPluginManager().callEvent(new TransitionStartEvent()),
 				"messages.phases.combat.name",
 				"messages.phases.combat.end"
-		);
-		gameTimer.run();
+		));
+		diamondRush.getGame().getGameTimer().run();
 	}
 
 
@@ -349,8 +348,8 @@ public class GamePhaseListeners implements Listener {
 			}
 			team.getMinecraftTeam().unregister();
 		}
-		if (gameTimer != null) {
-			gameTimer.cancel();
+		if (diamondRush.getGame().getGameTimer() != null) {
+			diamondRush.getGame().getGameTimer().cancel();
 		}
 		diamondRush.resetScoreboard();
 		diamondRush.setGame(null);

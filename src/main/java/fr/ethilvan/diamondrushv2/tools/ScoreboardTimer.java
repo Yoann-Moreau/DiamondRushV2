@@ -1,6 +1,7 @@
 package fr.ethilvan.diamondrushv2.tools;
 
 import fr.ethilvan.diamondrushv2.DiamondRush;
+import fr.ethilvan.diamondrushv2.game.GamePhase;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.*;
 
@@ -13,6 +14,7 @@ public class ScoreboardTimer implements Runnable {
 	private final String entryNamePath;
 	private final String endMessagePath;
 	private int taskId;
+	private int pauseTimer;
 
 
 
@@ -29,6 +31,7 @@ public class ScoreboardTimer implements Runnable {
 		this.entryNamePath = entryNamePath;
 		this.endMessagePath = endMessagePath;
 		this.taskId = -1;
+		this.pauseTimer = 0;
 
 		init();
 	}
@@ -79,6 +82,77 @@ public class ScoreboardTimer implements Runnable {
 			diamondRush.broadcastMessage(endMessagePath);
 			runnable.run();
 		}, 20L);
+	}
+
+
+	public void pause() {
+		diamondRush.getGame().setNextPhase(diamondRush.getGame().getPhase());
+		diamondRush.getGame().setPhase(GamePhase.PAUSE);
+		BukkitScheduler scheduler = diamondRush.getPlugin().getScheduler();
+		scheduler.cancelTask(taskId);
+		taskId = scheduler.scheduleSyncDelayedTask(diamondRush.getPlugin(), () -> {
+			pauseTimer = 0;
+			Objective sidebar = diamondRush.getScoreboard().getObjective("sidebar");
+			if (sidebar == null) {
+				return;
+			}
+			String pauseName = diamondRush.getMessagesConfig().getString("messages.phases.pause.name");
+			if (pauseName == null) {
+				diamondRush.missingMessage("messages.phases.pause.name");
+				return;
+			}
+			Score timer = sidebar.getScore(pauseName);
+			timer.setScore(pauseTimer);
+			continuePause();
+		}, 20L);
+	}
+
+
+	private void continuePause() {
+		BukkitScheduler scheduler = diamondRush.getPlugin().getScheduler();
+		taskId = scheduler.scheduleSyncDelayedTask(diamondRush.getPlugin(), () -> {
+			pauseTimer++;
+			Objective sidebar = diamondRush.getScoreboard().getObjective("sidebar");
+			if (sidebar == null) {
+				return;
+			}
+			String pauseName = diamondRush.getMessagesConfig().getString("messages.phases.pause.name");
+			if (pauseName == null) {
+				diamondRush.missingMessage("messages.phases.pause.name");
+				return;
+			}
+			Score timer = sidebar.getScore(pauseName);
+			timer.setScore(pauseTimer);
+			continuePause();
+		}, 20L);
+	}
+
+
+	public void resume() {
+		BukkitScheduler scheduler = diamondRush.getPlugin().getScheduler();
+		scheduler.cancelTask(taskId);
+		diamondRush.getGame().setPhase(diamondRush.getGame().getNextPhase());
+		GamePhase currentPhase = diamondRush.getGame().getPhase();
+		// Reset pause timer
+		Objective sidebar = diamondRush.getScoreboard().getObjective("sidebar");
+		if (sidebar == null) {
+			return;
+		}
+		String pauseName = diamondRush.getMessagesConfig().getString("messages.phases.pause.name");
+		if (pauseName == null) {
+			diamondRush.missingMessage("messages.phases.pause.name");
+			return;
+		}
+		Score timer = sidebar.getScore(pauseName);
+		timer.resetScore();
+		// Set next phase
+		if (currentPhase.equals(GamePhase.COMBAT)) {
+			diamondRush.getGame().setNextPhase(GamePhase.EXPLORATION);
+		}
+		else if (currentPhase.equals(GamePhase.EXPLORATION)) {
+			diamondRush.getGame().setNextPhase(GamePhase.COMBAT);
+		}
+		run();
 	}
 
 

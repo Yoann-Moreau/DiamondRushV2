@@ -47,24 +47,8 @@ public class RespawnEquipment {
 		return startCycle;
 	}
 
-	public String getArmor() {
-		return armor;
-	}
-
-	public Material getArmorMaterial() {
-		return Material.getMaterial(armor);
-	}
-
-	public String getWeapon() {
-		return weapon;
-	}
-
 	public Material getWeaponMaterial() {
 		return Material.getMaterial(weapon);
-	}
-
-	public String getItem() {
-		return item;
 	}
 
 	public Material getItemMaterial() {

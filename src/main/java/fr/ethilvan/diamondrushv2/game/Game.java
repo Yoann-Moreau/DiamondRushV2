@@ -2,6 +2,7 @@ package fr.ethilvan.diamondrushv2.game;
 
 import fr.ethilvan.diamondrushv2.DiamondRush;
 import fr.ethilvan.diamondrushv2.region.Region;
+import fr.ethilvan.diamondrushv2.tools.ScoreboardTimer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -28,6 +29,7 @@ public class Game {
 	private GamePhase nextPhase;
 	private int cycle = 1;
 	private int defeatedTeams = 0;
+	private ScoreboardTimer gameTimer = null;
 
 
 	public Game(DiamondRush diamondRush, World world, Location spawn) {
@@ -134,6 +136,15 @@ public class Game {
 
 	public void setDefeatedTeams(int defeatedTeams) {
 		this.defeatedTeams = defeatedTeams;
+	}
+
+
+	public ScoreboardTimer getGameTimer() {
+		return gameTimer;
+	}
+
+	public void setGameTimer(ScoreboardTimer gameTimer) {
+		this.gameTimer = gameTimer;
 	}
 
 

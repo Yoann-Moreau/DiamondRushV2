@@ -37,6 +37,11 @@ messages:
     end:
       description: "Ends the current DiamondRush game."
       success: "<gray>The DiamondRush game has been ended."
+    pause:
+      description: "Pauses the current DiamondRush game."
+      noTimer: "<red>No timer to pause for now."
+    resume:
+      description: "Resumes the current DiamondRush game."
   noGameCreated: "<red>You must create a game first."
   timer:
     major: "<yellow>{timer}"
@@ -78,6 +83,9 @@ messages:
       name: "Transition"
       start: "Time to change channel."
       end: ""
+    pause:
+      name: "Pause"
+      noGamePaused: "The game is not currently paused."
   scoreboard:
     name: "Phase:"
   killReward: "<green>You've been rewarded for you kill, check your inventory."
