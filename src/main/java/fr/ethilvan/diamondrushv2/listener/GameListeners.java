@@ -8,6 +8,7 @@ import fr.ethilvan.diamondrushv2.event.TeamLossEvent;
 import fr.ethilvan.diamondrushv2.game.GamePhase;
 import fr.ethilvan.diamondrushv2.game.Team;
 import fr.ethilvan.diamondrushv2.region.Region;
+import fr.ethilvan.diamondrushv2.tools.ScoreboardTimer;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Bukkit;
@@ -269,19 +270,49 @@ public class GameListeners implements Listener {
 		Player player = event.getPlayer();
 		boolean isRightClick = event.getAction().isRightClick();
 		Block targetedBlock = event.getClickedBlock();
-		if (targetedBlock == null) {
-			return;
-		}
-		Material targetedBlockType = targetedBlock.getType();
 		Material itemInHand = player.getInventory().getItemInMainHand().getType();
 		Material itemInOffHand = player.getInventory().getItemInOffHand().getType();
-		if (!isRightClick || targetedBlockType.equals(Material.OBSIDIAN)) {
-			return;
+
+		// Disable flint and steel
+		if (itemInHand.equals(Material.FLINT_AND_STEEL) || itemInOffHand.equals(Material.FLINT_AND_STEEL)) {
+			if (targetedBlock == null) {
+				return;
+			}
+			Material targetedBlockType = targetedBlock.getType();
+			// Allow nether portals
+			if (!isRightClick || targetedBlockType.equals(Material.OBSIDIAN)) {
+				return;
+			}
+			event.setCancelled(true);
 		}
-		if (!itemInHand.equals(Material.FLINT_AND_STEEL) && !itemInOffHand.equals(Material.FLINT_AND_STEEL)) {
-			return;
+
+		// Allow surrender
+		Material surrenderMaterial = Material.getMaterial(diamondRush.getConfig().getSurrenderMaterial());
+		if (itemInHand.equals(surrenderMaterial)) {
+			if (!diamondRush.getGame().getPhase().equals(GamePhase.COMBAT)) {
+				return;
+			}
+			Team team = diamondRush.getGame().getTeam(player.getUniqueId());
+			if (team == null) {
+				return;
+			}
+			if (team.getDeaths() < diamondRush.getConfig().getMinDeathsForSurrender()) {
+				return;
+			}
+			ScoreboardTimer gameTimer = diamondRush.getGame().getGameTimer();
+			if (gameTimer == null) {
+				return;
+			}
+			if (gameTimer.getRemainingTime() < 1) {
+				return;
+			}
+			player.getInventory().removeItem(new ItemStack(surrenderMaterial, 1));
+			Map<String, String> placeholders = new HashMap<>();
+			placeholders.put("\\{team-color\\}", team.getTeamColor().getColorName().toLowerCase());
+			placeholders.put("\\{team-name\\}", team.getName());
+			diamondRush.broadcastMessage("messages.phases.combat.surrender", placeholders);
+			gameTimer.setRemainingTime(0);
 		}
-		event.setCancelled(true);
 	}
 
 
@@ -441,6 +472,7 @@ public class GameListeners implements Listener {
 			return;
 		}
 		// Increment kills for team
+		killedTeam.setDeaths(killedTeam.getDeaths() + 1);
 		killerTeam.setKills(killerTeam.getKills() + 1);
 		rewardPlayerForKill(killer);
 

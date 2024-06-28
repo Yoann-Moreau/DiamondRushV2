@@ -79,6 +79,7 @@ messages:
       name: "Combat"
       start: "Start of the combat phase."
       end: "End of the combat phase."
+      surrender: "The team <{team-color}>{team-name}</{team-color}> has surrendered."
     transition:
       name: "Transition"
       start: "Time to change channel."

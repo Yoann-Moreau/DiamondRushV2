@@ -20,6 +20,7 @@ public class Team {
 	private Block spawnBlock = null;
 	private int lives;
 	private int kills = 0;
+	private int deaths = 0;
 
 	private final ScoreboardManager scoreboardManager;
 
@@ -132,5 +133,14 @@ public class Team {
 
 	public void setKills(int kills) {
 		this.kills = kills;
+	}
+
+
+	public int getDeaths() {
+		return deaths;
+	}
+
+	public void setDeaths(int deaths) {
+		this.deaths = deaths;
 	}
 }

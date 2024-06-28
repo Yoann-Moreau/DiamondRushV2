@@ -303,9 +303,10 @@ public class GamePhaseListeners implements Listener {
 		diamondRush.getGame().getWorld().setGameRule(GameRule.KEEP_INVENTORY, true);
 		diamondRush.getGame().getNetherWorld().setGameRule(GameRule.KEEP_INVENTORY, true);
 
-		// Reset kills for teams
+		// Reset kills and deaths for teams
 		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 			teamEntry.getValue().setKills(0);
+			teamEntry.getValue().setDeaths(0);
 		}
 
 		changePlayersGameMode(GameMode.SURVIVAL);

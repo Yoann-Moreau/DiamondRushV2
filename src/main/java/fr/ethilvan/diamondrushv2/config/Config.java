@@ -27,6 +27,9 @@ public class Config {
 	private int minDistanceFromTotem = 25;
 	// Spot
 	private int distanceToSpot = 25;
+	// Surrender
+	private String surrenderMaterial = "PAPER";
+	private int minDeathsForSurrender = 1;
 	// Kill rewards
 	private int nextKillsThreshold = 3;
 	private String firstKillsMaterial = "DIAMOND";
@@ -91,6 +94,14 @@ public class Config {
 		return Math.max(5, distanceToSpot);
 	}
 
+	public String getSurrenderMaterial() {
+		return surrenderMaterial;
+	}
+
+	public int getMinDeathsForSurrender() {
+		return Math.max(0, minDeathsForSurrender);
+	}
+
 	public int getNextKillsThreshold() {
 		return Math.max(1, nextKillsThreshold);
 	}
@@ -136,6 +147,8 @@ public class Config {
 		totemHeight = plugin.getConfig().getInt("totems.height");
 		minDistanceFromTotem = plugin.getConfig().getInt("teamSpawns.minDistanceFromTotem");
 		distanceToSpot = plugin.getConfig().getInt("distanceToSpot");
+		surrenderMaterial = plugin.getConfig().getString("surrenderMaterial");
+		minDeathsForSurrender = plugin.getConfig().getInt("minDeathsForSurrender");
 		nextKillsThreshold = plugin.getConfig().getInt("killRewards.nextKillsThreshold");
 		firstKillsMaterial = plugin.getConfig().getString("killRewards.firstKills.material");
 		firstKillsQuantity = plugin.getConfig().getInt("killRewards.firstKills.quantity");
@@ -170,6 +183,9 @@ public class Config {
 
 
 	public void checkForErrors() {
+		if (Material.getMaterial(surrenderMaterial) == null) {
+			throw new RuntimeException("The surrenderMaterial must be a valid Material");
+		}
 		if (Material.getMaterial(firstKillsMaterial) == null) {
 			throw new RuntimeException("The firstKillsMaterial must be a valid Material.");
 		}

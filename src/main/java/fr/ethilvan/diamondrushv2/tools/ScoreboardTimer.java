@@ -37,6 +37,15 @@ public class ScoreboardTimer implements Runnable {
 	}
 
 
+	public int getRemainingTime() {
+		return remainingTime;
+	}
+
+	public void setRemainingTime(int remainingTime) {
+		this.remainingTime = remainingTime;
+	}
+
+
 	private void init() {
 		entryName = diamondRush.getMessagesConfig().getString(entryNamePath);
 		if (entryName == null) {
