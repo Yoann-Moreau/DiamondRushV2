@@ -21,6 +21,7 @@ public class Team {
 	private int lives;
 	private int kills = 0;
 	private int deaths = 0;
+	private int surrenders = 0;
 
 	private final ScoreboardManager scoreboardManager;
 
@@ -142,5 +143,13 @@ public class Team {
 
 	public void setDeaths(int deaths) {
 		this.deaths = deaths;
+	}
+
+	public int getSurrenders() {
+		return surrenders;
+	}
+
+	public void setSurrenders(int surrenders) {
+		this.surrenders = surrenders;
 	}
 }

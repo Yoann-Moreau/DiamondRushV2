@@ -25,6 +25,7 @@ distanceToSpot: 25
 surrenderMaterial: "PAPER"     # Must be a valid Material
 # Number of deaths by combat before a team can surrender the current combat phase
 minDeathsForSurrender: 1
+maxSurrendersPerTeam: 1
 # Kill rewards are given to the player getting a kill on an enemy team player during a combat phase
 killRewards:
   nextKillsThreshold: 3

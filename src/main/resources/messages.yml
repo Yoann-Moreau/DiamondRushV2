@@ -79,7 +79,9 @@ messages:
       name: "Combat"
       start: "Start of the combat phase."
       end: "End of the combat phase."
-      surrender: "The team <{team-color}>{team-name}</{team-color}> has surrendered."
+      surrender:
+        success: "The team <{team-color}>{team-name}</{team-color}> has surrendered."
+        maxSurrendersReached: "<red>Your team has already surrendered too many times."
     transition:
       name: "Transition"
       start: "Time to change channel."

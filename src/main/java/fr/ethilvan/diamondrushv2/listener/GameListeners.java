@@ -306,11 +306,16 @@ public class GameListeners implements Listener {
 			if (gameTimer.getRemainingTime() < 1) {
 				return;
 			}
+			if (team.getSurrenders() >= diamondRush.getConfig().getMaxSurrendersPerTeam()) {
+				diamondRush.messagePlayer(player, "messages.phases.combat.surrender.maxSurrendersReached");
+				return;
+			}
 			player.getInventory().removeItem(new ItemStack(surrenderMaterial, 1));
+			team.setSurrenders(team.getSurrenders() + 1);
 			Map<String, String> placeholders = new HashMap<>();
 			placeholders.put("\\{team-color\\}", team.getTeamColor().getColorName().toLowerCase());
 			placeholders.put("\\{team-name\\}", team.getName());
-			diamondRush.broadcastMessage("messages.phases.combat.surrender", placeholders);
+			diamondRush.broadcastMessage("messages.phases.combat.surrender.success", placeholders);
 			gameTimer.setRemainingTime(0);
 		}
 	}

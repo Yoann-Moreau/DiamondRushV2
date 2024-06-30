@@ -30,6 +30,7 @@ public class Config {
 	// Surrender
 	private String surrenderMaterial = "PAPER";
 	private int minDeathsForSurrender = 1;
+	private int maxSurrendersPerTeam = 1;
 	// Kill rewards
 	private int nextKillsThreshold = 3;
 	private String firstKillsMaterial = "DIAMOND";
@@ -102,6 +103,10 @@ public class Config {
 		return Math.max(0, minDeathsForSurrender);
 	}
 
+	public int getMaxSurrendersPerTeam() {
+		return Math.max(0, maxSurrendersPerTeam);
+	}
+
 	public int getNextKillsThreshold() {
 		return Math.max(1, nextKillsThreshold);
 	}
@@ -149,6 +154,7 @@ public class Config {
 		distanceToSpot = plugin.getConfig().getInt("distanceToSpot");
 		surrenderMaterial = plugin.getConfig().getString("surrenderMaterial");
 		minDeathsForSurrender = plugin.getConfig().getInt("minDeathsForSurrender");
+		maxSurrendersPerTeam = plugin.getConfig().getInt("maxSurrendersPerTeam");
 		nextKillsThreshold = plugin.getConfig().getInt("killRewards.nextKillsThreshold");
 		firstKillsMaterial = plugin.getConfig().getString("killRewards.firstKills.material");
 		firstKillsQuantity = plugin.getConfig().getInt("killRewards.firstKills.quantity");
