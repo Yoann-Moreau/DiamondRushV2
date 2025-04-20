@@ -18,14 +18,12 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -554,6 +552,17 @@ public class GameListeners implements Listener {
 		placeholders.put("\\{player-name\\}", player.getName());
 		placeholders.put("\\{message\\}", textComponent.content());
 		diamondRush.broadcastMessage("messages.chatMessage", placeholders);
+	}
+
+
+	@EventHandler
+	public void onEntitySpawn(EntitySpawnEvent event) {
+		if (diamondRush.getGame() == null) {
+			return;
+		}
+		if (event.getEntity().getType() == EntityType.PHANTOM) {
+			event.setCancelled(true);
+		}
 	}
 
 
