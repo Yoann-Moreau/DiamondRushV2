@@ -51,12 +51,12 @@ explorationRewards:
 # Respawn equipments must be sorted by startCycle ascending order
 respawnEquipments:
   - startCycle: 2              # Cycles start at 1
-    armor: "LEATHER"           # Must be one of the following: LEATHER, CHAINMAIL, GOLD, IRON, DIAMOND, NETHERITE
+    armor: "NONE"              # Must be one of the following: NONE, LEATHER, CHAINMAIL, GOLD, IRON, DIAMOND, NETHERITE
     weapon: "WOODEN_SWORD"     # Must be a valid Material
     item: "COOKED_BEEF"        # Must be a valid Material
     itemQuantity: 2            # Must be > 0
   - startCycle: 3              # Cycles start at 1
-    armor: "CHAINMAIL"         # Must be one of the following: LEATHER, CHAINMAIL, GOLD, IRON, DIAMOND, NETHERITE
+    armor: "LEATHER"           # Must be one of the following: NONE, LEATHER, CHAINMAIL, GOLD, IRON, DIAMOND, NETHERITE
     weapon: "STONE_SWORD"      # Must be a valid Material
     item: "COOKED_BEEF"        # Must be a valid Material
     itemQuantity: 2            # Must be > 0

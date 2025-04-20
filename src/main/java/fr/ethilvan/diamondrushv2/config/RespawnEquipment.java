@@ -62,45 +62,49 @@ public class RespawnEquipment {
 
 	public Material getHelmet() {
 		return switch (armor) {
+			case "LEATHER" -> Material.LEATHER_HELMET;
 			case "CHAINMAIL" -> Material.CHAINMAIL_HELMET;
 			case "GOLD" -> Material.GOLDEN_HELMET;
 			case "IRON" -> Material.IRON_HELMET;
 			case "DIAMOND" -> Material.DIAMOND_HELMET;
 			case "NETHERITE" -> Material.NETHERITE_HELMET;
-			default -> Material.LEATHER_HELMET;
+			default -> Material.AIR;
 		};
 	}
 
 	public Material getChestplate() {
 		return switch (armor) {
+			case "LEATHER" -> Material.LEATHER_CHESTPLATE;
 			case "CHAINMAIL" -> Material.CHAINMAIL_CHESTPLATE;
 			case "GOLD" -> Material.GOLDEN_CHESTPLATE;
 			case "IRON" -> Material.IRON_CHESTPLATE;
 			case "DIAMOND" -> Material.DIAMOND_CHESTPLATE;
 			case "NETHERITE" -> Material.NETHERITE_CHESTPLATE;
-			default -> Material.LEATHER_CHESTPLATE;
+			default -> Material.AIR;
 		};
 	}
 
 	public Material getLeggings() {
 		return switch (armor) {
+			case "LEATHER" -> Material.LEATHER_LEGGINGS;
 			case "CHAINMAIL" -> Material.CHAINMAIL_LEGGINGS;
 			case "GOLD" -> Material.GOLDEN_LEGGINGS;
 			case "IRON" -> Material.IRON_LEGGINGS;
 			case "DIAMOND" -> Material.DIAMOND_LEGGINGS;
 			case "NETHERITE" -> Material.NETHERITE_LEGGINGS;
-			default -> Material.LEATHER_LEGGINGS;
+			default -> Material.AIR;
 		};
 	}
 
 	public Material getBoots() {
 		return switch (armor) {
+			case "LEATHER" -> Material.LEATHER_BOOTS;
 			case "CHAINMAIL" -> Material.CHAINMAIL_BOOTS;
 			case "GOLD" -> Material.GOLDEN_BOOTS;
 			case "IRON" -> Material.IRON_BOOTS;
 			case "DIAMOND" -> Material.DIAMOND_BOOTS;
 			case "NETHERITE" -> Material.NETHERITE_BOOTS;
-			default -> Material.LEATHER_BOOTS;
+			default -> Material.AIR;
 		};
 	}
 
@@ -112,6 +116,7 @@ public class RespawnEquipment {
 
 	private boolean isArmorValid() {
 		List<String> armors = new ArrayList<>();
+		armors.add("NONE");
 		armors.add("LEATHER");
 		armors.add("CHAINMAIL");
 		armors.add("GOLD");
