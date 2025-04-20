@@ -26,10 +26,7 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
@@ -376,6 +373,22 @@ public class GameListeners implements Listener {
 		}
 		GamePhase phase = diamondRush.getGame().getPhase();
 		if (phase.equals(GamePhase.TRANSITION) || phase.equals(GamePhase.PAUSE)) {
+			event.setCancelled(true);
+		}
+	}
+
+
+	@EventHandler
+	public void onItemDrop(PlayerDropItemEvent event) {
+		if (diamondRush.getGame() == null) {
+			return;
+		}
+		GamePhase phase = diamondRush.getGame().getPhase();
+		ItemStack droppedItem = event.getItemDrop().getItemStack();
+		if (phase.equals(GamePhase.TOTEM_PLACEMENT) && droppedItem.getType().equals(Material.OBSIDIAN)) {
+			event.setCancelled(true);
+		}
+		else if (phase.equals(GamePhase.SPAWN_PLACEMENT) && droppedItem.getType().equals(Material.CHISELED_STONE_BRICKS)) {
 			event.setCancelled(true);
 		}
 	}

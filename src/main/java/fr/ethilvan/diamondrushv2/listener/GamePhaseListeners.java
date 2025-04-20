@@ -115,9 +115,18 @@ public class GamePhaseListeners implements Listener {
 		// Check for missing totem
 		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 			if (teamEntry.getValue().getTotemBlock() == null) {
-				diamondRush.broadcastMessage("messages.phases.totemPlacement.end.goAgain");
-				Bukkit.getPluginManager().callEvent(new TotemPlacementStartEvent(false));
-				return;
+				UUID leaderUuid = teamEntry.getValue().getLeaderUuid();
+				Player leader = Bukkit.getPlayer(leaderUuid);
+				// End game if leader is missing
+				if (leader == null) {
+					Bukkit.getPluginManager().callEvent(new GameEndEvent());
+					return;
+				}
+				// Else put totemBlock at leader location
+				Block playerLocationBlock = leader.getLocation().getBlock();
+				Team team = teamEntry.getValue();
+				team.setTotemBlock(playerLocationBlock);
+				leader.getInventory().remove(Material.OBSIDIAN);
 			}
 		}
 		// Place totems
