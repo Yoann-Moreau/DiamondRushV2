@@ -24,8 +24,9 @@ Exploration and combat phases follow each other until all totems but one have be
 ## Warning
 
 This plugin is intended to be used on a server and a world dedicated to this mini-game. Using this plugin on your main 
-server can lead to unexpected behaviours and will damage your world.
+server can lead to unexpected behaviors and will damage your world.
 
 ## Compatibility
 
-This plugin has been developed for PaperMC servers and Minecraft 1.20.6. No other Minecraft version has been tested.
+This plugin has been developed for PaperMC servers and Minecraft 26.1.2. No other Minecraft version has been tested.
+As recommended by the PaperMC team, this plugin requires at least Java 25.
