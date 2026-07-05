@@ -58,11 +58,11 @@ public class GamePhaseListeners implements Listener {
 			diamondRush.messageLeaders("messages.phases.totemPlacement.start.leader");
 			diamondRush.messageOtherPlayersInTeams("messages.phases.totemPlacement.start.player");
 			// Hide advancements
-			diamondRush.getGame().getWorld().setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
-			diamondRush.getGame().getNetherWorld().setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+			diamondRush.getGame().getWorld().setGameRule(GameRules.SHOW_ADVANCEMENT_MESSAGES, false);
+			diamondRush.getGame().getNetherWorld().setGameRule(GameRules.SHOW_ADVANCEMENT_MESSAGES, false);
 			// Hide coordinates
-			diamondRush.getGame().getWorld().setGameRule(GameRule.REDUCED_DEBUG_INFO, true);
-			diamondRush.getGame().getNetherWorld().setGameRule(GameRule.REDUCED_DEBUG_INFO, true);
+			diamondRush.getGame().getWorld().setGameRule(GameRules.REDUCED_DEBUG_INFO, true);
+			diamondRush.getGame().getNetherWorld().setGameRule(GameRules.REDUCED_DEBUG_INFO, true);
 
 			diamondRush.getGame().resetPlayers();
 			teleportPlayersToGameSpawn(false);
@@ -251,8 +251,8 @@ public class GamePhaseListeners implements Listener {
 		diamondRush.getGame().setPhase(GamePhase.EXPLORATION);
 		diamondRush.getGame().setNextPhase(GamePhase.COMBAT);
 		diamondRush.broadcastMessage("messages.phases.exploration.start");
-		diamondRush.getGame().getWorld().setGameRule(GameRule.KEEP_INVENTORY, false);
-		diamondRush.getGame().getNetherWorld().setGameRule(GameRule.KEEP_INVENTORY, false);
+		diamondRush.getGame().getWorld().setGameRule(GameRules.KEEP_INVENTORY, false);
+		diamondRush.getGame().getNetherWorld().setGameRule(GameRules.KEEP_INVENTORY, false);
 
 		changePlayersGameMode(GameMode.SURVIVAL);
 		giveExplorationRewards();
@@ -309,8 +309,8 @@ public class GamePhaseListeners implements Listener {
 		diamondRush.getGame().setPhase(GamePhase.COMBAT);
 		diamondRush.getGame().setNextPhase(GamePhase.EXPLORATION);
 		diamondRush.broadcastMessage("messages.phases.combat.start");
-		diamondRush.getGame().getWorld().setGameRule(GameRule.KEEP_INVENTORY, true);
-		diamondRush.getGame().getNetherWorld().setGameRule(GameRule.KEEP_INVENTORY, true);
+		diamondRush.getGame().getWorld().setGameRule(GameRules.KEEP_INVENTORY, true);
+		diamondRush.getGame().getNetherWorld().setGameRule(GameRules.KEEP_INVENTORY, true);
 
 		// Reset kills and deaths for teams
 		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
