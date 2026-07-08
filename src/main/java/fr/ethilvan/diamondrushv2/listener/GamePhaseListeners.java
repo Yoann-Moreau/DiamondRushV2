@@ -20,7 +20,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
+
 
 public class GamePhaseListeners implements Listener {
 
@@ -68,7 +71,7 @@ public class GamePhaseListeners implements Listener {
 			teleportPlayersToGameSpawn(false);
 
 			// Give obsidian to leaders
-			for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+			for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 				Player leader = Bukkit.getPlayer(teamEntry.getValue().getLeaderUuid());
 				if (leader == null) {
 					continue;
@@ -78,7 +81,7 @@ public class GamePhaseListeners implements Listener {
 		}
 		// New totem placement phase
 		else {
-			for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+			for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 				// Reset totem block
 				if (teamEntry.getValue().getTotemBlock() != null) {
 					teamEntry.getValue().getTotemBlock().setType(Material.AIR);
@@ -113,7 +116,7 @@ public class GamePhaseListeners implements Listener {
 	@EventHandler
 	public void onTotemPlacementEnd(TotemPlacementEndEvent event) {
 		// Check for missing totem
-		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+		for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 			if (teamEntry.getValue().getTotemBlock() == null) {
 				UUID leaderUuid = teamEntry.getValue().getLeaderUuid();
 				Player leader = Bukkit.getPlayer(leaderUuid);
@@ -130,12 +133,12 @@ public class GamePhaseListeners implements Listener {
 			}
 		}
 		// Place totems
-		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+		for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 			Block totemBlock = teamEntry.getValue().getTotemBlock();
 			int height = totemBlock.getWorld().getMaxHeight() - totemBlock.getY();
 			CuboidRegion region = new CuboidRegion(totemBlock, 3, 3, height);
 			int totemHeight = diamondRush.getConfig().getTotemHeight();
-			List<Pattern> patterns = new ArrayList<>();
+			ArrayList<Pattern> patterns = new ArrayList<>();
 			patterns.add(new TotemFloorPattern(region, teamEntry.getValue().getTeamColor()));
 			patterns.add(new TotemPattern(region, totemHeight));
 			region.create(patterns);
@@ -149,7 +152,7 @@ public class GamePhaseListeners implements Listener {
 	public void onSpawnPlacementStart(SpawnPlacementStartEvent event) {
 		diamondRush.getGame().setPhase(GamePhase.SPAWN_PLACEMENT);
 		if (event.isFirstPlacement()) {
-			for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+			for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 				// Set team lives
 				int lives = diamondRush.getConfig().getTotemHeight() + 2;
 				teamEntry.getValue().setLives(lives);
@@ -166,7 +169,7 @@ public class GamePhaseListeners implements Listener {
 		}
 		// Next spawn placements
 		else {
-			for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+			for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 				Team team = teamEntry.getValue();
 				int minDistance = diamondRush.getConfig().getMinDistanceFromTotem();
 				if (team.getSpawnBlock() == null) {
@@ -201,7 +204,7 @@ public class GamePhaseListeners implements Listener {
 
 	@EventHandler
 	public void onSpawnPlacementEnd(SpawnPlacementEndEvent event) {
-		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+		for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 			Block spawnBlock;
 			Player leader = Bukkit.getPlayer(teamEntry.getValue().getLeaderUuid());
 			if (leader == null) {
@@ -217,7 +220,7 @@ public class GamePhaseListeners implements Listener {
 			Block totemBlock = teamEntry.getValue().getTotemBlock();
 			int distance = (int) totemBlock.getLocation().distance(spawnBlock.getLocation());
 			if (distance < diamondRush.getConfig().getMinDistanceFromTotem()) {
-				Map<String, String> placeholders = new HashMap<>();
+				HashMap<String, String> placeholders = new HashMap<>();
 				placeholders.put("\\{team-color\\}", teamEntry.getValue().getTeamColor().getColorName().toLowerCase());
 				placeholders.put("\\{team-name\\}", teamEntry.getValue().getName());
 				diamondRush.broadcastMessage("messages.phases.spawnPlacement.end.goAgain", placeholders);
@@ -313,7 +316,7 @@ public class GamePhaseListeners implements Listener {
 		diamondRush.getGame().getNetherWorld().setGameRule(GameRules.KEEP_INVENTORY, true);
 
 		// Reset kills and deaths for teams
-		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+		for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 			teamEntry.getValue().setKills(0);
 			teamEntry.getValue().setDeaths(0);
 		}
@@ -363,7 +366,7 @@ public class GamePhaseListeners implements Listener {
 	@EventHandler
 	public void onGameEnd(GameEndEvent event) {
 		diamondRush.getGame().resetPlayers();
-		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+		for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 			Team team = teamEntry.getValue();
 			for (UUID uuid : team.getPlayerUUIDs()) {
 				Player player = Bukkit.getPlayer(uuid);
@@ -392,7 +395,7 @@ public class GamePhaseListeners implements Listener {
 		Block center = cylindricalRegion.getCenter();
 		int radius = cylindricalRegion.getRadius();
 		int i = 0;
-		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+		for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 			// Calculate start position based on radius of spawn platform and number of teams
 			double angle = i * Math.PI / 180;
 			int x = (int) Math.round(center.getX() + radius * Math.cos(angle));
@@ -426,7 +429,7 @@ public class GamePhaseListeners implements Listener {
 
 
 	private void changePlayersGameMode(GameMode gameMode) {
-		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+		for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 			for (UUID uuid : teamEntry.getValue().getPlayerUUIDs()) {
 				Player player = Bukkit.getPlayer(uuid);
 				if (player == null) {
@@ -466,8 +469,8 @@ public class GamePhaseListeners implements Listener {
 		if (diamondRush.getGame().getCycle() < startCycle) {
 			return;
 		}
-		List<ExplorationReward> explorationRewards = diamondRush.getConfig().getExplorationRewards();
-		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+		ArrayList<ExplorationReward> explorationRewards = diamondRush.getConfig().getExplorationRewards();
+		for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 			Team team = teamEntry.getValue();
 			for (ExplorationReward explorationReward : explorationRewards) {
 				Material material = Material.getMaterial(explorationReward.getMaterial());

@@ -2,12 +2,11 @@ package fr.ethilvan.diamondrushv2.command.game;
 
 import fr.ethilvan.diamondrushv2.DiamondRush;
 import fr.ethilvan.diamondrushv2.command.Subcommand;
-import fr.ethilvan.diamondrushv2.config.Config;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
-import java.util.Map;
+
 
 public class ReloadCommand extends Subcommand {
 
@@ -51,7 +50,7 @@ public class ReloadCommand extends Subcommand {
 			sendMessage(sender, "messages.commands.reload.success");
 		}
 		catch (RuntimeException e) {
-			Map<String, String> placeholders = new HashMap<>();
+			HashMap<String, String> placeholders = new HashMap<>();
 			placeholders.put("\\{message\\}", e.getMessage());
 			sendMessage(sender, "messages.commands.reload.failure", placeholders);
 		}

@@ -9,8 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
 
 public class JoinCommand extends Subcommand {
 
@@ -26,7 +25,7 @@ public class JoinCommand extends Subcommand {
 
 	@Override
 	public String getSyntax() {
-		return "/diamondrush join";
+		return "/diamondrush join <teamName>";
 	}
 
 	@Override
@@ -61,7 +60,7 @@ public class JoinCommand extends Subcommand {
 		}
 		Team team = diamondRush.getGame().getTeam(teamName);
 		// Check if player has already joined a team
-		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+		for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 			if (teamEntry.getValue().getPlayerUUIDs().contains(player.getUniqueId())) {
 				sendMessage(sender, "messages.commands.join.alreadyInATeam");
 				return;
@@ -69,7 +68,7 @@ public class JoinCommand extends Subcommand {
 		}
 		// Add player to team
 		team.addPlayerUuid(player.getUniqueId());
-		Map<String, String> placeholders = new HashMap<>();
+		HashMap<String, String> placeholders = new HashMap<>();
 		placeholders.put("\\{team-color\\}", team.getTeamColor().getColorName().toLowerCase());
 		placeholders.put("\\{team-name\\}", team.getName());
 		sendMessage(sender, "messages.commands.join.success", placeholders);
@@ -77,10 +76,10 @@ public class JoinCommand extends Subcommand {
 
 
 	@Override
-	public List<String> getAutoCompleteChoices(String[] args) {
+	public ArrayList<String> getAutoCompleteChoices(String[] args) {
 		if (args.length == 2 && diamondRush.getGame() != null) {
 			return new ArrayList<>(diamondRush.getGame().getTeams().keySet());
 		}
-		return List.of();
+		return new ArrayList<>();
 	}
 }

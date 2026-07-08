@@ -5,7 +5,8 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
-import java.util.List;
+import java.util.ArrayList;
+
 
 public abstract class Region {
 
@@ -46,7 +47,7 @@ public abstract class Region {
 		pattern.create();
 	}
 
-	public void create(List<Pattern> patterns) {
+	public void create(ArrayList<Pattern> patterns) {
 		clear();
 		for (Pattern pattern : patterns) {
 			pattern.create();

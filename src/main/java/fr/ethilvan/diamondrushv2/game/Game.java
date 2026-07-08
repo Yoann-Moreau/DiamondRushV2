@@ -14,7 +14,10 @@ import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
+import java.util.UUID;
 
 
 public class Game {
@@ -23,8 +26,8 @@ public class Game {
 	private final World world;
 	private final World netherWorld;
 	private final Location spawn;
-	private final Map<String, Team> teams;
-	private final Map<String, Region> regions;
+	private final HashMap<String, Team> teams;
+	private final HashMap<String, Region> regions;
 	private GamePhase phase = GamePhase.CREATION;
 	private GamePhase nextPhase;
 	private int cycle = 1;
@@ -61,7 +64,7 @@ public class Game {
 	}
 
 
-	public Map<String, Team> getTeams() {
+	public HashMap<String, Team> getTeams() {
 		return teams;
 	}
 
@@ -73,7 +76,7 @@ public class Game {
 	}
 
 	public Team getTeam(UUID playerUuid) {
-		for (Map.Entry<String, Team> teamEntry : getTeams().entrySet()) {
+		for (HashMap.Entry<String, Team> teamEntry : getTeams().entrySet()) {
 			if (teamEntry.getValue().getPlayerUUIDs().contains(playerUuid)) {
 				return teamEntry.getValue();
 			}
@@ -90,7 +93,7 @@ public class Game {
 	}
 
 
-	public Map<String, Region> getRegions() {
+	public HashMap<String, Region> getRegions() {
 		return regions;
 	}
 
@@ -150,8 +153,8 @@ public class Game {
 
 	public void assignLeaders() {
 		Random random = new Random();
-		for (Map.Entry<String, Team> teamEntry : getTeams().entrySet()) {
-			List<UUID> uuids = teamEntry.getValue().getPlayerUUIDs();
+		for (HashMap.Entry<String, Team> teamEntry : getTeams().entrySet()) {
+			ArrayList<UUID> uuids = teamEntry.getValue().getPlayerUUIDs();
 			UUID leaderUuid = uuids.get(random.nextInt(uuids.size()));
 			teamEntry.getValue().setLeaderUuid(leaderUuid);
 		}
@@ -159,7 +162,7 @@ public class Game {
 
 
 	public void resetPlayers() {
-		for (Map.Entry<String, Team> teamEntry : getTeams().entrySet()) {
+		for (HashMap.Entry<String, Team> teamEntry : getTeams().entrySet()) {
 			for (UUID uuid : teamEntry.getValue().getPlayerUUIDs()) {
 				Player player = Bukkit.getPlayer(uuid);
 				if (player == null) {

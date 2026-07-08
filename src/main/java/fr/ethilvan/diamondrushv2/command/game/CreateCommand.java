@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+
 public class CreateCommand extends Subcommand {
 
 	public CreateCommand(DiamondRush diamondRush) {
@@ -47,7 +48,7 @@ public class CreateCommand extends Subcommand {
 			sendMessage(sender, "messages.commands.notAPlayer");
 			return;
 		}
-		if(diamondRush.getGame() != null) {
+		if (diamondRush.getGame() != null) {
 			sendMessage(sender, "messages.commands.create.gameAlreadyCreated");
 			return;
 		}

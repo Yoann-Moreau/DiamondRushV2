@@ -12,8 +12,9 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.io.File;
-import java.util.Map;
+import java.util.HashMap;
 import java.util.UUID;
+
 
 public class DiamondRush {
 
@@ -89,14 +90,14 @@ public class DiamondRush {
 		}
 	}
 
-	public void broadcastMessage(String messagePath, Map<String, String> placeholders) {
+	public void broadcastMessage(String messagePath, HashMap<String, String> placeholders) {
 		String message = plugin.getDiamondRush().getMessagesConfig().getString(messagePath);
 		if (message == null) {
 			missingMessage(messagePath);
 			return;
 		}
 
-		for (Map.Entry<String, String> placeholder : placeholders.entrySet()) {
+		for (HashMap.Entry<String, String> placeholder : placeholders.entrySet()) {
 			message = message.replaceAll(placeholder.getKey(), placeholder.getValue());
 		}
 		for (Player player : plugin.getServer().getOnlinePlayers()) {
@@ -115,13 +116,13 @@ public class DiamondRush {
 	}
 
 
-	public void messagePlayer(Player player, String messagePath, Map<String, String> placeholders) {
+	public void messagePlayer(Player player, String messagePath, HashMap<String, String> placeholders) {
 		String message = plugin.getDiamondRush().getMessagesConfig().getString(messagePath);
 		if (message == null) {
 			missingMessage(messagePath);
 			return;
 		}
-		for (Map.Entry<String, String> placeholder : placeholders.entrySet()) {
+		for (HashMap.Entry<String, String> placeholder : placeholders.entrySet()) {
 			message = message.replaceAll(placeholder.getKey(), placeholder.getValue());
 		}
 		player.sendRichMessage(message);
@@ -129,7 +130,7 @@ public class DiamondRush {
 
 
 	public void messageLeaders(String messagePath) {
-		for (Map.Entry<String, Team> teamEntry : getGame().getTeams().entrySet()) {
+		for (HashMap.Entry<String, Team> teamEntry : getGame().getTeams().entrySet()) {
 			Player player = Bukkit.getPlayer(teamEntry.getValue().getLeaderUuid());
 			if (player == null) {
 				continue;
@@ -145,7 +146,7 @@ public class DiamondRush {
 
 
 	public void messageOtherPlayersInTeams(String messagePath) {
-		for (Map.Entry<String, Team> teamEntry : getGame().getTeams().entrySet()) {
+		for (HashMap.Entry<String, Team> teamEntry : getGame().getTeams().entrySet()) {
 			UUID leaderUuid = teamEntry.getValue().getLeaderUuid();
 			for (UUID uuid : teamEntry.getValue().getPlayerUUIDs()) {
 				if (uuid == leaderUuid) { // Skip leader
@@ -167,25 +168,11 @@ public class DiamondRush {
 
 
 	public void messageOtherPlayersInTeam(Team team, String messagePath) {
-		for (UUID uuid : team.getPlayerUUIDs()) {
-			if (uuid == team.getLeaderUuid()) { // Skip leader
-				continue;
-			}
-			Player player = Bukkit.getPlayer(uuid);
-			if (player == null) {
-				continue;
-			}
-			String message = plugin.getDiamondRush().getMessagesConfig().getString(messagePath);
-			if (message == null) {
-				missingMessage(messagePath);
-				return;
-			}
-			player.sendRichMessage(message);
-		}
+		messageOtherPlayersInTeam(team, messagePath, new HashMap<>());
 	}
 
 
-	public void messageOtherPlayersInTeam(Team team, String messagePath, Map<String, String> placeholders) {
+	public void messageOtherPlayersInTeam(Team team, String messagePath, HashMap<String, String> placeholders) {
 		for (UUID uuid : team.getPlayerUUIDs()) {
 			if (uuid == team.getLeaderUuid()) { // Skip leader
 				continue;
@@ -199,7 +186,7 @@ public class DiamondRush {
 				missingMessage(messagePath);
 				return;
 			}
-			for (Map.Entry<String, String> placeholder : placeholders.entrySet()) {
+			for (HashMap.Entry<String, String> placeholder : placeholders.entrySet()) {
 				message = message.replaceAll(placeholder.getKey(), placeholder.getValue());
 			}
 			player.sendRichMessage(message);

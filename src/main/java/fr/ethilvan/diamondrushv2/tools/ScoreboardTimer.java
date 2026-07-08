@@ -5,6 +5,7 @@ import fr.ethilvan.diamondrushv2.game.GamePhase;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.*;
 
+
 public class ScoreboardTimer implements Runnable {
 
 	private final DiamondRush diamondRush;
@@ -15,7 +16,6 @@ public class ScoreboardTimer implements Runnable {
 	private final String endMessagePath;
 	private int taskId;
 	private int pauseTimer;
-
 
 
 	public ScoreboardTimer(

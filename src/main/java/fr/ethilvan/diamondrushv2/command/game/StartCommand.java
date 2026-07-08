@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
-import java.util.Map;
+
 
 public class StartCommand extends Subcommand {
 
@@ -52,9 +52,9 @@ public class StartCommand extends Subcommand {
 			sendMessage(sender, "messages.commands.start.notEnoughTeams");
 			return;
 		}
-		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+		for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 			if (teamEntry.getValue().getPlayerUUIDs().isEmpty()) {
-				Map<String, String> placeholders = new HashMap<>();
+				HashMap<String, String> placeholders = new HashMap<>();
 				placeholders.put("\\{team-color\\}", teamEntry.getValue().getTeamColor().getColorName().toLowerCase());
 				placeholders.put("\\{team-name\\}", teamEntry.getValue().getName());
 				sendMessage(sender, "messages.commands.start.notEnoughPlayersInTeam", placeholders);

@@ -5,6 +5,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
+
 public class GameStartEvent extends Event implements Cancellable {
 
 	private static final HandlerList HANDLER_LIST = new HandlerList();

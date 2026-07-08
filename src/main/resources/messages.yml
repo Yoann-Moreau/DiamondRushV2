@@ -20,7 +20,7 @@ messages:
       removeSuccess: "<gray>The <{team-color}>{team-name}</{team-color}> team has been deleted successfully."
       modifySuccess: "<yellow>The <{team-color}>{team-name}</{team-color}> team has been modified successfully."
     join:
-      description: "Joins the created DiamondRush game."
+      description: "Joins the team with the provided name for the current DiamondRush game."
       noTeamSpecified: "<red>You must provide a team name."
       noSuchTeam: "<red>No team by that name exists."
       alreadyInATeam: "<red>You have already joined a team."
@@ -90,6 +90,6 @@ messages:
       noGamePaused: "The game is not currently paused."
   scoreboard:
     name: "Phase:"
-  killReward: "<green>You've been rewarded for you kill, check your inventory."
+  killReward: "<green>You've been rewarded for your kill, check your inventory."
   teamLosesLife: "The <{team-color}>{team-name}</{team-color}> team has lost <red>1</red> life, <red>{lives}</red> remaining."
   chatMessage: "<{team-color}>{player-name}</{team-color}><dark_gray>: <white>{message}"

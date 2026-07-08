@@ -9,8 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
 
 public class TeamCommand extends Subcommand {
 
@@ -26,7 +25,7 @@ public class TeamCommand extends Subcommand {
 
 	@Override
 	public String getSyntax() {
-		return "/diamondrush team <add|remove|modify> <teamName>";
+		return "/diamondrush team <add|remove> <teamName>";
 	}
 
 	@Override
@@ -63,12 +62,11 @@ public class TeamCommand extends Subcommand {
 
 
 	@Override
-	public List<String> getAutoCompleteChoices(String[] args) {
+	public ArrayList<String> getAutoCompleteChoices(String[] args) {
 		if (args.length == 2) {
 			ArrayList<String> actions = new ArrayList<>();
 			actions.add("add");
 			actions.add("remove");
-			actions.add("modify");
 			return actions;
 		}
 
@@ -87,7 +85,7 @@ public class TeamCommand extends Subcommand {
 				return colors;
 			}
 		}
-		return List.of();
+		return new ArrayList<>();
 	}
 
 
@@ -104,7 +102,7 @@ public class TeamCommand extends Subcommand {
 		String colorName = args[3];
 
 		if (teamName.equals("game")) {
-			Map<String, String> placeholders = new HashMap<>();
+			HashMap<String, String> placeholders = new HashMap<>();
 			placeholders.put("\\{word\\}", teamName);
 			sendMessage(sender, "messages.commands.team.reservedWord", placeholders);
 			return;
@@ -113,7 +111,8 @@ public class TeamCommand extends Subcommand {
 		TeamColor teamColor;
 		try {
 			teamColor = TeamColor.valueOf(colorName.toUpperCase());
-		} catch (IllegalArgumentException e) {
+		}
+		catch (IllegalArgumentException e) {
 			sendMessage(sender, "messages.commands.team.notAValidColor");
 			return;
 		}
@@ -123,7 +122,7 @@ public class TeamCommand extends Subcommand {
 			return;
 		}
 		// Check if team color is taken
-		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+		for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 			if (teamEntry.getValue().getTeamColor().equals(teamColor)) {
 				sendMessage(sender, "messages.commands.team.colorTaken");
 				return;
@@ -132,7 +131,7 @@ public class TeamCommand extends Subcommand {
 
 		Team team = new Team(teamName, teamColor);
 		diamondRush.getGame().addTeam(teamName, team);
-		Map<String, String> placeholders = new HashMap<>();
+		HashMap<String, String> placeholders = new HashMap<>();
 		placeholders.put("\\{team-color\\}", team.getTeamColor().getColorName().toLowerCase());
 		placeholders.put("\\{team-name\\}", team.getName());
 		sendMessage(sender, "messages.commands.team.addSuccess", placeholders);
@@ -145,11 +144,11 @@ public class TeamCommand extends Subcommand {
 			return;
 		}
 		String teamName = args[2];
-		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+		for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 			if (!teamEntry.getKey().equals(teamName)) {
 				continue;
 			}
-			Map<String, String> placeholders = new HashMap<>();
+			HashMap<String, String> placeholders = new HashMap<>();
 			placeholders.put("\\{team-color\\}", teamEntry.getValue().getTeamColor().getColorName().toLowerCase());
 			placeholders.put("\\{team-name\\}", teamEntry.getValue().getName());
 			teamEntry.getValue().getMinecraftTeam().unregister();

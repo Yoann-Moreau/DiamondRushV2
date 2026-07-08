@@ -4,8 +4,9 @@ import fr.ethilvan.diamondrushv2.DiamondRush;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 
 public abstract class Subcommand {
 
@@ -28,8 +29,8 @@ public abstract class Subcommand {
 	public abstract void perform(CommandSender sender, @NotNull String[] args);
 
 
-	public List<String> getAutoCompleteChoices(String[] args) {
-		return List.of();
+	public ArrayList<String> getAutoCompleteChoices(String[] args) {
+		return new ArrayList<>();
 	}
 
 
@@ -43,14 +44,14 @@ public abstract class Subcommand {
 	}
 
 
-	protected void sendMessage(CommandSender commandSender, String messagePath, Map<String, String> placeholders) {
+	protected void sendMessage(CommandSender commandSender, String messagePath, HashMap<String, String> placeholders) {
 		String message = diamondRush.getMessagesConfig().getString(messagePath);
 		if (message == null) {
 			missingMessage(commandSender, messagePath);
 			return;
 		}
 
-		for (Map.Entry<String, String> placeholder : placeholders.entrySet()) {
+		for (HashMap.Entry<String, String> placeholder : placeholders.entrySet()) {
 			message = message.replaceAll(placeholder.getKey(), placeholder.getValue());
 		}
 		commandSender.sendRichMessage(message);

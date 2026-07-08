@@ -3,6 +3,7 @@ package fr.ethilvan.diamondrushv2.game;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 
+
 public enum TeamColor {
 
 	BLUE("BLUE", NamedTextColor.BLUE, Material.BLUE_WOOL),

@@ -2,6 +2,7 @@ package fr.ethilvan.diamondrushv2.config;
 
 import org.bukkit.Material;
 
+
 public class ExplorationReward {
 
 	private final String material;

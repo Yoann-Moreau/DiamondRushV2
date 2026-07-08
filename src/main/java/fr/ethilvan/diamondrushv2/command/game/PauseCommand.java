@@ -9,8 +9,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
+import java.util.HashMap;
 import java.util.UUID;
+
 
 public class PauseCommand extends Subcommand {
 
@@ -54,7 +55,7 @@ public class PauseCommand extends Subcommand {
 			return;
 		}
 		// Put team players in creative mode
-		for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+		for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 			for (UUID uuid : teamEntry.getValue().getPlayerUUIDs()) {
 				Player player = Bukkit.getPlayer(uuid);
 				if (player == null) {

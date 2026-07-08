@@ -3,7 +3,7 @@ package fr.ethilvan.diamondrushv2.config;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class RespawnEquipment {
 
@@ -115,7 +115,7 @@ public class RespawnEquipment {
 
 
 	private boolean isArmorValid() {
-		List<String> armors = new ArrayList<>();
+		ArrayList<String> armors = new ArrayList<>();
 		armors.add("NONE");
 		armors.add("LEATHER");
 		armors.add("CHAINMAIL");

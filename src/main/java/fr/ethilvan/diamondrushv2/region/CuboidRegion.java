@@ -3,6 +3,7 @@ package fr.ethilvan.diamondrushv2.region;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
+
 public class CuboidRegion extends Region {
 
 	private final int xDistanceFromCenter;

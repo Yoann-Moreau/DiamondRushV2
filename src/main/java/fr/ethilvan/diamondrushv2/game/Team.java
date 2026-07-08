@@ -6,15 +6,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
+
 
 public class Team {
 
 	private String name;
 	private TeamColor teamColor;
 	private org.bukkit.scoreboard.Team minecraftTeam;
-	private final List<UUID> playerUUIDs;
+	private final ArrayList<UUID> playerUUIDs;
 	private UUID leaderUuid;
 	private Block totemBlock = null;
 	private Block spawnBlock = null;
@@ -71,7 +71,7 @@ public class Team {
 		this.minecraftTeam = minecraftTeam;
 	}
 
-	public List<UUID> getPlayerUUIDs() {
+	public ArrayList<UUID> getPlayerUUIDs() {
 		return playerUUIDs;
 	}
 

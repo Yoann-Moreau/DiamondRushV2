@@ -32,7 +32,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
 
 
 public class GameListeners implements Listener {
@@ -75,7 +78,7 @@ public class GameListeners implements Listener {
 			return;
 		}
 		// Check for protected regions
-		for (Map.Entry<String, Region> regionEntry : diamondRush.getGame().getRegions().entrySet()) {
+		for (HashMap.Entry<String, Region> regionEntry : diamondRush.getGame().getRegions().entrySet()) {
 			if (regionEntry.getValue().contains(event.getBlock())) {
 
 				if (!diamondRush.getGame().getPhase().equals(GamePhase.EXPLORATION) &&
@@ -85,12 +88,12 @@ public class GameListeners implements Listener {
 				}
 
 				if (event.getBlock().getType().equals(Material.OBSIDIAN)) {
-					for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+					for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 						Team team = teamEntry.getValue();
 						if (regionEntry.getKey().equals(teamEntry.getKey() + "Totem")) {
 							int currentLives = team.getLives() - 1;
 							team.setLives(currentLives);
-							Map<String, String> placeholders = new HashMap<>();
+							HashMap<String, String> placeholders = new HashMap<>();
 							placeholders.put("\\{team-color\\}", team.getTeamColor().getColorName().toLowerCase());
 							placeholders.put("\\{team-name\\}", team.getName());
 							placeholders.put("\\{lives\\}", String.valueOf(currentLives));
@@ -121,7 +124,7 @@ public class GameListeners implements Listener {
 		if (diamondRush.getGame().getPhase().equals(GamePhase.TOTEM_PLACEMENT) &&
 				event.getBlock().getType().equals(Material.OBSIDIAN)) {
 
-			for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+			for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 				Team team = teamEntry.getValue();
 				Block totemBlock = team.getTotemBlock();
 				if (totemBlock == null) {
@@ -145,7 +148,7 @@ public class GameListeners implements Listener {
 		if (diamondRush.getGame().getPhase().equals(GamePhase.SPAWN_PLACEMENT) &&
 				event.getBlock().getType().equals(Material.CHISELED_STONE_BRICKS)) {
 
-			for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+			for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 				Team team = teamEntry.getValue();
 				Block spawnBlock = team.getSpawnBlock();
 				if (spawnBlock == null) {
@@ -209,7 +212,7 @@ public class GameListeners implements Listener {
 			team.setSpawnBlock(event.getBlock());
 		}
 		// Check for protected regions
-		for (Map.Entry<String, Region> regionEntry : diamondRush.getGame().getRegions().entrySet()) {
+		for (HashMap.Entry<String, Region> regionEntry : diamondRush.getGame().getRegions().entrySet()) {
 			if (regionEntry.getValue().contains(event.getBlock())) {
 				event.setCancelled(true);
 				return;
@@ -223,7 +226,7 @@ public class GameListeners implements Listener {
 		if (diamondRush.getGame() == null) {
 			return;
 		}
-		for (Map.Entry<String, Region> regionEntry : diamondRush.getGame().getRegions().entrySet()) {
+		for (HashMap.Entry<String, Region> regionEntry : diamondRush.getGame().getRegions().entrySet()) {
 			if (regionEntry.getValue().contains(event.getToBlock())) {
 				event.setCancelled(true);
 				return;
@@ -248,7 +251,7 @@ public class GameListeners implements Listener {
 			return;
 		}
 		// Prevent use of bucket in protected regions
-		for (Map.Entry<String, Region> regionEntry : diamondRush.getGame().getRegions().entrySet()) {
+		for (HashMap.Entry<String, Region> regionEntry : diamondRush.getGame().getRegions().entrySet()) {
 			if (regionEntry.getValue().contains(event.getBlock())) {
 				event.setCancelled(true);
 				return;
@@ -307,7 +310,7 @@ public class GameListeners implements Listener {
 			}
 			player.getInventory().removeItem(new ItemStack(surrenderMaterial, 1));
 			team.setSurrenders(team.getSurrenders() + 1);
-			Map<String, String> placeholders = new HashMap<>();
+			HashMap<String, String> placeholders = new HashMap<>();
 			placeholders.put("\\{team-color\\}", team.getTeamColor().getColorName().toLowerCase());
 			placeholders.put("\\{team-name\\}", team.getName());
 			diamondRush.broadcastMessage("messages.phases.combat.surrender.success", placeholders);
@@ -325,7 +328,7 @@ public class GameListeners implements Listener {
 		Iterator<BlockState> iterator = blockStates.iterator();
 		while (iterator.hasNext()) {
 			Block block = iterator.next().getBlock();
-			for (Map.Entry<String, Region> regionEntry : diamondRush.getGame().getRegions().entrySet()) {
+			for (HashMap.Entry<String, Region> regionEntry : diamondRush.getGame().getRegions().entrySet()) {
 				if (regionEntry.getValue().contains(block)) {
 					iterator.remove();
 					break;
@@ -344,7 +347,7 @@ public class GameListeners implements Listener {
 		Iterator<Block> iterator = blocks.iterator();
 		while (iterator.hasNext()) {
 			Block block = iterator.next();
-			for (Map.Entry<String, Region> regionEntry : diamondRush.getGame().getRegions().entrySet()) {
+			for (HashMap.Entry<String, Region> regionEntry : diamondRush.getGame().getRegions().entrySet()) {
 				if (regionEntry.getValue().contains(block)) {
 					iterator.remove();
 					break;
@@ -533,7 +536,7 @@ public class GameListeners implements Listener {
 					if (!onlinePlayer.getGameMode().equals(GameMode.SPECTATOR)) {
 						continue;
 					}
-					Map<String, String> placeholders = new HashMap<>();
+					HashMap<String, String> placeholders = new HashMap<>();
 					placeholders.put("\\{team-color\\}", "dark_gray");
 					placeholders.put("\\{player-name\\}", player.getName());
 					placeholders.put("\\{message\\}", textComponent.content());
@@ -547,7 +550,7 @@ public class GameListeners implements Listener {
 				if (teamPlayer == null) {
 					continue;
 				}
-				Map<String, String> placeholders = new HashMap<>();
+				HashMap<String, String> placeholders = new HashMap<>();
 				placeholders.put("\\{team-color\\}", team.getTeamColor().getColorName().toLowerCase());
 				placeholders.put("\\{player-name\\}", player.getName());
 				placeholders.put("\\{message\\}", textComponent.content());
@@ -560,7 +563,7 @@ public class GameListeners implements Listener {
 		if (team != null) {
 			teamColor = team.getTeamColor().getColorName();
 		}
-		Map<String, String> placeholders = new HashMap<>();
+		HashMap<String, String> placeholders = new HashMap<>();
 		placeholders.put("\\{team-color\\}", teamColor.toLowerCase());
 		placeholders.put("\\{player-name\\}", player.getName());
 		placeholders.put("\\{message\\}", textComponent.content());
@@ -582,7 +585,7 @@ public class GameListeners implements Listener {
 	private void changeLeader(Team team, Player newLeader) {
 		team.setLeaderUuid(newLeader.getUniqueId());
 		diamondRush.messagePlayer(newLeader, "messages.phases.leaderChange.leader");
-		Map<String, String> placeholders = new HashMap<>();
+		HashMap<String, String> placeholders = new HashMap<>();
 		placeholders.put("\\{player\\}", newLeader.getName());
 		diamondRush.messageOtherPlayersInTeam(team, "messages.phases.leaderChange.player", placeholders);
 	}

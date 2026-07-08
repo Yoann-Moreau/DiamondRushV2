@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+
 public class EndCommand extends Subcommand {
 
 	public EndCommand(DiamondRush diamondRush) {

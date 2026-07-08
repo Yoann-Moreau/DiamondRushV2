@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
 public class Config {
 
 	private final DiamondRushV2 plugin;
@@ -39,9 +40,9 @@ public class Config {
 	private int nextKillsQuantity = 3;
 	// Exploration rewards
 	private int rewardsStartCycle = 2;
-	private List<ExplorationReward> explorationRewards;
+	private ArrayList<ExplorationReward> explorationRewards;
 	// Respawn equipments
-	private List<RespawnEquipment> respawnEquipments;
+	private ArrayList<RespawnEquipment> respawnEquipments;
 
 
 	public Config(DiamondRushV2 plugin) {
@@ -131,11 +132,11 @@ public class Config {
 		return Math.max(1, rewardsStartCycle);
 	}
 
-	public List<ExplorationReward> getExplorationRewards() {
+	public ArrayList<ExplorationReward> getExplorationRewards() {
 		return explorationRewards;
 	}
 
-	public List<RespawnEquipment> getRespawnEquipments() {
+	public ArrayList<RespawnEquipment> getRespawnEquipments() {
 		return respawnEquipments;
 	}
 

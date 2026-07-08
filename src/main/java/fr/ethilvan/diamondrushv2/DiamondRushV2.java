@@ -11,7 +11,8 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
-import java.util.Map;
+import java.util.HashMap;
+
 
 public final class DiamondRushV2 extends JavaPlugin {
 
@@ -41,7 +42,7 @@ public final class DiamondRushV2 extends JavaPlugin {
 
 		// Unregister scoreboard teams
 		if (diamondRush.getGame() != null) {
-			for (Map.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
+			for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 				if (teamEntry.getValue().getMinecraftTeam() != null) {
 					teamEntry.getValue().getMinecraftTeam().unregister();
 				}

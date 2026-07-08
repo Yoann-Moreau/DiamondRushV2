@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class DiamondRushCommand implements TabExecutor {
 
@@ -47,7 +47,7 @@ public class DiamondRushCommand implements TabExecutor {
 					continue;
 				}
 				String description = diamondRush.getMessagesConfig().getString(subcommand.getDescription());
-				sender.sendRichMessage("<gold>" + subcommand.getSyntax() + "<dark_gray>: <white>" + description);
+				sender.sendRichMessage("<gold>" + subcommand.getSyntax() + "<gray>: <white>" + description);
 			}
 			sender.sendMessage("--------------------------------------------------");
 			return true;
@@ -65,7 +65,7 @@ public class DiamondRushCommand implements TabExecutor {
 
 
 	@Override
-	public @Nullable List<String> onTabComplete(
+	public @Nullable ArrayList<String> onTabComplete(
 			@NotNull CommandSender sender,
 			@NotNull Command command,
 			@NotNull String label,
@@ -89,6 +89,6 @@ public class DiamondRushCommand implements TabExecutor {
 			}
 		}
 
-		return List.of();
+		return new ArrayList<>();
 	}
 }
