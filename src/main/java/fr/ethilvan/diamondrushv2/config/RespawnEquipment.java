@@ -26,7 +26,7 @@ public class RespawnEquipment {
 		}
 
 		if (!isArmorValid()) {
-			throw new RuntimeException("The respawn equipment's armor must be one of the following: LEATHER, CHAINMAIL, GOLD, IRON, DIAMOND, NETHERITE.");
+			throw new RuntimeException("The respawn equipment's armor must be one of the following: LEATHER, COPPER, CHAINMAIL, GOLD, IRON, DIAMOND, NETHERITE.");
 		}
 
 		if (!isMaterialValid(weapon)) {
@@ -63,6 +63,7 @@ public class RespawnEquipment {
 	public Material getHelmet() {
 		return switch (armor) {
 			case "LEATHER" -> Material.LEATHER_HELMET;
+			case "COPPER" -> Material.COPPER_HELMET;
 			case "CHAINMAIL" -> Material.CHAINMAIL_HELMET;
 			case "GOLD" -> Material.GOLDEN_HELMET;
 			case "IRON" -> Material.IRON_HELMET;
@@ -75,6 +76,7 @@ public class RespawnEquipment {
 	public Material getChestplate() {
 		return switch (armor) {
 			case "LEATHER" -> Material.LEATHER_CHESTPLATE;
+			case "COPPER" -> Material.COPPER_CHESTPLATE;
 			case "CHAINMAIL" -> Material.CHAINMAIL_CHESTPLATE;
 			case "GOLD" -> Material.GOLDEN_CHESTPLATE;
 			case "IRON" -> Material.IRON_CHESTPLATE;
@@ -87,6 +89,7 @@ public class RespawnEquipment {
 	public Material getLeggings() {
 		return switch (armor) {
 			case "LEATHER" -> Material.LEATHER_LEGGINGS;
+			case "COPPER" -> Material.COPPER_LEGGINGS;
 			case "CHAINMAIL" -> Material.CHAINMAIL_LEGGINGS;
 			case "GOLD" -> Material.GOLDEN_LEGGINGS;
 			case "IRON" -> Material.IRON_LEGGINGS;
@@ -99,6 +102,7 @@ public class RespawnEquipment {
 	public Material getBoots() {
 		return switch (armor) {
 			case "LEATHER" -> Material.LEATHER_BOOTS;
+			case "COPPER" -> Material.COPPER_BOOTS;
 			case "CHAINMAIL" -> Material.CHAINMAIL_BOOTS;
 			case "GOLD" -> Material.GOLDEN_BOOTS;
 			case "IRON" -> Material.IRON_BOOTS;
@@ -118,6 +122,7 @@ public class RespawnEquipment {
 		ArrayList<String> armors = new ArrayList<>();
 		armors.add("NONE");
 		armors.add("LEATHER");
+		armors.add("COPPER");
 		armors.add("CHAINMAIL");
 		armors.add("GOLD");
 		armors.add("IRON");
