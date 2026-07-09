@@ -11,10 +11,7 @@ import fr.ethilvan.diamondrushv2.region.Region;
 import fr.ethilvan.diamondrushv2.tools.ScoreboardTimer;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.TextComponent;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
@@ -28,7 +25,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.StructureGrowEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.projectiles.ProjectileSource;
 import org.jetbrains.annotations.NotNull;
 
@@ -374,6 +373,76 @@ public class GameListeners implements Listener {
 		if (diamondRush.getGame() == null) {
 			return;
 		}
+
+		// Manage spectator inventory click
+		Player player = (Player) event.getWhoClicked();
+		if (diamondRush.getGame().getSpectators().contains(player)) {
+			event.setCancelled(true);
+
+			ItemStack itemStack = event.getCurrentItem();
+			if (itemStack == null) {
+				return;
+			}
+
+			if (player.getInventory().equals(event.getClickedInventory())) {
+				if (itemStack.getType() == Material.PLAYER_HEAD) {
+					player.openInventory(diamondRush.getGame().getSpectatorInventory().getInventory());
+					return;
+				}
+			}
+
+			// Spectate player when clicking player head in spectator inventory
+			Inventory clickedInventory = event.getClickedInventory();
+			if (clickedInventory == null) {
+				return;
+			}
+			boolean isSameInventory = clickedInventory.equals(
+					diamondRush.getGame().getSpectatorInventory().getInventory()
+			);
+			if (itemStack.getType().equals(Material.PLAYER_HEAD) && isSameInventory) {
+				SkullMeta headMeta = (SkullMeta) itemStack.getItemMeta();
+				if (headMeta == null) {
+					return;
+				}
+				OfflinePlayer playerHeadOwner = headMeta.getOwningPlayer();
+				if (playerHeadOwner == null) {
+					return;
+				}
+				for (HashMap.Entry<String, Team> entry : diamondRush.getGame().getTeams().entrySet()) {
+					Team team = entry.getValue();
+					for (UUID teamPlayerUuid : team.getPlayerUUIDs()) {
+						Player teamPlayer = Bukkit.getPlayer(teamPlayerUuid);
+						if (teamPlayer == null) {
+							continue;
+						}
+						if (teamPlayer.getUniqueId().equals(playerHeadOwner.getUniqueId())) {
+							if (playerHeadOwner.isConnected()) {
+								if (teamPlayer.getGameMode() != GameMode.SPECTATOR) {
+									return;
+								}
+								player.setSpectatorTarget(teamPlayer);
+								return;
+							}
+						}
+					}
+				}
+			}
+			// Teleport spectator to team totem
+			for (HashMap.Entry<String, Team> entry : diamondRush.getGame().getTeams().entrySet()) {
+				Team team = entry.getValue();
+				if (itemStack.getType().equals(team.getTeamColor().getMaterial())) {
+					Block totemBlock = team.getTotemBlock();
+					if (totemBlock == null) {
+						return;
+					}
+					int totemHeight = diamondRush.getConfig().getTotemHeight();
+					player.teleport(team.getTotemBlock().getLocation().add(0, totemHeight, 0));
+					return;
+				}
+			}
+		} // End if spectators contains player
+
+		// Prevent inventory click while the game is paused or in transition
 		GamePhase phase = diamondRush.getGame().getPhase();
 		if (phase.equals(GamePhase.TRANSITION) || phase.equals(GamePhase.PAUSE)) {
 			event.setCancelled(true);

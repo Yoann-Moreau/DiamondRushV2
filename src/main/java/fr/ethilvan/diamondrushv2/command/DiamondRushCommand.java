@@ -29,6 +29,7 @@ public class DiamondRushCommand implements TabExecutor {
 		subcommands.add(new EndCommand(diamondRush));
 		subcommands.add(new PauseCommand(diamondRush));
 		subcommands.add(new ResumeCommand(diamondRush));
+		subcommands.add(new SpectateCommand(diamondRush));
 	}
 
 

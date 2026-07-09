@@ -24,6 +24,7 @@ messages:
       noTeamSpecified: "<red>You must provide a team name."
       noSuchTeam: "<red>No team by that name exists."
       alreadyInATeam: "<red>You have already joined a team."
+      spectating: "<red>You are spectating the current DiamondRush game and therefore cannot join a team."
       success: "<green>You have joined the <{team-color}>{team-name}</{team-color}> team."
     start:
       description: "Starts the DiamondRush game."
@@ -42,6 +43,10 @@ messages:
       noTimer: "<red>No timer to pause for now."
     resume:
       description: "Resumes the current DiamondRush game."
+    spectate:
+      description: "Allows to spectate the current DiamondRush game."
+      alreadyInTeam: "You are already in a team and therefore can't spectate."
+      spectating: "<green>You are now spectating the current DiamondRush game. Open your inventory and click on the head to select a player to spectate or a team totem to teleport to."
   noGameCreated: "<red>You must create a game first."
   timer:
     major: "<yellow>{timer}"

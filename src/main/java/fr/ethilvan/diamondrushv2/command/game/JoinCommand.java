@@ -2,13 +2,20 @@ package fr.ethilvan.diamondrushv2.command.game;
 
 import fr.ethilvan.diamondrushv2.DiamondRush;
 import fr.ethilvan.diamondrushv2.command.Subcommand;
+import fr.ethilvan.diamondrushv2.game.SpectatorInventory;
 import fr.ethilvan.diamondrushv2.game.Team;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 
 public class JoinCommand extends Subcommand {
@@ -53,6 +60,12 @@ public class JoinCommand extends Subcommand {
 			sendMessage(sender, "messages.commands.join.noTeamSpecified");
 			return;
 		}
+
+		if (diamondRush.getGame().getSpectators().contains(player)) {
+			sendMessage(sender, "messages.commands.join.spectating");
+			return;
+		}
+
 		String teamName = args[1];
 		if (!diamondRush.getGame().getTeams().containsKey(teamName)) {
 			sendMessage(sender, "messages.commands.join.noSuchTeam");
@@ -72,6 +85,7 @@ public class JoinCommand extends Subcommand {
 		placeholders.put("\\{team-color\\}", team.getTeamColor().getColorName().toLowerCase());
 		placeholders.put("\\{team-name\\}", team.getName());
 		sendMessage(sender, "messages.commands.join.success", placeholders);
+		updateSpectatorInventory();
 	}
 
 
@@ -81,5 +95,37 @@ public class JoinCommand extends Subcommand {
 			return new ArrayList<>(diamondRush.getGame().getTeams().keySet());
 		}
 		return new ArrayList<>();
+	}
+
+
+	private void updateSpectatorInventory() {
+		int numberOfTeams = diamondRush.getGame().getTeams().size();
+		SpectatorInventory spectatorInventory = new SpectatorInventory(diamondRush, numberOfTeams);
+
+		int teamIndex = 0;
+		for (HashMap.Entry<String, Team> entry : diamondRush.getGame().getTeams().entrySet()) {
+			Team team = entry.getValue();
+			Material teamMaterial = team.getTeamColor().getMaterial();
+			spectatorInventory.addItem(new ItemStack(teamMaterial), teamIndex * 9);
+
+			int playerIndex = 0;
+			for (UUID playerUuid : team.getPlayerUUIDs()) {
+				Player teamPlayer = Bukkit.getPlayer(playerUuid);
+				if (teamPlayer == null) {
+					continue;
+				}
+				ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+				head.editMeta(SkullMeta.class, skullMeta ->  {
+					skullMeta.setOwningPlayer(teamPlayer);
+					skullMeta.displayName(Component.text(teamPlayer.getName()));
+				});
+				spectatorInventory.addItem(head, playerIndex * 9 + 1);
+				playerIndex++;
+			}
+
+			teamIndex++;
+		}
+
+		diamondRush.getGame().setSpectatorInventory(spectatorInventory);
 	}
 }
