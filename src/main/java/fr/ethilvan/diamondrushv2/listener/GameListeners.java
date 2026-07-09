@@ -415,27 +415,30 @@ public class GameListeners implements Listener {
 						if (teamPlayer == null) {
 							continue;
 						}
-						if (teamPlayer.getUniqueId().equals(playerHeadOwner.getUniqueId())) {
-							if (playerHeadOwner.isConnected()) {
-								if (teamPlayer.getGameMode() != GameMode.SPECTATOR) {
-									return;
-								}
-								player.setSpectatorTarget(teamPlayer);
-								return;
-							}
+						if (!teamPlayer.getUniqueId().equals(playerHeadOwner.getUniqueId())) {
+							continue;
 						}
+						if (!playerHeadOwner.isConnected()) {
+							return;
+						}
+						if (player.getGameMode() != GameMode.SPECTATOR) {
+							return;
+						}
+						player.setSpectatorTarget(teamPlayer);
+						return;
 					}
 				}
 			}
 			// Teleport spectator to team totem
 			for (HashMap.Entry<String, Team> entry : diamondRush.getGame().getTeams().entrySet()) {
 				Team team = entry.getValue();
-				if (itemStack.getType().equals(team.getTeamColor().getMaterial())) {
+				if (itemStack.getType().equals(team.getTeamColor().getMaterial()) && isSameInventory) {
 					Block totemBlock = team.getTotemBlock();
 					if (totemBlock == null) {
 						return;
 					}
 					int totemHeight = diamondRush.getConfig().getTotemHeight();
+					player.setSpectatorTarget(null);
 					player.teleport(team.getTotemBlock().getLocation().add(0, totemHeight, 0));
 					return;
 				}

@@ -123,7 +123,7 @@ public class JoinCommand extends Subcommand {
 					skullMeta.setOwningPlayer(teamPlayer);
 					skullMeta.displayName(Component.text(teamPlayer.getName()));
 				});
-				spectatorInventory.addItem(head, playerIndex * 9 + 1);
+				spectatorInventory.addItem(head, teamIndex * 9 + playerIndex + 1);
 				playerIndex++;
 			}
 
