@@ -57,13 +57,13 @@ public class SpectateCommand extends Subcommand {
 			return;
 		}
 
-		//for (HashMap.Entry<String, Team> entry : diamondRush.getGame().getTeams().entrySet()) {
-		//	Team team = entry.getValue();
-		//	if (team.getPlayerUUIDs().contains(player.getUniqueId())) {
-		//		sendMessage(sender, "messages.commands.spectate.alreadyInTeam");
-		//		return;
-		//	}
-		//}
+		for (HashMap.Entry<String, Team> entry : diamondRush.getGame().getTeams().entrySet()) {
+			Team team = entry.getValue();
+			if (team.getPlayerUUIDs().contains(player.getUniqueId())) {
+				sendMessage(sender, "messages.commands.spectate.alreadyInTeam");
+				return;
+			}
+		}
 
 		diamondRush.getGame().addSpectator(player);
 		player.setGameMode(GameMode.SPECTATOR);
