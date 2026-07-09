@@ -25,6 +25,7 @@ messages:
       noSuchTeam: "<red>No team by that name exists."
       alreadyInATeam: "<red>You have already joined a team."
       spectating: "<red>You are spectating the current DiamondRush game and therefore cannot join a team."
+      teamAtMaxCapacity: "<red>There are already 8 players in this team, there cannot be more."
       success: "<green>You have joined the <{team-color}>{team-name}</{team-color}> team."
     start:
       description: "Starts the DiamondRush game."

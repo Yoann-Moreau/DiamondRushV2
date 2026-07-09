@@ -72,6 +72,10 @@ public class JoinCommand extends Subcommand {
 			return;
 		}
 		Team team = diamondRush.getGame().getTeam(teamName);
+		if (team.getPlayerUUIDs().size() >= 8) {
+			sendMessage(sender, "messages.commands.join.teamAtMaxCapacity");
+			return;
+		}
 		// Check if player has already joined a team
 		for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 			if (teamEntry.getValue().getPlayerUUIDs().contains(player.getUniqueId())) {
