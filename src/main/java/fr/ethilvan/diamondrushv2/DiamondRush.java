@@ -12,6 +12,10 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -74,8 +78,30 @@ public class DiamondRush {
 		File file = new File(plugin.getDataFolder(), "messages.yml");
 		if (!file.exists()) {
 			plugin.saveResource("messages.yml", false);
+			messagesConfig = YamlConfiguration.loadConfiguration(file);
+			return;
 		}
+		updateMessagesConfig(file);
+	}
+
+
+	private void updateMessagesConfig(File file) {
 		messagesConfig = YamlConfiguration.loadConfiguration(file);
+		try {
+			InputStream inputStream = getPlugin().getResource("messages.yml");
+			if (inputStream == null) {
+				throw new IllegalStateException("messages.yml file not found!");
+			}
+			YamlConfiguration defaults = YamlConfiguration.loadConfiguration(
+					new InputStreamReader(inputStream, StandardCharsets.UTF_8)
+			);
+			messagesConfig.setDefaults(defaults);
+			messagesConfig.options().copyDefaults(true);
+			messagesConfig.save(file);
+		}
+		catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 
