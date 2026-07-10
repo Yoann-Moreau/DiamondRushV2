@@ -599,21 +599,17 @@ public class GameListeners implements Listener {
 		event.setCancelled(true);
 		Player player = event.getPlayer();
 		Team team = diamondRush.getGame().getTeam(player.getUniqueId());
+
+		// Limit spectator messages to spectators
+		if (diamondRush.getGame().getSpectatorUuids().contains(player.getUniqueId())) {
+			messageSpectators(player, textComponent);
+			return;
+		}
+
 		if (!diamondRush.getGame().getPhase().equals(GamePhase.COMBAT)) {
-			// send to spectators
-			for (UUID spectatorUuid : diamondRush.getGame().getSpectatorUuids()) {
-				Player spectator = Bukkit.getPlayer(spectatorUuid);
-				if (spectator == null) {
-					continue;
-				}
-				HashMap<String, String> placeholders = new HashMap<>();
-				placeholders.put("\\{team-color\\}", "dark_gray");
-				placeholders.put("\\{player-name\\}", player.getName());
-				placeholders.put("\\{message\\}", textComponent.content());
-				diamondRush.messagePlayer(spectator, "messages.chatMessage", placeholders);
-				return;
-			}
-			// Send to team members
+			// send to spectators (not combat)
+			messageSpectators(player, textComponent);
+			// Send to team members (not combat)
 			for (UUID uuid : team.getPlayerUUIDs()) {
 				Player teamPlayer = Bukkit.getPlayer(uuid);
 				if (teamPlayer == null) {
@@ -627,7 +623,8 @@ public class GameListeners implements Listener {
 			}
 			return;
 		}
-		// send to everyone
+
+		// send to everyone (combat)
 		String teamColor = "gray";
 		if (team != null) {
 			teamColor = team.getTeamColor().getColorName();
@@ -743,5 +740,20 @@ public class GameListeners implements Listener {
 			player.getInventory().addItem(new ItemStack(nextKillsMaterial, nextKillsQuantity));
 		}
 		diamondRush.messagePlayer(player, "messages.killReward");
+	}
+
+
+	private void messageSpectators(@NotNull Player player, TextComponent textComponent) {
+		for (UUID spectatorUuid : diamondRush.getGame().getSpectatorUuids()) {
+			Player spectator = Bukkit.getPlayer(spectatorUuid);
+			if (spectator == null) {
+				continue;
+			}
+			HashMap<String, String> placeholders = new HashMap<>();
+			placeholders.put("\\{team-color\\}", "dark_gray");
+			placeholders.put("\\{player-name\\}", player.getName());
+			placeholders.put("\\{message\\}", textComponent.content());
+			diamondRush.messagePlayer(spectator, "messages.chatMessage", placeholders);
+		}
 	}
 }
