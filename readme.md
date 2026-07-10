@@ -1,7 +1,8 @@
 # DiamondRushV2
 
-DiamondRushV2 is the rewritten plugin developed by Hironak and heavily inspired by the plugin DiamondRush developed by
-aumgn and noogotte.
+DiamondRushV2 is the rewritten plugin developed by Hironak and going back over the original plugin DiamondRush developed 
+by aumgn and noogotte. Some functionalities have been updated to use the new features of recent Minecraft versions, and
+others are not implemented yet.
 
 ## DiamondRush mini-game
 
@@ -67,4 +68,9 @@ Resumes the current paused DiamondRush game.
 
 ### /diamondrush reload
 
-Reloads the DiamondRush configuration files. Must be executed before the game starts. 
+Reloads the DiamondRush configuration files. Must be executed before the game starts.
+
+### /diamondrush spectate
+
+Sets the game mode to SPECTATOR and allows to teleport to team totems and to spectate players when clicking on their
+heads in spectator inventory.
