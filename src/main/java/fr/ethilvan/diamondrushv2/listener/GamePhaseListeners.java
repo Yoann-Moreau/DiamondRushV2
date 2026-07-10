@@ -382,6 +382,7 @@ public class GamePhaseListeners implements Listener {
 		if (diamondRush.getGame().getGameTimer() != null) {
 			diamondRush.getGame().getGameTimer().cancel();
 		}
+		diamondRush.getGame().getSpectators().clear();
 		diamondRush.resetScoreboard();
 		diamondRush.setGame(null);
 	}
