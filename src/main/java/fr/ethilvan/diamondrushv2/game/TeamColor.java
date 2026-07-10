@@ -8,7 +8,7 @@ public enum TeamColor {
 
 	BLUE("BLUE", NamedTextColor.BLUE, Material.BLUE_WOOL),
 	RED("DARK_RED", NamedTextColor.DARK_RED, Material.RED_WOOL),
-	GREEN("DARK_GREEN", NamedTextColor.DARK_GREEN, Material.RED_WOOL),
+	GREEN("DARK_GREEN", NamedTextColor.DARK_GREEN, Material.GREEN_WOOL),
 	ORANGE("GOLD", NamedTextColor.GOLD, Material.ORANGE_WOOL),
 	PURPLE("DARK_PURPLE", NamedTextColor.DARK_PURPLE, Material.PURPLE_WOOL),
 	WHITE("WHITE", NamedTextColor.WHITE, Material.WHITE_WOOL),
