@@ -26,7 +26,7 @@ public class Game {
 	private final World world;
 	private final World netherWorld;
 	private final Location spawn;
-	private final ArrayList<Player> spectators;
+	private final ArrayList<UUID> spectatorUuids;
 	private SpectatorInventory spectatorInventory;
 	private final HashMap<String, Team> teams;
 	private final HashMap<String, Region> regions;
@@ -41,7 +41,7 @@ public class Game {
 		this.diamondRush = diamondRush;
 		this.world = world;
 		this.spawn = spawn;
-		this.spectators = new ArrayList<>();
+		this.spectatorUuids = new ArrayList<>();
 		this.teams = new HashMap<>();
 		this.regions = new HashMap<>();
 
@@ -67,16 +67,16 @@ public class Game {
 	}
 
 
-	public ArrayList<Player> getSpectators() {
-		return spectators;
+	public ArrayList<UUID> getSpectatorUuids() {
+		return spectatorUuids;
 	}
 
-	public void addSpectator(Player player) {
-		spectators.add(player);
+	public void addSpectatorUuid(UUID playerUuid) {
+		spectatorUuids.add(playerUuid);
 	}
 
-	public void removeSpectator(Player player) {
-		spectators.remove(player);
+	public void removeSpectatorUuid(UUID playerUuid) {
+		spectatorUuids.remove(playerUuid);
 	}
 
 

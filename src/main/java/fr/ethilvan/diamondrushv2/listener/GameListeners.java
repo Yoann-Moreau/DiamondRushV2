@@ -31,10 +31,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.projectiles.ProjectileSource;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 
 public class GameListeners implements Listener {
@@ -376,7 +373,7 @@ public class GameListeners implements Listener {
 
 		// Manage spectator inventory click
 		Player player = (Player) event.getWhoClicked();
-		if (diamondRush.getGame().getSpectators().contains(player)) {
+		if (diamondRush.getGame().getSpectatorUuids().contains(player.getUniqueId())) {
 			event.setCancelled(true);
 
 			ItemStack itemStack = event.getCurrentItem();
@@ -384,6 +381,7 @@ public class GameListeners implements Listener {
 				return;
 			}
 
+			// Open spectator inventory on base player head click
 			if (player.getInventory().equals(event.getClickedInventory())) {
 				if (itemStack.getType() == Material.PLAYER_HEAD) {
 					player.openInventory(diamondRush.getGame().getSpectatorInventory().getInventory());
@@ -391,7 +389,7 @@ public class GameListeners implements Listener {
 				}
 			}
 
-			// Spectate player when clicking player head in spectator inventory
+			// Spectate player when clicking team player head in spectator inventory
 			Inventory clickedInventory = event.getClickedInventory();
 			if (clickedInventory == null) {
 				return;
@@ -418,7 +416,7 @@ public class GameListeners implements Listener {
 						if (!teamPlayer.getUniqueId().equals(playerHeadOwner.getUniqueId())) {
 							continue;
 						}
-						if (!playerHeadOwner.isConnected()) {
+						if (!playerHeadOwner.isOnline()) {
 							return;
 						}
 						if (player.getGameMode() != GameMode.SPECTATOR) {
@@ -602,18 +600,17 @@ public class GameListeners implements Listener {
 		Player player = event.getPlayer();
 		Team team = diamondRush.getGame().getTeam(player.getUniqueId());
 		if (!diamondRush.getGame().getPhase().equals(GamePhase.COMBAT)) {
-			// send to spectators if not in team
-			if (team == null) {
-				for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-					if (!onlinePlayer.getGameMode().equals(GameMode.SPECTATOR)) {
-						continue;
-					}
-					HashMap<String, String> placeholders = new HashMap<>();
-					placeholders.put("\\{team-color\\}", "dark_gray");
-					placeholders.put("\\{player-name\\}", player.getName());
-					placeholders.put("\\{message\\}", textComponent.content());
-					diamondRush.messagePlayer(onlinePlayer, "messages.chatMessage", placeholders);
+			// send to spectators
+			for (UUID spectatorUuid : diamondRush.getGame().getSpectatorUuids()) {
+				Player spectator = Bukkit.getPlayer(spectatorUuid);
+				if (spectator == null) {
+					continue;
 				}
+				HashMap<String, String> placeholders = new HashMap<>();
+				placeholders.put("\\{team-color\\}", "dark_gray");
+				placeholders.put("\\{player-name\\}", player.getName());
+				placeholders.put("\\{message\\}", textComponent.content());
+				diamondRush.messagePlayer(spectator, "messages.chatMessage", placeholders);
 				return;
 			}
 			// Send to team members
@@ -650,6 +647,43 @@ public class GameListeners implements Listener {
 		}
 		if (event.getEntity().getType() == EntityType.PHANTOM) {
 			event.setCancelled(true);
+		}
+	}
+
+
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		if (diamondRush.getGame() == null) {
+			return;
+		}
+
+		GamePhase gamePhase = diamondRush.getGame().getPhase();
+
+		GamePhase[] survivalPhases = {
+				GamePhase.CREATION,
+				GamePhase.COMBAT,
+				GamePhase.EXPLORATION,
+				GamePhase.TOTEM_PLACEMENT,
+				GamePhase.SPAWN_PLACEMENT,
+				GamePhase.STARTING,
+		};
+
+		GamePhase[] creativePhases = {
+				GamePhase.TRANSITION,
+				GamePhase.PAUSE,
+		};
+
+		Player player = event.getPlayer();
+		for (HashMap.Entry<String, Team> entry : diamondRush.getGame().getTeams().entrySet()) {
+			Team team = entry.getValue();
+			if (team.getPlayerUUIDs().contains(player.getUniqueId())) {
+				if (Arrays.asList(survivalPhases).contains(gamePhase)) {
+					player.setGameMode(GameMode.SURVIVAL);
+				}
+				else if (Arrays.asList(creativePhases).contains(gamePhase)) {
+					player.setGameMode(GameMode.CREATIVE);
+				}
+			}
 		}
 	}
 

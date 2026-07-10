@@ -61,7 +61,7 @@ public class JoinCommand extends Subcommand {
 			return;
 		}
 
-		if (diamondRush.getGame().getSpectators().contains(player)) {
+		if (diamondRush.getGame().getSpectatorUuids().contains(player.getUniqueId())) {
 			sendMessage(sender, "messages.commands.join.spectating");
 			return;
 		}

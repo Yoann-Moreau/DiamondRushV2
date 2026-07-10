@@ -65,7 +65,7 @@ public class SpectateCommand extends Subcommand {
 			}
 		}
 
-		diamondRush.getGame().addSpectator(player);
+		diamondRush.getGame().addSpectatorUuid(player.getUniqueId());
 		player.setGameMode(GameMode.SPECTATOR);
 		sendMessage(player, "messages.commands.spectate.spectating");
 		player.getInventory().clear();
