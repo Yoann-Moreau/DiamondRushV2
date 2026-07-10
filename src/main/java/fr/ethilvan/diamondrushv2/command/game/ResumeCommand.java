@@ -4,6 +4,7 @@ import fr.ethilvan.diamondrushv2.DiamondRush;
 import fr.ethilvan.diamondrushv2.command.Subcommand;
 import fr.ethilvan.diamondrushv2.game.GamePhase;
 import fr.ethilvan.diamondrushv2.game.Team;
+import fr.ethilvan.diamondrushv2.tools.MessageHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
@@ -44,15 +45,15 @@ public class ResumeCommand extends Subcommand {
 	@Override
 	public void perform(CommandSender sender, @NotNull String[] args) {
 		if (!sender.hasPermission(getPermission())) {
-			sendMessage(sender, "messages.commands.noPermission");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.noPermission");
 			return;
 		}
 		if (diamondRush.getGame() == null) {
-			sendMessage(sender, "messages.noGameCreated");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.noGameCreated");
 			return;
 		}
 		if (!diamondRush.getGame().getPhase().equals(GamePhase.PAUSE)) {
-			sendMessage(sender, "messages.commands.resume.noGamePaused");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.resume.noGamePaused");
 		}
 		// Put team players in survival mode
 		for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {

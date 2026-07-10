@@ -5,6 +5,7 @@ import fr.ethilvan.diamondrushv2.command.Subcommand;
 import fr.ethilvan.diamondrushv2.event.GameStartEvent;
 import fr.ethilvan.diamondrushv2.game.GamePhase;
 import fr.ethilvan.diamondrushv2.game.Team;
+import fr.ethilvan.diamondrushv2.tools.MessageHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -41,15 +42,15 @@ public class StartCommand extends Subcommand {
 	@Override
 	public void perform(CommandSender sender, @NotNull String[] args) {
 		if (!sender.hasPermission(getPermission())) {
-			sendMessage(sender, "messages.commands.noPermission");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.noPermission");
 			return;
 		}
 		if (diamondRush.getGame() == null) {
-			sendMessage(sender, "messages.noGameCreated");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.noGameCreated");
 			return;
 		}
 		if (diamondRush.getGame().getTeams().isEmpty()) { // TODO: Replace with size() < 2
-			sendMessage(sender, "messages.commands.start.notEnoughTeams");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.start.notEnoughTeams");
 			return;
 		}
 		for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
@@ -57,12 +58,12 @@ public class StartCommand extends Subcommand {
 				HashMap<String, String> placeholders = new HashMap<>();
 				placeholders.put("\\{team-color\\}", teamEntry.getValue().getTeamColor().getColorName().toLowerCase());
 				placeholders.put("\\{team-name\\}", teamEntry.getValue().getName());
-				sendMessage(sender, "messages.commands.start.notEnoughPlayersInTeam", placeholders);
+				MessageHelper.sendMessage(diamondRush, sender, "messages.commands.start.notEnoughPlayersInTeam", placeholders);
 				return;
 			}
 		}
 		if (!diamondRush.getGame().getPhase().equals(GamePhase.CREATION)) {
-			sendMessage(sender, "messages.commands.start.gameAlreadyStarted");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.start.gameAlreadyStarted");
 			return;
 		}
 		Bukkit.getPluginManager().callEvent(new GameStartEvent());

@@ -3,6 +3,7 @@ package fr.ethilvan.diamondrushv2.command.game;
 import fr.ethilvan.diamondrushv2.DiamondRush;
 import fr.ethilvan.diamondrushv2.command.Subcommand;
 import fr.ethilvan.diamondrushv2.game.Team;
+import fr.ethilvan.diamondrushv2.tools.MessageHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
@@ -43,15 +44,15 @@ public class PauseCommand extends Subcommand {
 	@Override
 	public void perform(CommandSender sender, @NotNull String[] args) {
 		if (!sender.hasPermission(getPermission())) {
-			sendMessage(sender, "messages.commands.noPermission");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.noPermission");
 			return;
 		}
 		if (diamondRush.getGame() == null) {
-			sendMessage(sender, "messages.noGameCreated");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.noGameCreated");
 			return;
 		}
 		if (diamondRush.getGame().getGameTimer() == null) {
-			sendMessage(sender, "messages.commands.pause.noTimer");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.pause.noTimer");
 			return;
 		}
 		// Put team players in creative mode

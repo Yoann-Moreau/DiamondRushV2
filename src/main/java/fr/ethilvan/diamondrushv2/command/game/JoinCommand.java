@@ -4,6 +4,7 @@ import fr.ethilvan.diamondrushv2.DiamondRush;
 import fr.ethilvan.diamondrushv2.command.Subcommand;
 import fr.ethilvan.diamondrushv2.game.SpectatorInventory;
 import fr.ethilvan.diamondrushv2.game.Team;
+import fr.ethilvan.diamondrushv2.tools.MessageHelper;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -49,37 +50,37 @@ public class JoinCommand extends Subcommand {
 	@Override
 	public void perform(CommandSender sender, @NotNull String[] args) {
 		if (!(sender instanceof Player player)) {
-			sendMessage(sender, "messages.commands.notAPlayer");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.notAPlayer");
 			return;
 		}
 		if (diamondRush.getGame() == null) {
-			sendMessage(sender, "messages.noGameCreated");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.noGameCreated");
 			return;
 		}
 		if (args.length < 2) {
-			sendMessage(sender, "messages.commands.join.noTeamSpecified");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.join.noTeamSpecified");
 			return;
 		}
 
 		if (diamondRush.getGame().getSpectatorUuids().contains(player.getUniqueId())) {
-			sendMessage(sender, "messages.commands.join.spectating");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.join.spectating");
 			return;
 		}
 
 		String teamName = args[1];
 		if (!diamondRush.getGame().getTeams().containsKey(teamName)) {
-			sendMessage(sender, "messages.commands.join.noSuchTeam");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.join.noSuchTeam");
 			return;
 		}
 		Team team = diamondRush.getGame().getTeam(teamName);
 		if (team.getPlayerUUIDs().size() >= 8) {
-			sendMessage(sender, "messages.commands.join.teamAtMaxCapacity");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.join.teamAtMaxCapacity");
 			return;
 		}
 		// Check if player has already joined a team
 		for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 			if (teamEntry.getValue().getPlayerUUIDs().contains(player.getUniqueId())) {
-				sendMessage(sender, "messages.commands.join.alreadyInATeam");
+				MessageHelper.sendMessage(diamondRush, sender, "messages.commands.join.alreadyInATeam");
 				return;
 			}
 		}
@@ -88,7 +89,7 @@ public class JoinCommand extends Subcommand {
 		HashMap<String, String> placeholders = new HashMap<>();
 		placeholders.put("\\{team-color\\}", team.getTeamColor().getColorName().toLowerCase());
 		placeholders.put("\\{team-name\\}", team.getName());
-		sendMessage(sender, "messages.commands.join.success", placeholders);
+		MessageHelper.sendMessage(diamondRush, sender, "messages.commands.join.success", placeholders);
 		updateSpectatorInventory();
 	}
 

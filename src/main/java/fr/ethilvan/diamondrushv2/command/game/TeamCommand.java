@@ -4,6 +4,7 @@ import fr.ethilvan.diamondrushv2.DiamondRush;
 import fr.ethilvan.diamondrushv2.command.Subcommand;
 import fr.ethilvan.diamondrushv2.game.Team;
 import fr.ethilvan.diamondrushv2.game.TeamColor;
+import fr.ethilvan.diamondrushv2.tools.MessageHelper;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,15 +42,15 @@ public class TeamCommand extends Subcommand {
 	@Override
 	public void perform(CommandSender sender, @NotNull String[] args) {
 		if (!sender.hasPermission(getPermission())) {
-			sendMessage(sender, "messages.commands.noPermission");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.noPermission");
 			return;
 		}
 		if (diamondRush.getGame() == null) {
-			sendMessage(sender, "messages.noGameCreated");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.noGameCreated");
 			return;
 		}
 		if (args.length < 2) {
-			sendMessage(sender, "messages.commands.team.noActionSpecified");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.team.noActionSpecified");
 			return;
 		}
 		if (args[1].equalsIgnoreCase("add")) {
@@ -91,11 +92,11 @@ public class TeamCommand extends Subcommand {
 
 	private void addTeam(CommandSender sender, @NotNull String[] args) {
 		if (args.length < 3) {
-			sendMessage(sender, "messages.commands.team.noTeamSpecified");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.team.noTeamSpecified");
 			return;
 		}
 		if (args.length < 4) {
-			sendMessage(sender, "messages.commands.team.noColorSpecified");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.team.noColorSpecified");
 			return;
 		}
 		String teamName = args[2];
@@ -104,7 +105,7 @@ public class TeamCommand extends Subcommand {
 		if (teamName.equals("game")) {
 			HashMap<String, String> placeholders = new HashMap<>();
 			placeholders.put("\\{word\\}", teamName);
-			sendMessage(sender, "messages.commands.team.reservedWord", placeholders);
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.team.reservedWord", placeholders);
 			return;
 		}
 
@@ -113,18 +114,18 @@ public class TeamCommand extends Subcommand {
 			teamColor = TeamColor.valueOf(colorName.toUpperCase());
 		}
 		catch (IllegalArgumentException e) {
-			sendMessage(sender, "messages.commands.team.notAValidColor");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.team.notAValidColor");
 			return;
 		}
 		// Check if team name is taken
 		if (diamondRush.getGame().getTeam(teamName) != null) {
-			sendMessage(sender, "messages.commands.team.teamAlreadyExists");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.team.teamAlreadyExists");
 			return;
 		}
 		// Check if team color is taken
 		for (HashMap.Entry<String, Team> teamEntry : diamondRush.getGame().getTeams().entrySet()) {
 			if (teamEntry.getValue().getTeamColor().equals(teamColor)) {
-				sendMessage(sender, "messages.commands.team.colorTaken");
+				MessageHelper.sendMessage(diamondRush, sender, "messages.commands.team.colorTaken");
 				return;
 			}
 		}
@@ -134,13 +135,13 @@ public class TeamCommand extends Subcommand {
 		HashMap<String, String> placeholders = new HashMap<>();
 		placeholders.put("\\{team-color\\}", team.getTeamColor().getColorName().toLowerCase());
 		placeholders.put("\\{team-name\\}", team.getName());
-		sendMessage(sender, "messages.commands.team.addSuccess", placeholders);
+		MessageHelper.sendMessage(diamondRush, sender, "messages.commands.team.addSuccess", placeholders);
 	}
 
 
 	private void removeTeam(CommandSender sender, @NotNull String[] args) {
 		if (args.length < 3) {
-			sendMessage(sender, "messages.commands.team.noTeamSpecified");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.team.noTeamSpecified");
 			return;
 		}
 		String teamName = args[2];
@@ -153,10 +154,10 @@ public class TeamCommand extends Subcommand {
 			placeholders.put("\\{team-name\\}", teamEntry.getValue().getName());
 			teamEntry.getValue().getMinecraftTeam().unregister();
 			diamondRush.getGame().getTeams().remove(teamName);
-			sendMessage(sender, "messages.commands.team.removeSuccess", placeholders);
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.team.removeSuccess", placeholders);
 			return;
 		}
 
-		sendMessage(sender, "messages.commands.team.noSuchTeam");
+		MessageHelper.sendMessage(diamondRush, sender, "messages.commands.team.noSuchTeam");
 	}
 }

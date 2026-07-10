@@ -27,7 +27,7 @@ public class ScoreboardTimer implements Runnable {
 	) {
 		this.diamondRush = diamondRush;
 		this.remainingTime = duration;
-		this.runnable = runnable == null ? () -> diamondRush.broadcastMessage(endMessagePath) : runnable;
+		this.runnable = runnable == null ? () -> MessageHelper.broadcastMessage(diamondRush, endMessagePath) : runnable;
 		this.entryNamePath = entryNamePath;
 		this.endMessagePath = endMessagePath;
 		this.taskId = -1;
@@ -49,7 +49,7 @@ public class ScoreboardTimer implements Runnable {
 	private void init() {
 		entryName = diamondRush.getMessagesConfig().getString(entryNamePath);
 		if (entryName == null) {
-			diamondRush.missingMessage(entryNamePath);
+			MessageHelper.missingMessage(diamondRush, entryNamePath);
 			return;
 		}
 		initScoreboard();
@@ -88,7 +88,7 @@ public class ScoreboardTimer implements Runnable {
 				run();
 				return;
 			}
-			diamondRush.broadcastMessage(endMessagePath);
+			MessageHelper.broadcastMessage(diamondRush, endMessagePath);
 			runnable.run();
 		}, 20L);
 	}
@@ -107,7 +107,7 @@ public class ScoreboardTimer implements Runnable {
 			}
 			String pauseName = diamondRush.getMessagesConfig().getString("messages.phases.pause.name");
 			if (pauseName == null) {
-				diamondRush.missingMessage("messages.phases.pause.name");
+				MessageHelper.missingMessage(diamondRush, "messages.phases.pause.name");
 				return;
 			}
 			Score timer = sidebar.getScore(pauseName);
@@ -127,7 +127,7 @@ public class ScoreboardTimer implements Runnable {
 			}
 			String pauseName = diamondRush.getMessagesConfig().getString("messages.phases.pause.name");
 			if (pauseName == null) {
-				diamondRush.missingMessage("messages.phases.pause.name");
+				MessageHelper.missingMessage(diamondRush, "messages.phases.pause.name");
 				return;
 			}
 			Score timer = sidebar.getScore(pauseName);
@@ -149,7 +149,7 @@ public class ScoreboardTimer implements Runnable {
 		}
 		String pauseName = diamondRush.getMessagesConfig().getString("messages.phases.pause.name");
 		if (pauseName == null) {
-			diamondRush.missingMessage("messages.phases.pause.name");
+			MessageHelper.missingMessage(diamondRush, "messages.phases.pause.name");
 			return;
 		}
 		Score timer = sidebar.getScore(pauseName);

@@ -5,6 +5,7 @@ import fr.ethilvan.diamondrushv2.command.Subcommand;
 import fr.ethilvan.diamondrushv2.game.Game;
 import fr.ethilvan.diamondrushv2.region.CylindricalRegion;
 import fr.ethilvan.diamondrushv2.region.pattern.SpawnFloorPattern;
+import fr.ethilvan.diamondrushv2.tools.MessageHelper;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -41,15 +42,15 @@ public class CreateCommand extends Subcommand {
 	@Override
 	public void perform(CommandSender sender, @NotNull String[] args) {
 		if (!sender.hasPermission(getPermission())) {
-			sendMessage(sender, "messages.commands.noPermission");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.noPermission");
 			return;
 		}
 		if (!(sender instanceof Player player)) {
-			sendMessage(sender, "messages.commands.notAPlayer");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.notAPlayer");
 			return;
 		}
 		if (diamondRush.getGame() != null) {
-			sendMessage(sender, "messages.commands.create.gameAlreadyCreated");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.create.gameAlreadyCreated");
 			return;
 		}
 		diamondRush.setGame(new Game(diamondRush, player.getWorld(), player.getLocation()));
@@ -57,6 +58,6 @@ public class CreateCommand extends Subcommand {
 		SpawnFloorPattern pattern = new SpawnFloorPattern(spawnRegion);
 		spawnRegion.create(pattern);
 		diamondRush.getGame().addRegion("gameSpawn", spawnRegion);
-		sendMessage(sender, "messages.commands.create.success");
+		MessageHelper.sendMessage(diamondRush, sender, "messages.commands.create.success");
 	}
 }

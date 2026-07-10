@@ -2,6 +2,7 @@ package fr.ethilvan.diamondrushv2.game;
 
 import fr.ethilvan.diamondrushv2.DiamondRush;
 import fr.ethilvan.diamondrushv2.region.Region;
+import fr.ethilvan.diamondrushv2.tools.MessageHelper;
 import fr.ethilvan.diamondrushv2.tools.ScoreboardTimer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -209,7 +210,7 @@ public class Game {
 		String displayNamePath = "messages.scoreboard.name";
 		String displayName = diamondRush.getMessagesConfig().getString(displayNamePath);
 		if (displayName == null) {
-			diamondRush.missingMessage(displayNamePath);
+			MessageHelper.missingMessage(diamondRush, displayNamePath);
 			return;
 		}
 		Component component = Component.text(displayName, NamedTextColor.GOLD);

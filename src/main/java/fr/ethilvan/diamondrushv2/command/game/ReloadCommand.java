@@ -2,6 +2,7 @@ package fr.ethilvan.diamondrushv2.command.game;
 
 import fr.ethilvan.diamondrushv2.DiamondRush;
 import fr.ethilvan.diamondrushv2.command.Subcommand;
+import fr.ethilvan.diamondrushv2.tools.MessageHelper;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,7 +39,7 @@ public class ReloadCommand extends Subcommand {
 	@Override
 	public void perform(CommandSender sender, @NotNull String[] args) {
 		if (!sender.hasPermission(getPermission())) {
-			sendMessage(sender, "messages.commands.noPermission");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.noPermission");
 			return;
 		}
 		try {
@@ -47,12 +48,12 @@ public class ReloadCommand extends Subcommand {
 			diamondRush.getConfig().load();
 			diamondRush.loadMessages();
 			diamondRush.getPlugin().registerEvents();
-			sendMessage(sender, "messages.commands.reload.success");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.reload.success");
 		}
 		catch (RuntimeException e) {
 			HashMap<String, String> placeholders = new HashMap<>();
 			placeholders.put("\\{message\\}", e.getMessage());
-			sendMessage(sender, "messages.commands.reload.failure", placeholders);
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.reload.failure", placeholders);
 		}
 	}
 }

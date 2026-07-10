@@ -2,11 +2,9 @@ package fr.ethilvan.diamondrushv2;
 
 import fr.ethilvan.diamondrushv2.config.Config;
 import fr.ethilvan.diamondrushv2.game.Game;
-import fr.ethilvan.diamondrushv2.game.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
@@ -16,8 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.UUID;
 
 
 public class DiamondRush {
@@ -102,126 +98,6 @@ public class DiamondRush {
 		catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-
-	public void broadcastMessage(String messagePath) {
-		String message = plugin.getDiamondRush().getMessagesConfig().getString(messagePath);
-		if (message == null) {
-			missingMessage(messagePath);
-			return;
-		}
-		for (Player player : plugin.getServer().getOnlinePlayers()) {
-			player.sendRichMessage(message);
-		}
-	}
-
-	public void broadcastMessage(String messagePath, HashMap<String, String> placeholders) {
-		String message = plugin.getDiamondRush().getMessagesConfig().getString(messagePath);
-		if (message == null) {
-			missingMessage(messagePath);
-			return;
-		}
-
-		for (HashMap.Entry<String, String> placeholder : placeholders.entrySet()) {
-			message = message.replaceAll(placeholder.getKey(), placeholder.getValue());
-		}
-		for (Player player : plugin.getServer().getOnlinePlayers()) {
-			player.sendRichMessage(message);
-		}
-	}
-
-
-	public void messagePlayer(Player player, String messagePath) {
-		String message = plugin.getDiamondRush().getMessagesConfig().getString(messagePath);
-		if (message == null) {
-			missingMessage(messagePath);
-			return;
-		}
-		player.sendRichMessage(message);
-	}
-
-
-	public void messagePlayer(Player player, String messagePath, HashMap<String, String> placeholders) {
-		String message = plugin.getDiamondRush().getMessagesConfig().getString(messagePath);
-		if (message == null) {
-			missingMessage(messagePath);
-			return;
-		}
-		for (HashMap.Entry<String, String> placeholder : placeholders.entrySet()) {
-			message = message.replaceAll(placeholder.getKey(), placeholder.getValue());
-		}
-		player.sendRichMessage(message);
-	}
-
-
-	public void messageLeaders(String messagePath) {
-		for (HashMap.Entry<String, Team> teamEntry : getGame().getTeams().entrySet()) {
-			Player player = Bukkit.getPlayer(teamEntry.getValue().getLeaderUuid());
-			if (player == null) {
-				continue;
-			}
-			String message = plugin.getDiamondRush().getMessagesConfig().getString(messagePath);
-			if (message == null) {
-				missingMessage(messagePath);
-				return;
-			}
-			player.sendRichMessage(message);
-		}
-	}
-
-
-	public void messageOtherPlayersInTeams(String messagePath) {
-		for (HashMap.Entry<String, Team> teamEntry : getGame().getTeams().entrySet()) {
-			UUID leaderUuid = teamEntry.getValue().getLeaderUuid();
-			for (UUID uuid : teamEntry.getValue().getPlayerUUIDs()) {
-				if (uuid == leaderUuid) { // Skip leader
-					continue;
-				}
-				Player player = Bukkit.getPlayer(uuid);
-				if (player == null) {
-					continue;
-				}
-				String message = plugin.getDiamondRush().getMessagesConfig().getString(messagePath);
-				if (message == null) {
-					missingMessage(messagePath);
-					return;
-				}
-				player.sendRichMessage(message);
-			}
-		}
-	}
-
-
-	public void messageOtherPlayersInTeam(Team team, String messagePath) {
-		messageOtherPlayersInTeam(team, messagePath, new HashMap<>());
-	}
-
-
-	public void messageOtherPlayersInTeam(Team team, String messagePath, HashMap<String, String> placeholders) {
-		for (UUID uuid : team.getPlayerUUIDs()) {
-			if (uuid == team.getLeaderUuid()) { // Skip leader
-				continue;
-			}
-			Player player = Bukkit.getPlayer(uuid);
-			if (player == null) {
-				continue;
-			}
-			String message = plugin.getDiamondRush().getMessagesConfig().getString(messagePath);
-			if (message == null) {
-				missingMessage(messagePath);
-				return;
-			}
-			for (HashMap.Entry<String, String> placeholder : placeholders.entrySet()) {
-				message = message.replaceAll(placeholder.getKey(), placeholder.getValue());
-			}
-			player.sendRichMessage(message);
-		}
-	}
-
-
-	public void missingMessage(String messagePath) {
-		plugin.getLogger().warning("Message missing from configuration: '" + messagePath + "'.");
 	}
 
 

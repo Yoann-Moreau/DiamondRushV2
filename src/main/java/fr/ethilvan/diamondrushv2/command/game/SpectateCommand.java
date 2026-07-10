@@ -3,6 +3,7 @@ package fr.ethilvan.diamondrushv2.command.game;
 import fr.ethilvan.diamondrushv2.DiamondRush;
 import fr.ethilvan.diamondrushv2.command.Subcommand;
 import fr.ethilvan.diamondrushv2.game.Team;
+import fr.ethilvan.diamondrushv2.tools.MessageHelper;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -48,26 +49,26 @@ public class SpectateCommand extends Subcommand {
 	@Override
 	public void perform(CommandSender sender, @NotNull String[] args) {
 		if (!(sender instanceof Player player)) {
-			sendMessage(sender, "messages.commands.notAPlayer");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.commands.notAPlayer");
 			return;
 		}
 
 		if (diamondRush.getGame() == null) {
-			sendMessage(sender, "messages.noGameCreated");
+			MessageHelper.sendMessage(diamondRush, sender, "messages.noGameCreated");
 			return;
 		}
 
 		for (HashMap.Entry<String, Team> entry : diamondRush.getGame().getTeams().entrySet()) {
 			Team team = entry.getValue();
 			if (team.getPlayerUUIDs().contains(player.getUniqueId())) {
-				sendMessage(sender, "messages.commands.spectate.alreadyInTeam");
+				MessageHelper.sendMessage(diamondRush, sender, "messages.commands.spectate.alreadyInTeam");
 				return;
 			}
 		}
 
 		diamondRush.getGame().addSpectatorUuid(player.getUniqueId());
 		player.setGameMode(GameMode.SPECTATOR);
-		sendMessage(player, "messages.commands.spectate.spectating");
+		MessageHelper.sendMessage(diamondRush, player, "messages.commands.spectate.spectating");
 		player.getInventory().clear();
 		giveSpectatorManagementItems(player);
 	}

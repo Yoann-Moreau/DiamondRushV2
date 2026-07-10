@@ -8,6 +8,7 @@ import fr.ethilvan.diamondrushv2.event.TeamLossEvent;
 import fr.ethilvan.diamondrushv2.game.GamePhase;
 import fr.ethilvan.diamondrushv2.game.Team;
 import fr.ethilvan.diamondrushv2.region.Region;
+import fr.ethilvan.diamondrushv2.tools.MessageHelper;
 import fr.ethilvan.diamondrushv2.tools.ScoreboardTimer;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.TextComponent;
@@ -93,7 +94,7 @@ public class GameListeners implements Listener {
 							placeholders.put("\\{team-color\\}", team.getTeamColor().getColorName().toLowerCase());
 							placeholders.put("\\{team-name\\}", team.getName());
 							placeholders.put("\\{lives\\}", String.valueOf(currentLives));
-							diamondRush.broadcastMessage("messages.teamLosesLife", placeholders);
+							MessageHelper.broadcastMessage(diamondRush, "messages.teamLosesLife", placeholders);
 							if (currentLives == 0) {
 								event.getBlock().setType(Material.AIR);
 								Bukkit.getPluginManager().callEvent(new TeamLossEvent(team));
@@ -301,7 +302,7 @@ public class GameListeners implements Listener {
 				return;
 			}
 			if (team.getSurrenders() >= diamondRush.getConfig().getMaxSurrendersPerTeam()) {
-				diamondRush.messagePlayer(player, "messages.phases.combat.surrender.maxSurrendersReached");
+				MessageHelper.messagePlayer(diamondRush, player, "messages.phases.combat.surrender.maxSurrendersReached");
 				return;
 			}
 			player.getInventory().removeItem(new ItemStack(surrenderMaterial, 1));
@@ -309,7 +310,7 @@ public class GameListeners implements Listener {
 			HashMap<String, String> placeholders = new HashMap<>();
 			placeholders.put("\\{team-color\\}", team.getTeamColor().getColorName().toLowerCase());
 			placeholders.put("\\{team-name\\}", team.getName());
-			diamondRush.broadcastMessage("messages.phases.combat.surrender.success", placeholders);
+			MessageHelper.broadcastMessage(diamondRush, "messages.phases.combat.surrender.success", placeholders);
 			gameTimer.setRemainingTime(0);
 		}
 	}
@@ -602,13 +603,13 @@ public class GameListeners implements Listener {
 
 		// Limit spectator messages to spectators
 		if (diamondRush.getGame().getSpectatorUuids().contains(player.getUniqueId())) {
-			messageSpectators(player, textComponent);
+			MessageHelper.messageSpectators(diamondRush, player, textComponent);
 			return;
 		}
 
 		if (!diamondRush.getGame().getPhase().equals(GamePhase.COMBAT)) {
 			// send to spectators (not combat)
-			messageSpectators(player, textComponent);
+			MessageHelper.messageSpectators(diamondRush, player, textComponent);
 			// Send to team members (not combat)
 			for (UUID uuid : team.getPlayerUUIDs()) {
 				Player teamPlayer = Bukkit.getPlayer(uuid);
@@ -619,7 +620,7 @@ public class GameListeners implements Listener {
 				placeholders.put("\\{team-color\\}", team.getTeamColor().getColorName().toLowerCase());
 				placeholders.put("\\{player-name\\}", player.getName());
 				placeholders.put("\\{message\\}", textComponent.content());
-				diamondRush.messagePlayer(teamPlayer, "messages.chatMessage", placeholders);
+				MessageHelper.messagePlayer(diamondRush, teamPlayer, "messages.chatMessage", placeholders);
 			}
 			return;
 		}
@@ -633,7 +634,7 @@ public class GameListeners implements Listener {
 		placeholders.put("\\{team-color\\}", teamColor.toLowerCase());
 		placeholders.put("\\{player-name\\}", player.getName());
 		placeholders.put("\\{message\\}", textComponent.content());
-		diamondRush.broadcastMessage("messages.chatMessage", placeholders);
+		MessageHelper.broadcastMessage(diamondRush, "messages.chatMessage", placeholders);
 	}
 
 
@@ -687,10 +688,10 @@ public class GameListeners implements Listener {
 
 	private void changeLeader(Team team, Player newLeader) {
 		team.setLeaderUuid(newLeader.getUniqueId());
-		diamondRush.messagePlayer(newLeader, "messages.phases.leaderChange.leader");
+		MessageHelper.messagePlayer(diamondRush, newLeader, "messages.phases.leaderChange.leader");
 		HashMap<String, String> placeholders = new HashMap<>();
 		placeholders.put("\\{player\\}", newLeader.getName());
-		diamondRush.messageOtherPlayersInTeam(team, "messages.phases.leaderChange.player", placeholders);
+		MessageHelper.messageOtherPlayersInTeam(diamondRush, team, "messages.phases.leaderChange.player", placeholders);
 	}
 
 
@@ -739,21 +740,6 @@ public class GameListeners implements Listener {
 			}
 			player.getInventory().addItem(new ItemStack(nextKillsMaterial, nextKillsQuantity));
 		}
-		diamondRush.messagePlayer(player, "messages.killReward");
-	}
-
-
-	private void messageSpectators(@NotNull Player player, TextComponent textComponent) {
-		for (UUID spectatorUuid : diamondRush.getGame().getSpectatorUuids()) {
-			Player spectator = Bukkit.getPlayer(spectatorUuid);
-			if (spectator == null) {
-				continue;
-			}
-			HashMap<String, String> placeholders = new HashMap<>();
-			placeholders.put("\\{team-color\\}", "dark_gray");
-			placeholders.put("\\{player-name\\}", player.getName());
-			placeholders.put("\\{message\\}", textComponent.content());
-			diamondRush.messagePlayer(spectator, "messages.chatMessage", placeholders);
-		}
+		MessageHelper.messagePlayer(diamondRush, player, "messages.killReward");
 	}
 }

@@ -11,6 +11,7 @@ import fr.ethilvan.diamondrushv2.region.Region;
 import fr.ethilvan.diamondrushv2.region.pattern.Pattern;
 import fr.ethilvan.diamondrushv2.region.pattern.TotemFloorPattern;
 import fr.ethilvan.diamondrushv2.region.pattern.TotemPattern;
+import fr.ethilvan.diamondrushv2.tools.MessageHelper;
 import fr.ethilvan.diamondrushv2.tools.ScoreboardTimer;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -38,7 +39,7 @@ public class GamePhaseListeners implements Listener {
 	@EventHandler
 	public void onGameStart(GameStartEvent event) {
 		diamondRush.getGame().setPhase(GamePhase.STARTING);
-		diamondRush.broadcastMessage("messages.phases.starting.start");
+		MessageHelper.broadcastMessage(diamondRush, "messages.phases.starting.start");
 
 		diamondRush.getGame().setGameTimer(new ScoreboardTimer(
 				diamondRush,
@@ -58,8 +59,8 @@ public class GamePhaseListeners implements Listener {
 		// First totem placement
 		if (event.isFirstPlacement()) {
 			diamondRush.getGame().assignLeaders();
-			diamondRush.messageLeaders("messages.phases.totemPlacement.start.leader");
-			diamondRush.messageOtherPlayersInTeams("messages.phases.totemPlacement.start.player");
+			MessageHelper.messageLeaders(diamondRush, "messages.phases.totemPlacement.start.leader");
+			MessageHelper.messageOtherPlayersInTeams(diamondRush, "messages.phases.totemPlacement.start.player");
 			// Hide advancements
 			diamondRush.getGame().getWorld().setGameRule(GameRules.SHOW_ADVANCEMENT_MESSAGES, false);
 			diamondRush.getGame().getNetherWorld().setGameRule(GameRules.SHOW_ADVANCEMENT_MESSAGES, false);
@@ -164,8 +165,8 @@ public class GamePhaseListeners implements Listener {
 				leader.getInventory().setItemInMainHand(new ItemStack(Material.CHISELED_STONE_BRICKS));
 			}
 			// Message players
-			diamondRush.messageLeaders("messages.phases.spawnPlacement.start.leader");
-			diamondRush.messageOtherPlayersInTeams("messages.phases.spawnPlacement.start.player");
+			MessageHelper.messageLeaders(diamondRush, "messages.phases.spawnPlacement.start.leader");
+			MessageHelper.messageOtherPlayersInTeams(diamondRush, "messages.phases.spawnPlacement.start.player");
 		}
 		// Next spawn placements
 		else {
@@ -223,7 +224,7 @@ public class GamePhaseListeners implements Listener {
 				HashMap<String, String> placeholders = new HashMap<>();
 				placeholders.put("\\{team-color\\}", teamEntry.getValue().getTeamColor().getColorName().toLowerCase());
 				placeholders.put("\\{team-name\\}", teamEntry.getValue().getName());
-				diamondRush.broadcastMessage("messages.phases.spawnPlacement.end.goAgain", placeholders);
+				MessageHelper.broadcastMessage(diamondRush, "messages.phases.spawnPlacement.end.goAgain", placeholders);
 
 				Bukkit.getPluginManager().callEvent(new SpawnPlacementStartEvent(false));
 				return;
@@ -253,7 +254,7 @@ public class GamePhaseListeners implements Listener {
 	public void onExplorationStart(ExplorationStartEvent event) {
 		diamondRush.getGame().setPhase(GamePhase.EXPLORATION);
 		diamondRush.getGame().setNextPhase(GamePhase.COMBAT);
-		diamondRush.broadcastMessage("messages.phases.exploration.start");
+		MessageHelper.broadcastMessage(diamondRush, "messages.phases.exploration.start");
 		diamondRush.getGame().getWorld().setGameRule(GameRules.KEEP_INVENTORY, false);
 		diamondRush.getGame().getNetherWorld().setGameRule(GameRules.KEEP_INVENTORY, false);
 
@@ -283,7 +284,7 @@ public class GamePhaseListeners implements Listener {
 	@EventHandler
 	public void onTransitionStart(TransitionStartEvent event) {
 		diamondRush.getGame().setPhase(GamePhase.TRANSITION);
-		diamondRush.broadcastMessage("messages.phases.transition.start");
+		MessageHelper.broadcastMessage(diamondRush, "messages.phases.transition.start");
 
 		changePlayersGameMode(GameMode.CREATIVE);
 
@@ -311,7 +312,7 @@ public class GamePhaseListeners implements Listener {
 	public void onCombatStart(CombatStartEvent event) {
 		diamondRush.getGame().setPhase(GamePhase.COMBAT);
 		diamondRush.getGame().setNextPhase(GamePhase.EXPLORATION);
-		diamondRush.broadcastMessage("messages.phases.combat.start");
+		MessageHelper.broadcastMessage(diamondRush, "messages.phases.combat.start");
 		diamondRush.getGame().getWorld().setGameRule(GameRules.KEEP_INVENTORY, true);
 		diamondRush.getGame().getNetherWorld().setGameRule(GameRules.KEEP_INVENTORY, true);
 
