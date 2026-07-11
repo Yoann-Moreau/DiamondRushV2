@@ -603,13 +603,14 @@ public class GameListeners implements Listener {
 
 		// Limit spectator messages to spectators
 		if (diamondRush.getGame().getSpectatorUuids().contains(player.getUniqueId())) {
-			MessageHelper.messageSpectators(diamondRush, player, textComponent);
+			MessageHelper.messageSpectators(diamondRush, player, textComponent, "dark_gray");
 			return;
 		}
 
 		if (!diamondRush.getGame().getPhase().equals(GamePhase.COMBAT)) {
 			// send to spectators (not combat)
-			MessageHelper.messageSpectators(diamondRush, player, textComponent);
+			String color = team.getTeamColor().getColorName().toLowerCase();
+			MessageHelper.messageSpectators(diamondRush, player, textComponent, color);
 			// Send to team members (not combat)
 			for (UUID uuid : team.getPlayerUUIDs()) {
 				Player teamPlayer = Bukkit.getPlayer(uuid);

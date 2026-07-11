@@ -50,7 +50,8 @@ public class MessageHelper {
 	public static void messageSpectators(
 			DiamondRush diamondRush,
 			@NotNull Player player,
-			TextComponent textComponent
+			TextComponent textComponent,
+			String color
 	) {
 		for (UUID spectatorUuid : diamondRush.getGame().getSpectatorUuids()) {
 			Player spectator = Bukkit.getPlayer(spectatorUuid);
@@ -58,7 +59,7 @@ public class MessageHelper {
 				continue;
 			}
 			HashMap<String, String> placeholders = new HashMap<>();
-			placeholders.put("\\{team-color\\}", "dark_gray");
+			placeholders.put("\\{team-color\\}", color);
 			placeholders.put("\\{player-name\\}", player.getName());
 			placeholders.put("\\{message\\}", textComponent.content());
 			messagePlayer(diamondRush, spectator, "messages.chatMessage", placeholders);
