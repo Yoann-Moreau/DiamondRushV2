@@ -438,7 +438,7 @@ public class GameListeners implements Listener {
 					}
 					int totemHeight = diamondRush.getConfig().getTotemHeight();
 					player.setSpectatorTarget(null);
-					player.teleport(team.getTotemBlock().getLocation().add(0, totemHeight, 0));
+					player.teleportAsync(team.getTotemBlock().getLocation().add(0, totemHeight, 0));
 					return;
 				}
 			}

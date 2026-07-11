@@ -380,6 +380,14 @@ public class GamePhaseListeners implements Listener {
 			}
 			team.getMinecraftTeam().unregister();
 		}
+		for (UUID spectatorUuid : diamondRush.getGame().getSpectatorUuids()) {
+			Player player = Bukkit.getPlayer(spectatorUuid);
+			if (player == null) {
+				continue;
+			}
+			player.teleportAsync(diamondRush.getGame().getSpawn());
+			player.setGameMode(GameMode.valueOf(diamondRush.getConfig().getEndGameMode()));
+		}
 		if (diamondRush.getGame().getGameTimer() != null) {
 			diamondRush.getGame().getGameTimer().cancel();
 		}

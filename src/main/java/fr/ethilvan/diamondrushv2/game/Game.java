@@ -194,15 +194,27 @@ public class Game {
 				if (player == null) {
 					continue;
 				}
-				player.getInventory().clear();
-				player.setHealth(20);
-				player.setFoodLevel(20);
-				player.setSaturation(5);
-				player.setLevel(0);
-				player.setExp(0);
-				player.setGameMode(GameMode.SURVIVAL);
+				resetPlayer(player);
 			}
 		}
+		for (UUID uuid : getSpectatorUuids()) {
+			Player player = Bukkit.getPlayer(uuid);
+			if (player == null) {
+				continue;
+			}
+			resetPlayer(player);
+		}
+	}
+
+
+	private void resetPlayer(Player player) {
+		player.getInventory().clear();
+		player.setHealth(20);
+		player.setFoodLevel(20);
+		player.setSaturation(5);
+		player.setLevel(0);
+		player.setExp(0);
+		player.setGameMode(GameMode.SURVIVAL);
 	}
 
 
