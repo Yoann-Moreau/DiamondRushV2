@@ -385,6 +385,8 @@ public class GameListeners implements Listener {
 			// Open spectator inventory on base player head click
 			if (player.getInventory().equals(event.getClickedInventory())) {
 				if (itemStack.getType() == Material.PLAYER_HEAD) {
+					event.setCancelled(true);
+					event.getWhoClicked().setItemOnCursor(null);
 					player.openInventory(diamondRush.getGame().getSpectatorInventory().getInventory());
 					return;
 				}
@@ -399,6 +401,7 @@ public class GameListeners implements Listener {
 					diamondRush.getGame().getSpectatorInventory().getInventory()
 			);
 			if (itemStack.getType().equals(Material.PLAYER_HEAD) && isSameInventory) {
+				event.setCancelled(true);
 				SkullMeta headMeta = (SkullMeta) itemStack.getItemMeta();
 				if (headMeta == null) {
 					return;
@@ -432,6 +435,7 @@ public class GameListeners implements Listener {
 			for (HashMap.Entry<String, Team> entry : diamondRush.getGame().getTeams().entrySet()) {
 				Team team = entry.getValue();
 				if (itemStack.getType().equals(team.getTeamColor().getMaterial()) && isSameInventory) {
+					event.setCancelled(true);
 					Block totemBlock = team.getTotemBlock();
 					if (totemBlock == null) {
 						return;
