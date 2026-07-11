@@ -60,3 +60,5 @@ respawnEquipments:
     weapon: "STONE_SWORD"      # Must be a valid Material
     item: "COOKED_BEEF"        # Must be a valid Material
     itemQuantity: 2            # Must be > 0
+end:
+  gamemode: "ADVENTURE"        # Must be ADVENTURE, SURVIVAL, CREATIVE or SPECTATOR

@@ -1,8 +1,15 @@
 package fr.ethilvan.diamondrushv2.config;
 
 import fr.ethilvan.diamondrushv2.DiamondRushV2;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,12 +50,16 @@ public class Config {
 	private ArrayList<ExplorationReward> explorationRewards;
 	// Respawn equipments
 	private ArrayList<RespawnEquipment> respawnEquipments;
+	// End
+	private String endGameMode = "ADVENTURE";
 
 
 	public Config(DiamondRushV2 plugin) {
 		this.plugin = plugin;
 		explorationRewards = new ArrayList<>();
 		respawnEquipments = new ArrayList<>();
+
+		updateConfigFile();
 	}
 
 
@@ -140,6 +151,10 @@ public class Config {
 		return respawnEquipments;
 	}
 
+	public String getEndGameMode() {
+		return endGameMode;
+	}
+
 
 	public void load() {
 		totemPlacementDuration = plugin.getConfig().getInt("phases.duration.totemPlacement");
@@ -162,6 +177,7 @@ public class Config {
 		nextKillsMaterial = plugin.getConfig().getString("killRewards.nextKills.material");
 		nextKillsQuantity = plugin.getConfig().getInt("killRewards.nextKills.quantity");
 		rewardsStartCycle = plugin.getConfig().getInt("explorationRewards.startCycle");
+		endGameMode = plugin.getConfig().getString("end.gamemode");
 
 		explorationRewards = new ArrayList<>();
 		List<Map<?, ?>> explorationRewardsList = plugin.getConfig().getMapList("explorationRewards.rewards");
@@ -204,6 +220,37 @@ public class Config {
 		}
 		if (firstCombatDuration + combatChange * numberOfChanges < 0) {
 			throw new RuntimeException("The combat time can't be inferior to 0.");
+		}
+		try {
+			GameMode.valueOf(endGameMode);
+		}
+		catch (IllegalArgumentException e) {
+			throw new RuntimeException("The end gamemode must be a valid gamemode.");
+		}
+	}
+
+
+	private void updateConfigFile() {
+		File file = new File(plugin.getDataFolder(), "config.yml");
+		if (!file.exists()) {
+			plugin.saveResource("config.yml", false);
+			return;
+		}
+		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+		try {
+			InputStream inputStream = plugin.getResource("config.yml");
+			if (inputStream == null) {
+				throw new IllegalStateException("config.yml file not found!");
+			}
+			YamlConfiguration defaults = YamlConfiguration.loadConfiguration(
+					new InputStreamReader(inputStream, StandardCharsets.UTF_8)
+			);
+			config.setDefaults(defaults);
+			config.options().copyDefaults(true);
+			config.save(file);
+		}
+		catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 	}
 }

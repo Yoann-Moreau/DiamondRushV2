@@ -375,7 +375,7 @@ public class GamePhaseListeners implements Listener {
 					continue;
 				}
 				player.teleportAsync(diamondRush.getGame().getSpawn());
-				player.setGameMode(GameMode.ADVENTURE);
+				player.setGameMode(GameMode.valueOf(diamondRush.getConfig().getEndGameMode()));
 				team.getMinecraftTeam().removePlayer(player);
 			}
 			team.getMinecraftTeam().unregister();

@@ -77,11 +77,11 @@ public class DiamondRush {
 			messagesConfig = YamlConfiguration.loadConfiguration(file);
 			return;
 		}
-		updateMessagesConfig(file);
+		updateMessagesConfigFile(file);
 	}
 
 
-	private void updateMessagesConfig(File file) {
+	private void updateMessagesConfigFile(File file) {
 		messagesConfig = YamlConfiguration.loadConfiguration(file);
 		try {
 			InputStream inputStream = getPlugin().getResource("messages.yml");
