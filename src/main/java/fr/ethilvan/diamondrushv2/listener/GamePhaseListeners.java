@@ -67,6 +67,9 @@ public class GamePhaseListeners implements Listener {
 			// Hide coordinates
 			diamondRush.getGame().getWorld().setGameRule(GameRules.REDUCED_DEBUG_INFO, true);
 			diamondRush.getGame().getNetherWorld().setGameRule(GameRules.REDUCED_DEBUG_INFO, true);
+			// Disable locator bar
+			diamondRush.getGame().getWorld().setGameRule(GameRules.LOCATOR_BAR, false);
+			diamondRush.getGame().getNetherWorld().setGameRule(GameRules.LOCATOR_BAR, false);
 
 			diamondRush.getGame().resetPlayers();
 			teleportPlayersToGameSpawn(false);
